@@ -80,10 +80,12 @@
 
             <div class="row">
                 <div class="col-lg-12">
-                    <input type="hidden" id="clinic-id" value="<?php echo $data_setting_header->clinicID;?>">
-                    <input type="hidden" id="poli-id" value="<?php echo $data_setting_header->poliID;?>">
-                    <h1><?php echo $data_setting_header->clinicName;?></h1>
-                    <h1><?php echo $data_setting_header->poliName;?></h1>
+                    <?php if(isset($data_setting_header)){?>
+                        <input type="hidden" id="clinic-id" value="<?php echo $data_setting_header->clinicID;?>">
+                        <input type="hidden" id="poli-id" value="<?php echo $data_setting_header->poliID;?>">
+                        <h1><?php echo $data_setting_header->clinicName;?></h1>
+                        <h1><?php echo $data_setting_header->poliName;?></h1>
+                    <?php } ?>
                 </div>
             </div>
 

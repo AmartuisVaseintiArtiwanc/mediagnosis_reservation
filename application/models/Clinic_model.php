@@ -96,6 +96,15 @@ class Clinic_Model extends CI_Model {
         return $query->row();
     }
 
+    function getClinicByUserID($id){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_clinics a');
+        $this->db->where('userID',$id);
+        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     function createClinic($data){
         $this->db->insert('tbl_cyberits_m_clinics',$data);	
 		$result=$this->db->affected_rows();

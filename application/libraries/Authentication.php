@@ -3,7 +3,7 @@
     {
         public function isAuthorizeAdmin($currentUserLevel)
         {
-            if($currentUserLevel == 'admin' || $currentUserLevel == 'super_admin' )
+            if($currentUserLevel == 'admin')
                 {return true;}
             else
                 {return false;}

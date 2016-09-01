@@ -5,25 +5,42 @@ class SSchedule_model extends CI_Model {
     var $column_order = array('sClinicID','clinicName','poliName',null); //set column field database for datatable orderable
     var $column_search = array('clinicName','poliName'); //set column field database for datatable searchable just firstname ,
 
-    function getScheduleListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit){
+    function getScheduleListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit, $clinic){
         $this->_dataSettingQuery($searchText,$orderByColumnIndex,$orderDir);
         // LIMIT
         if($limit!=null || $start!=null){
             $this->db->limit($limit, $start);
         }
+
+        //ROLE
+        $role = $this->session->userdata('role');
+        if($role=="admin"){
+            $this->db->where('a.clinicID',$clinic);
+        }
+
         $query = $this->db->get();
         return $query->result_array();
 
     }
 
-    function count_filtered($searchText){
+    function count_filtered($searchText,$clinic){
         $this->_dataSettingQuery($searchText,null,null);
+        //ROLE
+        $role = $this->session->userdata('role');
+        if($role=="admin"){
+            $this->db->where('a.clinicID',$clinic);
+        }
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all(){
+    public function count_all($clinic){
         $this->db->from("tbl_cyberits_s_clinic a");
+        //ROLE
+        $role = $this->session->userdata('role');
+        if($role=="admin"){
+            $this->db->where('a.clinicID',$clinic);
+        }
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
         return $this->db->count_all_results();
     }

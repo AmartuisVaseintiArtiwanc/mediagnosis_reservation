@@ -1,7 +1,7 @@
 <?php
 
-class SClinic extends CI_Controller {
-	
+class Reservation extends CI_Controller {
+
     function __construct(){
         parent::__construct();
         $this->load->helper(array('form', 'url','security','date'));
@@ -9,12 +9,13 @@ class SClinic extends CI_Controller {
         $this->load->library("authentication");
         $this->is_logged_in();
         $this->load->model('clinic_model',"clinic_model");
-		$this->load->model('poli_model',"poli_model");
-		$this->load->model('sclinic_model',"sclinic_model");
+        $this->load->model('poli_model',"poli_model");
+        $this->load->model('sclinic_model',"sclinic_model");
         $this->load->model('sschedule_model',"sschedule_model");
+        $this->load->model('test_model',"test_model");
     }
-    
-	function index(){
+
+    function index(){
         $role = $this->session->userdata('role');
         if($this->authentication->isAuthorizeSuperAdmin($role)){
             $data['main_content'] = 'setting/setting_clinic_list_view';
@@ -22,9 +23,55 @@ class SClinic extends CI_Controller {
         }else if($this->authentication->isAuthorizeAdmin($role)){
             $userID =  $this->session->userdata('userID');
             $clinic = $this->clinic_model->getClinicByUserID($userID);
-            $this->goToSettingDetailClinic($clinic->clinicID);
+            $this->getListReservationClinic($clinic->clinicID);
         }
-	}
+
+
+    }
+
+    function getListReservationClinic($clinicID){
+        $clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinicID);
+
+        // CREATE & CHECK RESERVATION CLINIC EACH POLI
+        $this->createHeaderReservation($clinicPoliList,$clinicID );
+
+        $data['reversation_clinic_data']  = $this->test_model->getReservationClinic($clinicID);
+        $data['main_content'] = 'reservation/reservation_home_view';
+        $this->load->view('template/template', $data);
+    }
+
+    function createHeaderReservation($clinicPoliList,$clinicID){
+        $datetime = date('Y-m-d H:i:s', time());
+        $userID = $this->session->userdata('userID');
+        foreach($clinicPoliList as $row){
+            $poliID = $row['poliID'];
+            $verifyReservation = $this->test_model->checkReservationToday($clinicID,$poliID);
+            if($verifyReservation == 0) {
+                //insert baru
+                $data_reservasi = array(
+                    'clinicID' => $clinicID,
+                    'poliID' => $poliID,
+                    'currentQueue' => 0,
+                    'totalQueue' => 0,
+                    'isActive' => 1,
+                    'created' => $datetime,
+                    'createdBy' => $userID,
+                    'lastUpdated' => $datetime,
+                    'lastUpdatedBy' => $userID
+                );
+
+                $query = $this->test_model->insertReservation($data_reservasi);
+
+                if ($this->db->trans_status() === FALSE) {
+                    // Failed to save Data to DB
+                    $this->db->trans_rollback();
+                }
+                else{
+                    $this->db->trans_commit();
+                }
+            }
+        }
+    }
 
     function dataClinicListAjax(){
 
@@ -70,44 +117,44 @@ class SClinic extends CI_Controller {
         //output to json format
         echo json_encode($output);
     }
-	
-	function goToSettingDetailClinic($id){
-        
+
+    function goToSettingDetailClinic($id){
+
         $data['main_content'] = 'setting/setting_clinic_detail_view';
         $data['data'] = null;
         $data['msg'] = null;
-        
+
         //Data Selection
         $data['data_setting_header'] = $this->clinic_model->getClinicByID($id);
         $data['data_setting_detail'] = $this->sclinic_model->getSettingDetailClinic($id);
-        
-		$this->load->view('template/template', $data);
+
+        $this->load->view('template/template', $data);
     }
-	
-	function saveClinic(){
+
+    function saveClinic(){
         //$this->output->enable_profiler(TRUE);
         $status="";
         $msg="";
         $datetime = date('Y-m-d H:i:s', time());
         $data = $this->input->post('data');
         $clinicID= $data[0]['clinicID'];
-		
-		$this->db->trans_begin();
-		// ADD NEW DATA 
-		if(isset($data[1])){
+
+        $this->db->trans_begin();
+        // ADD NEW DATA
+        if(isset($data[1])){
             // Save Detail Clinic - Poli
-			foreach($data[1] as $row){
-				$detail_setting = array(
-					'clinicID'=>$clinicID,
-					'poliID'=>$row['poliID'],
+            foreach($data[1] as $row){
+                $detail_setting = array(
+                    'clinicID'=>$clinicID,
+                    'poliID'=>$row['poliID'],
                     'isActive'=>1,
                     'created'=>$datetime,
                     "createdBy" => $this->session->userdata('superUserID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
-				);
+                );
 
-				$addDetil = $this->sclinic_model->createSettingClinic($detail_setting);
+                $addDetil = $this->sclinic_model->createSettingClinic($detail_setting);
 
                 //Save Schedule Per Clinic-Poli
                 for($i=0;$i<7;$i++){
@@ -127,31 +174,31 @@ class SClinic extends CI_Controller {
                     );
                     $this->sschedule_model->createSettingSchedule($detail_schedule);
                 }
-			}
-		}
-		
-		//DELETE DATA
-		if(isset($data[2])){
-			foreach($data[2] as $row){			
-				$deteleDetil = $this->sclinic_model->deleteSettingClinic($clinicID,$row['poliID']);
+            }
+        }
+
+        //DELETE DATA
+        if(isset($data[2])){
+            foreach($data[2] as $row){
+                $deteleDetil = $this->sclinic_model->deleteSettingClinic($clinicID,$row['poliID']);
                 $this->sschedule_model->deleteSettingSchedule($clinicID,$row['poliID']);
-			}
-		}
-		
-		if ($this->db->trans_status() === FALSE){
-			$this->db->trans_rollback();
-			$status="error";
-			$msg="Error while saved data!";
+            }
+        }
+
+        if ($this->db->trans_status() === FALSE){
+            $this->db->trans_rollback();
+            $status="error";
+            $msg="Error while saved data!";
         }
         else{
-			$this->db->trans_commit();
-			$status="success";
-			$msg="Setting berhasil disimpan!";
+            $this->db->trans_commit();
+            $status="success";
+            $msg="Setting berhasil disimpan!";
         }
-		
+
         // return message to AJAX
         echo json_encode(array('status' => $status, 'msg' => $msg));
-	}      
+    }
 
     function getDayName($i){
         $dayName = "";

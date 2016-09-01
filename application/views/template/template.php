@@ -346,6 +346,17 @@
               </ul>
             </li>
         <?php } ?>
+          <li class="treeview">
+              <a href="#">
+                  <i class="fa fa-calendar"></i>
+                  <span>Reservation</span>
+                  <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                  <li><a href="<?php echo site_url("SClinic");?>"><i class="fa fa-circle-o"></i> Today Reservation</a></li>
+                  <li><a href="<?php echo site_url("SPoli");?>"><i class="fa fa-circle-o"></i> Report Reservation</a></li>
+              </ul>
+          </li>
       </ul>
     </section>
     <!-- /.sidebar -->
@@ -362,7 +373,7 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Admin LTE</b>
+      <b>CYBERITS</b>
     </div>
     <strong>Copyright &copy; 2016 <a href="http://almsaeedstudio.com">Aslela</a>.</strong> All rights
     reserved.

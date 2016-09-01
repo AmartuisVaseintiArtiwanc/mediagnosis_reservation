@@ -1,6 +1,5 @@
 <?php
 
-
 class SettingSchedule extends CI_Controller
 {
 
@@ -9,6 +8,7 @@ class SettingSchedule extends CI_Controller
         parent::__construct();
         $this->load->helper(array('form', 'url', 'security', 'date'));
         $this->load->library("pagination");
+        $this->load->library("authentication");
         $this->is_logged_in();
         $this->load->model('clinic_model', "clinic_model");
         $this->load->model('poli_model', "poli_model");
@@ -36,9 +36,17 @@ class SettingSchedule extends CI_Controller
             $orderDir = "ASC";
         }
 
-        $result = $this->sschedule_model->getScheduleListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
-        $resultTotalAll = $this->sschedule_model->count_all();
-        $resultTotalFilter  = $this->sschedule_model->count_filtered($searchText);
+        $role = $this->session->userdata('role');
+        $clinic = '';
+        if($this->authentication->isAuthorizeAdmin($role)){
+            $userID =  $this->session->userdata('userID');
+            $clinicData = $this->clinic_model->getClinicByUserID($userID);
+            $clinic = $clinicData->clinicID;
+        }
+
+        $result = $this->sschedule_model->getScheduleListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit,$clinic);
+        $resultTotalAll = $this->sschedule_model->count_all($clinic);
+        $resultTotalFilter  = $this->sschedule_model->count_filtered($searchText,$clinic);
 
         $data = array();
         $no = $_POST['start'];
@@ -65,13 +73,44 @@ class SettingSchedule extends CI_Controller
     }
 
     function goToSettingDetailSchedule($clinicID, $poliID){
-        $data['main_content'] = 'setting/setting_schedule_detail_view';
         $data['data'] = null;
         $data['msg'] = null;
 
-        //Data Selection
-        $data['data_setting_header'] = $this->sschedule_model->getHeaderData($clinicID, $poliID);
-        $data['data_setting_detail'] = $this->sschedule_model->getSettingDetailSchedule($clinicID, $poliID);
+        $role = $this->session->userdata('role');
+
+        //SUPER ADMIN
+        if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $data['data_setting_header'] = $this->sschedule_model->getHeaderData($clinicID, $poliID);
+            $data['data_setting_detail'] = $this->sschedule_model->getSettingDetailSchedule($clinicID, $poliID);
+
+            if(isset($data['data_setting_header'])){
+                $data['main_content'] = 'setting/setting_schedule_detail_view';
+            }else{
+                $welcome = site_url("SettingSchedule");
+                redirect($welcome, 'refresh');
+            }
+        }
+        //ADMIN
+        else if($this->authentication->isAuthorizeAdmin($role)){
+            //ROLE
+            $userID =  $this->session->userdata('userID');
+            $clinicData = $this->clinic_model->getClinicByUserID($userID);
+            $clinic = $clinicData->clinicID;
+
+            if($clinic==$clinicID){
+                //Data Selection
+                $data['data_setting_header'] = $this->sschedule_model->getHeaderData($clinicID, $poliID);
+                $data['data_setting_detail'] = $this->sschedule_model->getSettingDetailSchedule($clinicID, $poliID);
+                $data['main_content'] = 'setting/setting_schedule_detail_view';
+            }else{
+                $welcome = site_url("Welcome");
+                redirect($welcome, 'refresh');
+            }
+        }
+        else{
+            $welcome = site_url("Welcome");
+            redirect($welcome, 'refresh');
+        }
 
         $this->load->view('template/template', $data);
     }
