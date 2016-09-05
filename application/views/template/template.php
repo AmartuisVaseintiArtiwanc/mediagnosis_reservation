@@ -353,8 +353,8 @@
                   <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                  <li><a href="<?php echo site_url("SClinic");?>"><i class="fa fa-circle-o"></i> Today Reservation</a></li>
-                  <li><a href="<?php echo site_url("SPoli");?>"><i class="fa fa-circle-o"></i> Report Reservation</a></li>
+                  <li><a href="<?php echo site_url("Reservation");?>"><i class="fa fa-circle-o"></i> Today Reservation</a></li>
+                  <li><a href="<?php echo site_url("Reservation/goToReservationReportClinicList");?>"><i class="fa fa-circle-o"></i> Report Reservation</a></li>
               </ul>
           </li>
       </ul>

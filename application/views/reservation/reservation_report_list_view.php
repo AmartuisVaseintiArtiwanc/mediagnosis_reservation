@@ -14,7 +14,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Reservation
+        Report Reservation
         <small>List Clinic</small>
     </h1>
     <ol class="breadcrumb">
@@ -84,7 +84,7 @@
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
-                           "data-value": cellData});
+                            "data-value": cellData});
                         $btn_edit.append("<i class='fa fa-search'></i>&nbsp Detail");
 
                         $(td).html($btn_edit).append(" ");
@@ -106,7 +106,7 @@
         //Edit open Modal
         $( "#dataTables-list tbody" ).on( "click", "button.edit-btn", function() {
             var id_item =  $(this).attr("data-value");
-            location.href = baseurl+"Reservation/goToListReservationClinic/"+id_item;
+            location.href = baseurl+"Reservation/goToReservationReportPoliList/"+id_item;
         });
     });
 </script>

@@ -19,7 +19,7 @@ class Test_model extends CI_Model{
         }
     }
 
-    function getReservationClinic($clinic){
+    function getReservationClinicPoli($clinic){
         $date = date('Y-m-d', time());
 
         $this->db->select('*');
