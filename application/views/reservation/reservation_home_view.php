@@ -123,6 +123,7 @@
                             </div>
 
                             <input type="hidden" id="detail-reservation-value" value="0" />
+                            <div id="current-queue-info" data-queue-number="" data-queue-poli="" data-queue-doctor=""></div>
 
                             <div class="overlay loading-screen-queue">
                                 <i class="fa fa-user-times"></i>
@@ -142,7 +143,7 @@
                     <h3 class="box-title">Antrian Sebelumnya</h3>
                 </div>
 
-                <div class="box-body">
+                <div class="box-body"id="current-queue-box-list">
                     <?php foreach($reservation_latest_queue as $row) { ?>
                         <div class="col-lg-12 col-xs-12">
                             <div class="small-box-list bg-green">
@@ -225,6 +226,10 @@
             $icon.appendTo($small_box)
             $("#current-queue-box").prepend($small_box);
 
+            $("#current-queue-info").attr("data-queue-number",q_number);
+            $("#current-queue-info").attr("data-queue-poli",poli_name);
+            $("#current-queue-info").attr("data-queue-doctor",doctor_name);
+
             $("#button-confirm-queue").removeClass("hide");
             $("#button-confirm-queue").show();
         }
@@ -233,6 +238,7 @@
             //new Audio("audio.mp3").play();
         }
 
+        // CONFIRM ANTRIAN SEKARANG
         $(".btn-reservation-confirmation").click(function(){
             var $value = $(this).attr("data-value");
             var $title = "Confirmation";
@@ -269,13 +275,17 @@
                         },
                         success:function(data){
                             if(data.status != "error"){
+                                alertify.success(data.msg);
                                 //SET COUNTER QUEUE
                                 $("#current-queue-box").attr("data-queue",0);
                                 //HIDE LOADING SCREEN
                                 $(".loading-screen-queue").hide();
-                                alertify.success("Cannot response server !");
+
+                                //REMOVE BOX
                                 $("#current-queue-box").children(".small-box").html("");
                                 $("#button-confirm-queue").hide();
+
+                                renderQueueListBox();
                             }else{
                                 alertify.error(data.msg);
                                 $(".loading-screen-queue").hide();
@@ -292,6 +302,30 @@
                 }
             ).setHeader($title);
         });
+
+        function renderQueueListBox(){
+
+            var $qnumber = $("#current-queue-info").attr("data-queue-number");
+            var $poli = $("#current-queue-info").attr("data-queue-poli");
+            var $doctor =  $("#current-queue-info").attr("data-queue-doctor");
+
+            var $div = $("<div>", {class: "col-lg-12 col-xs-12"});
+            var $small_box = $("<div>", {class: "small-box-list bg-green", "data-value": "0"});
+            var $inner = $("<div>", {class: "inner", "data-value": "0"});
+            var $queue_number = $("<h3>").html($qnumber);
+            var $poli_doctor = $("<p>").html($poli+" - "+$doctor);
+
+            var $icon = $("<div>", {class: "icon"});
+            var $i = $("<i>", {class: "ion ion-person"});
+            $i.appendTo($icon)
+
+            $queue_number.appendTo($inner);
+            $poli_doctor.appendTo($inner);
+            $inner.appendTo($small_box);
+            $icon.appendTo($small_box);
+            $small_box.appendTo($div);
+            $("#current-queue-box-list").prepend($div);
+        }
     });
 </script>
 

@@ -66,6 +66,7 @@ class Test_model extends CI_Model{
         $this->db->like('a.created',$date);
         $this->db->where('a.status != ',"waiting");
         $this->db->where('a.status != ',"confirm");
+
         $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
         $this->db->order_by('a.created','desc');
         //$this->db->limit(5, 0);
