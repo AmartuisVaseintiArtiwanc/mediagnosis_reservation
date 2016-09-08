@@ -106,7 +106,7 @@
         //Edit open Modal
         $( "#dataTables-list tbody" ).on( "click", "button.edit-btn", function() {
             var id_item =  $(this).attr("data-value");
-            location.href = baseurl+"Reservation/goToListReservationClinic/"+id_item;
+            location.href = baseurl+"Reservation/goToListReservationQueue/"+id_item;
         });
     });
 </script>

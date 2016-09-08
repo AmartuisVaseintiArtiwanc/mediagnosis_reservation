@@ -23,22 +23,24 @@ class Reservation extends CI_Controller {
         }else if($this->authentication->isAuthorizeAdmin($role)){
             $userID =  $this->session->userdata('userID');
             $clinic = $this->clinic_model->getClinicByUserID($userID);
-            $this->goToListReservationClinic($clinic->clinicID);
+            $this->goToListReservationQueue($clinic->clinicID);
         }
     }
 
-    function goToListReservationClinic($clinicID){
+    /*Reservasi Antrian Tiap Clinic Pada HARI INI*/
+    function goToListReservationQueue($clinicID){
         $clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinicID);
 
         // CREATE & CHECK RESERVATION CLINIC EACH POLI
         $this->createHeaderReservation($clinicPoliList,$clinicID );
 
-        $data['data_clinic'] = $this->clinic_model->getClinicByID($clinicID);
-        $data['reversation_clinic_data']  = $this->test_model->getReservationClinicPoli($clinicID);
+        $data['reversation_clinic_data']  = $this->test_model->getHeaderReservationData($clinicID);
+        $data['reservation_latest_queue'] = $this->test_model->getReservationLatestQueue($clinicID);
         $data['main_content'] = 'reservation/reservation_home_view';
         $this->load->view('template/template', $data);
     }
 
+    /*Create Header Reservasi untuk HARI INI*/
     function createHeaderReservation($clinicPoliList,$clinicID){
         $datetime = date('Y-m-d H:i:s', time());
         $userID = $this->session->userdata('userID');
@@ -72,6 +74,61 @@ class Reservation extends CI_Controller {
         }
     }
 
+    /* Get Antrian Sekarang, Per Clinic*/
+    function getQueueCurrent(){
+        $clinicID = $this->security->xss_clean($this->input->post('clinic'));
+        $data = $this->test_model->getCurrentQueue($clinicID);
+
+        $output="";
+        $status="error";
+        if(isset($data)){
+            $output = array(
+                "headerID"=>$data->reservationID,
+                "detailID"=>$data->detailReservationID,
+                "noQueue"=>$data->noQueue,
+                "poliName" => strtoupper($data->poliName),
+                "doctorName" => $data->doctorName
+            );
+            $status="success";
+        }
+        echo json_encode(array('status' => $status, 'output' => $output));
+    }
+
+    function saveCurrentQueue(){
+
+        $datetime = date('Y-m-d H:i:s', time());
+        $status_rev = $this->security->xss_clean($this->input->post('status'));
+        $detailID = $this->security->xss_clean($this->input->post('detailID'));
+
+        $data=array(
+            'status'=>$status_rev,
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+
+        $this->db->trans_begin();
+        $query = $this->test_model->updateReservationDetail($data,$detailID);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg = "Cannot save to Database !";
+        } else {
+            if ($query) {
+                $this->db->trans_commit();
+                $status = "success";
+                $msg = "Save data successfully !";
+            } else {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Failed to save data !";
+            }
+        }
+
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+
     function goToReservationReportClinicList(){
         $role = $this->session->userdata('role');
         if($this->authentication->isAuthorizeSuperAdmin($role)){
@@ -93,6 +150,9 @@ class Reservation extends CI_Controller {
 
     function goToReservationReportDateList(){
 
+        $clinicID = $this->security->xss_clean($this->input->post('clinicID'));
+        $user = $this->login_model->validate($username, $password);
+        echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
     function dataReservationClinicPoliListAjax(){
