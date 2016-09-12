@@ -2,16 +2,26 @@
 
 class SPoli_Model extends CI_Model {
 
-    function getSettingDetailPoli($poliID){
+    function getSettingDetailPoli($sClinicID){
 		$this->db->select('*');
         $this->db->from('tbl_cyberits_s_poli a');
 		$this->db->join('tbl_cyberits_m_doctors b', 'a.doctorID = b.doctorID');
-        $this->db->where('a.poliID',$poliID);
+        $this->db->where('a.sClinicID',$sClinicID);
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
 		$this->db->order_by('b.doctorName','asc');
         $query = $this->db->get();
 		return $query->result_array();
 	}
+
+    function getSettingHeaderPoli($sClinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_s_clinic a');
+        $this->db->join('tbl_cyberits_m_clinics c', 'a.clinicID = c.clinicID');
+        $this->db->join('tbl_cyberits_m_poli b', 'a.poliID = b.poliID');
+        $this->db->where('a.sClinicID',$sClinicID);
+        $query = $this->db->get();
+        return $query->row();
+    }
 	
     function createSettingPoli($data){
         $this->db->insert('tbl_cyberits_s_poli',$data);

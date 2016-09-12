@@ -46,6 +46,21 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
+    function getHeaderReservationDataByDoctor($clinic,$poli){
+        $date = date('Y-m-d', time());
+
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_header_reservation a');
+        $this->db->join('tbl_cyberits_m_clinics c', 'a.clinicID = c.clinicID');
+        $this->db->join('tbl_cyberits_m_poli d', 'd.poliID = a.poliID');
+        $this->db->where('a.clinicID',$clinic);
+        $this->db->where('a.poliID',$poli);
+        $this->db->where('a.isActive', 1);
+        $this->db->like('a.created',$date);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     function getReservationLatestQueue($clinic){
         $date = date('Y-m-d', time());
 
@@ -100,6 +115,54 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
+    function getCurrentQueueDoctor($reservation){
+        $date = date('Y-m-d', time());
+
+        #Create where clause
+        $this->db->select('currentQueue');
+        $this->db->from('tbl_cyberits_t_header_reservation');
+        $this->db->where("a.reservationID",$reservation);
+        $this->db->where('isActive', 1);
+        $this->db->like('created',$date);
+        $where_clause = $this->db->get_compiled_select();
+
+        #Create main query
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
+        $this->db->like('a.created',$date);
+        $this->db->where('a.status',"waiting");
+        $this->db->where("a.reservationID",$reservation);
+        $this->db->where("a.noQueue > ",$where_clause);
+        $this->db->order_by('a.created','asc');
+        //$this->db->limit(5, 0);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function checkReservationDetail($detailID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->where("a.detailReservationID",$detailID);
+        $this->db->where("a.status",'waiting');
+        $query = $this->db->get();
+        if($query->num_rows() == 0){
+            return 0; // allready taken by other doctor
+        }else{
+            return 1; // available
+        }
+    }
+
+    function getReservationDetailByID($detailID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->where("a.detailReservationID",$detailID);
+        $this->db->where("a.status",'waiting');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     function insertReservation($data){
         $this->db->insert('tbl_cyberits_t_header_reservation', $data);
         return $this->db->insert_id();
@@ -108,6 +171,16 @@ class Test_model extends CI_Model{
     function updateReservationDetail($data, $detailID){
         $this->db->where('detailReservationID',$detailID);
         $this->db->update('tbl_cyberits_t_detail_reservation',$data);
+
+        if ($this->db->affected_rows() == 1)
+            return TRUE;
+        else
+            return FALSE;
+    }
+
+    function updateReservationHeader($data, $headerID){
+        $this->db->where('reservationID',$headerID);
+        $this->db->update('tbl_cyberits_t_header_reservation',$data);
 
         if ($this->db->affected_rows() == 1)
             return TRUE;

@@ -31,14 +31,6 @@
 
         <div class="box-body">
             <p>
-            <div class="row">
-                <div class="col-lg-8">
-                    <button type="button" class="btn btn-primary btn-xl" id="add-btn"
-                            data-toggle="modal" data-target="#disease-modal-add">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
-                    </button>
-                </div>
-            </div>
             </p>
             <table  class="table table-bordered table-striped tbl-master" id="dataTables-list">
                 <thead>

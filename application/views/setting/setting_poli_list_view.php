@@ -31,24 +31,13 @@
 
         <div class="box-body">
             <p>
-            <div class="row">
-                <div class="col-lg-8">
-                    <button type="button" class="btn btn-primary btn-xl" id="add-btn"
-                            data-toggle="modal" data-target="#disease-modal-add">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
-                    </button>
-                </div>
-            </div>
             </p>
             <table  class="table table-bordered table-striped tbl-master" id="dataTables-list">
                 <thead>
                 <tr>
                     <th>No</th>
+                    <th style = "text-align:left;">Clinic</th>
                     <th style = "text-align:left;">Poli</th>
-                    <th style = "text-align:left;display:none;">Created</th>
-                    <th style = "text-align:left;display:none;">Created By</th>
-                    <th style = "text-align:left;display:none;">Last Modified</th>
-                    <th style = "text-align:left;display:none;">Last Modified By</th>
                     <th style = "text-align:center;">Option</th>
                 </tr>
                 </thead>
@@ -75,7 +64,7 @@
             deferRender: true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": baseurl+"SPoli/dataPoliListAjax",
+                "url": baseurl+"SPoli/dataSPoliListAjax",
                 "type": "POST"
             },
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
@@ -83,8 +72,9 @@
             },
             columns: [
                 { data: 0,"width": "10%" },
-                { data: 2, "width": "50%"},
-                { data: 1, "width": "40%"}
+                { data: 2, "width": "40%"},
+                { data: 3, "width": "40%"},
+                { data: 4, "width": "10%"},
             ],
             //Set column definition initialisation properties.
             "columnDefs": [
@@ -94,9 +84,9 @@
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn",
-                            "type": "button", "data-value": cellData});
-                        $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");                                              
-                      $(td).html($btn_edit).append(" ");
+                            "type": "button", "data-clinic": rowData[4], "data-poli": rowData[5],"data-value":rowData[1]});
+                        $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
+                        $(td).html($btn_edit).append(" ");
                     }
                 },
                 {

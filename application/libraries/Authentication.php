@@ -12,7 +12,7 @@
 
         public function isAuthorizeDoctor($currentUserLevel)
         {
-            if($currentUserLevel == 'doctor' || $currentUserLevel == 'super_admin' )
+            if($currentUserLevel == 'doctor')
             {return true;}
             else
             {return false;}

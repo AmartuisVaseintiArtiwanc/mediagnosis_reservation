@@ -375,7 +375,7 @@
     <div class="pull-right hidden-xs">
       <b>CYBERITS</b>
     </div>
-    <strong>Copyright &copy; 2016 <a href="http://almsaeedstudio.com">Aslela</a>.</strong> All rights
+    <strong>Copyright &copy; 2016 <a href="">CYBERITS</a>.</strong> All rights
     reserved.
   </footer>
 

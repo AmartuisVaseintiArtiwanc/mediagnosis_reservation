@@ -48,7 +48,7 @@
                 deferRender: true,
                 // Load data for the table's content from an Ajax source
                 "ajax": {
-                    "url": baseurl+"doctor/dataDoctorListAjax",
+                    "url": baseurl+"SPoli/dataLookupDoctorListAjax",
                     "type": "POST"
                 },
                 "fnCreatedRow": function( nRow, aData, iDataIndex ) {

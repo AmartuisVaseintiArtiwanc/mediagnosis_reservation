@@ -94,6 +94,11 @@ class Reservation extends CI_Controller {
         echo json_encode(array('status' => $status, 'output' => $output));
     }
 
+    function getQueueNext(){
+        $clinicID = $this->security->xss_clean($this->input->post('clinic'));
+        echo json_encode(array('status' => $status, 'output' => $output));
+    }
+
     function saveCurrentQueue(){
 
         $datetime = date('Y-m-d H:i:s', time());

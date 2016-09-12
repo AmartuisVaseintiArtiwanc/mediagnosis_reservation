@@ -82,7 +82,7 @@
 
             <div class="row"> 
 				<div class="col-lg-12">
-					<input type="hidden" id="header_id" value="<?php echo $data_setting_header->poliID;?>">
+					<input type="hidden" id="header_id" value="<?php echo $data_setting_header->sClinicID;?>">
 					<h1><?php echo $data_setting_header->poliName;?></h1>
 				</div>                               
             </div>
@@ -133,7 +133,7 @@
             if(validateDoctorInput()){
                 $('#error-msg').addClass("hidden");
                 var header_data_setting = new Object();
-                header_data_setting.poliID = $("#header_id").val();
+                header_data_setting.sClinicID = $("#header_id").val();
 							
 				// Deleted Doctor
 				var deleted_data_setting = [];
