@@ -235,7 +235,8 @@
         }
 
         function alertSound(){
-            //new Audio("audio.mp3").play();
+            var audio = $("#loading-beep")[0];
+            audio.play();
         }
 
         // CONFIRM ANTRIAN SEKARANG
