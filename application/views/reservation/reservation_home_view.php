@@ -132,6 +132,12 @@
                             </div>
                         </div>
                         <!-- /.box-body -->
+                        <div class="hide">
+                            <audio id="loading-beep">
+                                <source src="../assets/custom/audio.mp3" type="audio/mp3"/>
+                            </audio>
+
+                        </div>
                     </div>
                 </div>
             </div>
