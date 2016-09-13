@@ -1,7 +1,7 @@
 <?php  
 	class HReservation_model extends CI_Model{
 
-		function checkReservationToday(){
+		function checkReservationToday($clinicID, $poliID){
 
 			$date = date('Y-m-d', time());
 
@@ -9,12 +9,28 @@
 	        $this->db->from('tbl_cyberits_t_header_reservation');
 	        $this->db->like('created',$date);
 	        $this->db->where('isActive', 1);
+	        $this->db->where('clinicID',$clinicID);
+	        $this->db->where('poliID',$poliID);
 	        $query = $this->db->get();
 	        if($query->num_rows()>0){
-	            return $query->row(); // allready exist
+	            return 1; // allready exist
 	        }else{
 	            return 0; //blom ada
 	        }
+		}
+
+		function getReservationTodayID($clinicID, $poliID){
+			$date = date('Y-m-d', time());
+
+			$this->db->select('reservationID');
+	        $this->db->from('tbl_cyberits_t_header_reservation');
+	        $this->db->like('created',$date);
+	        $this->db->where('isActive', 1);
+	        $this->db->where('clinicID',$clinicID);
+	        $this->db->where('poliID',$poliID);
+	        $query = $this->db->get();
+	        
+	        return $query;
 		}
 
 		function insertReservation($data){
