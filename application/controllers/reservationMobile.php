@@ -19,7 +19,7 @@
 			$clinicID = $this->input->post('clinicID');
 			$poliID = $this->input->post('poliID');
 			$userID = $this->input->post('userID');
-			$verifyReservation = $this->HReservation_model->checkReservationToday();
+			$verifyReservation = $this->HReservation_model->checkReservationToday($clinicID, $poliID);
 
 			if($userID!=null){
 				//belom ada reservasi hari itu
@@ -76,6 +76,9 @@
 				}
 				else{
 					//update tambah satu total 
+
+					$existingReservation = $this->HReservation_model->getReservationTodayID($clinicID, $poliID);
+
 					$data_reservasi = array(
 							'totalQueue' => $verifyReservation->totalQueue + 1,
 							'lastUpdated' => $datetime,
@@ -93,7 +96,7 @@
 		            }
 		            else{
 		            	$data_reservasi = array(
-							'reservationID' => $query->reservationID,
+							'reservationID' => $existingReservation->reservationID,
 							'noQueue' => $verifyReservation->totalQueue + 1,
 							'patientID' => $userID,
 							'status' => 'waiting',
