@@ -249,7 +249,7 @@
             if($value=="confirm"){
                 $msg="Pasien Ada ?";
                 $data = {
-                    status : "check",
+                    status : "confirm",
                     detailID : detailID
                 };
             }else if($value=="reject"){

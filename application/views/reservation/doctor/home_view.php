@@ -124,6 +124,13 @@
                                 <h3 class="text-center">TIDAK ADA ANTRIAN</h3>
                             </div>
                         </div>
+
+                        <div class="hide">
+                            <audio id="loading-beep">
+                                <source src="../assets/custom/audio.mp3" type="audio/mp3"/>
+                            </audio>
+
+                        </div>
                         <!-- /.box-body -->
                     </div>
                 </div>
@@ -204,7 +211,8 @@
         }
 
         function alertSound(){
-            //new Audio("audio.mp3").play();
+            var audio = $("#loading-beep")[0];
+            audio.play();
         }
 
         // CONFIRM ANTRIAN SEKARANG

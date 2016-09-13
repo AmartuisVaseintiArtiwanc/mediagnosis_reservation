@@ -107,7 +107,7 @@ class Test_model extends CI_Model{
         $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
         $this->db->join('tbl_cyberits_m_doctors d', 'a.doctorID = d.doctorID');
         $this->db->like('a.created',$date);
-        $this->db->where('a.status',"confirm");
+        $this->db->where('a.status',"check");
         $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
         $this->db->order_by('a.created','asc');
         //$this->db->limit(5, 0);
