@@ -10,8 +10,8 @@
 		    $this->load->library('form_validation');
 		    $this->load->library('email');
 
-		    $this->load->model("hreservation_model");
-		    $this->load->model("dreservation_model");
+		    $this->load->model("HReservation_model");
+		    $this->load->model("DReservation_model");
 		}
 
 		function doReserve(){
@@ -19,7 +19,7 @@
 			$clinicID = $this->input->post('clinicID');
 			$poliID = $this->input->post('poliID');
 			$userID = $this->input->post('userID');
-			$verifyReservation = $this->hreservation_model->checkReservationToday();
+			$verifyReservation = $this->HReservation_model->checkReservationToday();
 
 			if($userID!=null){
 				//belom ada reservasi hari itu
@@ -38,8 +38,7 @@
 						);
 
 					$this->db->trans_begin();
-
-					$query = $this->hreservation_model->insertReservation($data_reservasi);
+					$query = $this->HReservation_model->insertReservation($data_reservasi);
 
 					if ($this->db->trans_status() === FALSE) {
 		                // Failed to save Data to DB
@@ -52,6 +51,7 @@
 							'reservationID' => $query,
 							'noQueue' => 1,
 							'patientID' => $userID,
+							'status' => 'waiting',
 							'isActive' => 1,
 							'created' => $datetime,
 							'createdBy' => $userID,
@@ -59,7 +59,7 @@
 							'lastUpdatedBy' => $userID
 						);
 
-		            	$query2 = $this->dreservation_model->insertReservation($data_reservasi);
+		            	$query2 = $this->DReservation_model->insertReservation($data_reservasi);
 
 		            	if ($this->db->trans_status() === FALSE) {
 			                // Failed to save Data to DB
@@ -83,8 +83,7 @@
 						);
 
 					$this->db->trans_begin();
-
-					$query = $this->hreservation_model->updateReservation($data_reservasi, $clinicID, $poliID);
+					$query = $this->HReservation_model->updateReservation($data_reservasi, $clinicID, $poliID);
 
 					if ($this->db->trans_status() === FALSE) {
 		                // Failed to save Data to DB
@@ -94,9 +93,10 @@
 		            }
 		            else{
 		            	$data_reservasi = array(
-							'reservationID' => $query,
+							'reservationID' => $query->reservationID,
 							'noQueue' => $verifyReservation->totalQueue + 1,
 							'patientID' => $userID,
+							'status' => 'waiting',
 							'isActive' => 1,
 							'created' => $datetime,
 							'createdBy' => $userID,
@@ -104,7 +104,7 @@
 							'lastUpdatedBy' => $userID
 						);
 
-						$query2 = $this->dreservation_model->insertReservation($data_reservasi);
+						$query2 = $this->DReservation_model->insertReservation($data_reservasi);
 
 		            	if ($this->db->trans_status() === FALSE) {
 			                // Failed to save Data to DB
