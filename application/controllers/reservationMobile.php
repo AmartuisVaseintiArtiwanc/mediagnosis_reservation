@@ -80,7 +80,7 @@
 					$existingReservation = $this->HReservation_model->getReservationTodayID($clinicID, $poliID);
 
 					$data_reservasi = array(
-							'totalQueue' => $verifyReservation->totalQueue + 1,
+							'totalQueue' => $existingReservation->totalQueue + 1,
 							'lastUpdated' => $datetime,
 							'lastUpdatedBy' => $userID
 						);
@@ -97,7 +97,7 @@
 		            else{
 		            	$data_reservasi = array(
 							'reservationID' => $existingReservation->reservationID,
-							'noQueue' => $verifyReservation->totalQueue + 1,
+							'noQueue' => $existingReservation->totalQueue + 1,
 							'patientID' => $userID,
 							'status' => 'waiting',
 							'isActive' => 1,
