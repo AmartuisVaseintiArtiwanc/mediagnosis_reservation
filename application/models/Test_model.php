@@ -106,6 +106,7 @@ class Test_model extends CI_Model{
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
         $this->db->join('tbl_cyberits_m_doctors d', 'a.doctorID = d.doctorID');
+        $this->db->join('tbl_cyberits_m_patients e', 'a.patientID = e.patientID');
         $this->db->like('a.created',$date);
         $this->db->where('a.status',"check");
         $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
@@ -131,6 +132,7 @@ class Test_model extends CI_Model{
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
+        $this->db->join('tbl_cyberits_m_patients d', 'a.patientID = d.patientID');
         $this->db->like('a.created',$date);
         $this->db->where('a.status',"waiting");
         $this->db->where("a.reservationID",$reservation);

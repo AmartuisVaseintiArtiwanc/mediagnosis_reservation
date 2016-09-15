@@ -80,7 +80,8 @@ class ReservationDoctor extends CI_Controller {
                 "headerID"=>$data->reservationID,
                 "detailID"=>$data->detailReservationID,
                 "noQueue"=>$data->noQueue,
-                "poliName" => strtoupper($data->poliName)
+                "poliName" => strtoupper($data->poliName),
+                "patientName" => strtoupper($data->patientName)
             );
             $status="success";
         }
@@ -94,52 +95,60 @@ class ReservationDoctor extends CI_Controller {
         $headerID = $this->security->xss_clean($this->input->post('headerID'));
         $detailID = $this->security->xss_clean($this->input->post('detailID'));
 
-        $checkReservation = $this->test_model->checkReservationDetail($detailID);
+        if($status_rev =='check'){
+            $checkReservation = $this->test_model->checkReservationDetail($detailID);
+            if($checkReservation){
+                $doctor = $this->doctor_model->getDoctorByUserID($this->session->userdata('userID'));
+                $detail_data = $this->test_model->getReservationDetailByID($detailID);
 
-        if($checkReservation){
-            $doctor = $this->doctor_model->getDoctorByUserID($this->session->userdata('userID'));
-            $detail_data = $this->test_model->getReservationDetailByID($detailID);
+                //UPDATE CURRENT QUEUE
+                $data_header=array(
+                    'currentQueue'=>$detail_data->noQueue,
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$this->session->userdata('userID')
+                );
+                $query_header = $this->test_model->updateReservationHeader($data_header,$headerID);
 
-            //UPDATE CURRENT QUEUE
-            $data_header=array(
-                'currentQueue'=>$detail_data->noQueue,
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$this->session->userdata('userID')
-            );
-            $query_header = $this->test_model->updateReservationHeader($data_header,$headerID);
+                //UPDATE DATA DETAIL
+                $data=array(
+                    'doctorID'=>$doctor->doctorID,
+                    'status'=>'check',
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$this->session->userdata('userID')
+                );
 
-            //UPDATE DATA DETAIL
-            $data=array(
-                'doctorID'=>$doctor->doctorID,
-                'status'=>'check',
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$this->session->userdata('userID')
-            );
+                $this->db->trans_begin();
+                $query_detail = $this->test_model->updateReservationDetail($data,$detailID);
 
-            $this->db->trans_begin();
-            $query_detail = $this->test_model->updateReservationDetail($data,$detailID);
-
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                $status = "error";
-                $msg = "Cannot save to Database !";
-            } else {
-                if ($query_detail && $query_header) {
-                    $this->db->trans_commit();
-                    $status = "success";
-                    $msg = "Save data successfully !";
-                } else {
+                if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data !";
+                    $msg = "Cannot save to Database !";
+                } else {
+                    if ($query_detail && $query_header) {
+                        $this->db->trans_commit();
+                        $status = "success";
+                        $msg = "Save data successfully !";
+                    } else {
+                        $this->db->trans_rollback();
+                        $status = "error";
+                        $msg = "Failed to save data !";
+                    }
                 }
+            }else{
+                $status = "taken";
+                $msg = "This Patient has been taken by Other Doctor!";
             }
         }else{
             $status = "taken";
-            $msg = "This Patient has been taken by Other Doctor!";
+            $msg = "";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+    function goToMedicalRecord(){
+        $this->load->view('reservation/doctor/medical_record_view');
     }
 
     function is_logged_in(){

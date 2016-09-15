@@ -164,7 +164,7 @@
                     success:function(data){
                         if(data.status != "error"){
                             //RENDER QUEUE BOX
-                            renderQueueBox(data.output['noQueue'],data.output['poliName']);
+                            renderQueueBox(data.output['noQueue'],data.output['poliName'],data.output['patientName']);
                             //SET DATA RESERVATION
                             $detailID = data.output['detailID'];
                             $("#detail-reservation-value").val($detailID);
@@ -187,10 +187,10 @@
         }
         setInterval(getCurrentQueue, 1000);
 
-        function renderQueueBox(q_number,poli_name){
+        function renderQueueBox(q_number,poli_name,patient_name){
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
-            var $queue_number = $("<h3>").html(q_number);
+            var $queue_number = $("<h3>").html(q_number+" - "+patient_name);
             var $poli_doctor = $("<p>").html(poli_name);
 
             var $icon = $("<div>", {class: "icon"});
@@ -234,7 +234,7 @@
             }else if($value=="reject"){
                 $msg="Pasien Tidak Ada ?";
                 $data = {
-                    status : "late",
+                    status : "uncheck",
                     headerID : $reservation,
                     detailID : detailID
                 };
