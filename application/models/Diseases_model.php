@@ -28,6 +28,16 @@
             return $query->result_array();
 		}
 
+        function getDiseaseAutocomplete($search){
+            $this->db->select('diseaseName');
+            $this->db->from('tbl_cyberits_m_diseases d');
+            $this->db->like('d.diseaseName', $search);
+
+            $this->db->limit(10);
+            $query = $this->db->get();
+            return $query->result_array();
+        }
+
 		function getDiagnosisResult($arraySymptomp){
 			$sql_string="SELECT d.diseaseID, d.diseaseName, d.TotalWeigth, SUM(z.weight) as Weight, CAST(SUM(z.weight) AS DECIMAL)/CAST(d.TotalWeigth AS DECIMAL)*100 AS Percentage FROM 
 						(SELECT a.diseaseID, a.diseaseName , SUM(b.weight) as TotalWeigth

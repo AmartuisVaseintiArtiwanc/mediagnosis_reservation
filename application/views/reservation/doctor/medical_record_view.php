@@ -14,9 +14,13 @@
     <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/font-awesome/css/font-awesome.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
 
+    <!--Autocomplete-->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/easyAutocomplete-1.3.5/easy-autocomplete.min.css">
+
     <!--Select2-->
     <script src="<?php echo base_url();?>assets/plugins/jQuery/jQuery-2.2.0.min.js"></script>
     <script src="<?php echo base_url();?>assets/plugins/autosize/autosize.min.js"></script>
+    <script src="<?php echo base_url();?>assets/plugins/easyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
 
 </head>
 <style>
@@ -40,12 +44,6 @@
         padding-top: 24px;
         padding-bottom: 24px;
     }
-    .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
-    .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-    .autocomplete-selected { background: #F0F0F0; }
-    .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
-    .autocomplete-group { padding: 2px 5px; }
-    .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
 </style>
 <body>
 <div class="headline">
@@ -151,7 +149,7 @@
                                           data-input-value="#main-condition-value"
                                             data-input-element="#main-condition-text"
                                             data-ul="#main-condition-ul"
-                                            class="w3-closebtn w3-margin-right w3-medium">x</span>
+                                            class="w3-closebtn w3-margin-right w3-medium"><i class="fa fa-pencil"></i></span>
                                 </li>
                             </ul>
                         </p>
@@ -165,7 +163,7 @@
 
                     <form class="w3-container">
                         <p>
-                            <textarea class="w3-input"></textarea>
+                            <textarea class="w3-input" id="condition-date-text"></textarea>
                         </p>
                     </form>
                 </div>
@@ -175,16 +173,13 @@
                     <div class="w3-container w3-green">
                         <h4 class="w3-left">KELUHAN TAMBAHAN</h4>
                     </div>
-                    <form class="w3-container">
-                        <p>
-                            <ul class="w3-ul w3-card-4" id="additional-condition-ul">
-                                <li class="w3-padding-8">
-                                    <span onclick="this.parentElement.style.display='none'"
-                                          class="w3-closebtn w3-large w3-margin-right">x</span>
-                                    <span class="w3-large"><textarea class="w3-input add-codition-li-text"></textarea></span><br>
-                                </li>
-                            </ul>
-                        </p>
+                    <form class="w3-container w3-margin-top">
+                        <ul class="w3-ul w3-card-4 w3-ul-list" id="additional-condition-ul">
+                            <li class="w3-padding-8">
+                                <span class="w3-closebtn w3-closebtn-list w3-large w3-margin-right">x</span><br/>
+                                <div class="w3-medium w3-padding-medium"><textarea class="w3-input add-codition-li-text"></textarea></div>
+                            </li>
+                        </ul>
                         <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin"
                                 id="btn-add-additional-condition">+ TAMBAH BARU</button>
                     </form>
@@ -233,14 +228,22 @@
                         <h4 class="w3-left">PEMERIKSAAN PENUNJANG</h4>
                     </div>
                     <form class="w3-container w3-margin-top">
-                        <div class="w3-row-padding">
-                            <div class="w3-half">
-                                <input class="w3-input w3-border" type="text" placeholder="One">
-                            </div>
-                            <div class="w3-half">
-                                <input class="w3-input w3-border" type="text" placeholder="Two">
-                            </div>
-                        </div>
+
+                        <ul class="w3-ul w3-ul-list w3-card-4" id="support-examination-ul">
+                            <li class="w3-padding-small">
+                                <span class="w3-closebtn w3-closebtn-list w3-large w3-margin-right">x</span><br/>
+                                <span class="w3-clear"></span>
+                                <div class="w3-row">
+                                    <div class="w3-col m6 w3-padding-small">
+                                        <textarea class="w3-input w3-border support-examination-column"></textarea>
+                                    </div>
+                                    <div class="w3-col m6 w3-padding-small">
+                                        <textarea class="w3-input w3-border support-examination-value"></textarea>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+
                         <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin"
                                 id="btn-add-support-examination">+ TAMBAH BARU</button>
                         <br/>
@@ -262,6 +265,7 @@
             </div>
         </div>
         <div class="content w3-row">
+            <!--WORKING DIAGNOSE-->
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
@@ -296,11 +300,11 @@
                     </div>
                     <p></p>
                     <form class="w3-container">
-                        <ul class="w3-ul w3-card-4" id="support-diagnose-ul">
+                        <ul class="w3-ul w3-ul-list w3-card-4" id="support-diagnose-ul">
                             <li class="w3-padding-8">
                                     <span onclick="this.parentElement.style.display='none'"
-                                          class="w3-closebtn w3-large w3-margin-right">x</span>
-                                <span class="w3-large"><textarea class="w3-input support-diagnose-li-text"></textarea></span><br>
+                                          class="w3-closebtn w3-large w3-margin-right w3-closebtn-list">x</span><br>
+                                <div class="w3-medium w3-padding-medium"><textarea class="w3-input support-diagnose-li-text"></textarea></div>
                             </li>
                         </ul>
                         <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin"
@@ -332,14 +336,14 @@
                     </div>
                     <p></p>
                     <form class="w3-container">
-                        <ul class="w3-ul w3-card-4" id="medication-ul">
+                        <ul class="w3-ul w3-ul-list w3-card-4" id="medication-ul">
                             <li class="w3-padding-8">
                                     <span onclick="this.parentElement.style.display='none'"
-                                          class="w3-closebtn w3-large w3-margin-right">x</span>
-                                <span class="w3-large"><textarea class="w3-input medication-li-text"></textarea></span><br>
+                                          class="w3-closebtn w3-large w3-margin-right">x</span><br>
+                                <div class="w3-medium w3-padding-medium"><textarea class="w3-input medication-li-text"></textarea></div>
                             </li>
                         </ul>
-                       <button class="w3-btn w3-round-xxlarge w3-left w3-red w3-margin" id="btn-add-medication">+ TAMBAH BARU</button>
+                       <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin" id="btn-add-medication">+ TAMBAH BARU</button>
                         <br/>
                     </form>
                 </div>
@@ -359,132 +363,14 @@
                     </form>
                 </div>
             </div>
-
-            <div class="w3-center">
-                <button class="w3-btn w3-green" id="button-save">SIMPAN</button>
-            </div>
-
-            <div class="autocomplete-suggestions">
-                <div class="autocomplete-group"><strong>NHL</strong></div>
-                <div class="autocomplete-suggestion autocomplete-selected">...</div>
-                <div class="autocomplete-suggestion">...</div>
-                <div class="autocomplete-suggestion">...</div>
-            </div>
+            <input type="hidden" id="base-url" value="<?php echo site_url();?>"/>
+        </div>
+        <div class="w3-center">
+            <button class="w3-btn w3-green" id="button-save">SIMPAN</button>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
-    // Example:
-    $(document).ready(function(){
-        //Auto fit Textarea
-        autosize($('textarea'));
-
-        $("#main-condition-text").bind("keypress", {}, keypressInBox);
-        $("#working-diagnose-text").bind("keypress", {}, keypressInBox);
-        function keypressInBox(e) {
-            var code = (e.keyCode ? e.keyCode : e.which);
-            if (code == 13) { //Enter keycode
-                e.preventDefault();
-                var $parent = $(this).parent();
-                var $value = $(this).val();
-                var $ul = $(this).attr("data-ul");
-                var $li = $(this).attr("data-li");
-
-                $(this).addClass("w3-hide");
-                $($ul).removeClass("w3-hide");
-                $($li).html($value);
-            }
-        };
-
-        $(".w3-closebtn").click(function(){
-            var $element = $(this).attr("data-input-element");
-            var $value = $(this).attr("data-input-value");
-            var $ul = $(this).attr("data-ul");
-
-            $($ul).addClass("w3-hide");
-            $($element).removeClass("w3-hide");
-            $($value).attr("data-value",0);
-        });
-
-
-        //ADD NEW ADDITIONAL CONDITION
-        $("#btn-add-additional-condition").click(function(e){
-            e.preventDefault();
-
-            var $ul = $("#additional-condition-ul");
-            var $li = $("<li>", {class: "w3-padding-8", "data-value": "0"});
-            var $close_btn = $("<span>", {class: "w3-closebtn w3-large w3-margin-right"}).text("x");
-            var $container = $("<span>", {class: "w3-large"});
-            var $textarea = $("<textarea>", {class: "w3-input add-codition-li-text"});
-            var $br = $("<br>");
-
-            $textarea.bind("keypress", {}, keypressInBoxList);
-            $textarea.appendTo($container);
-            $close_btn.appendTo($li);
-            $container.appendTo($li);
-            $br.appendTo($li);
-            $li.appendTo($ul)
-        });
-
-        // ADD NEW SUPPORT TEST
-        $("#btn-add-support-diagnose").click(function(e){
-            e.preventDefault();
-
-            var $ul = $("#support-diagnose-ul");
-            var $li = $("<li>", {class: "w3-padding-8", "data-value": "0"});
-            var $close_btn = $("<span>", {class: "w3-closebtn w3-large w3-margin-right"}).text("x");
-            var $container = $("<span>", {class: "w3-large"});
-            var $textarea = $("<textarea>", {class: "w3-input support-diagnose-li-text"});
-            var $br = $("<br>");
-
-            $textarea.bind("keypress", {}, keypressInBoxList);
-            $textarea.appendTo($container);
-            $close_btn.appendTo($li);
-            $container.appendTo($li);
-            $br.appendTo($li);
-            $li.appendTo($ul)
-        });
-
-        // ADD NEW MEDICATION
-        $("#btn-add-medication").click(function(e){
-            e.preventDefault();
-
-            var $ul = $("#medication-ul");
-            var $li = $("<li>", {class: "w3-padding-8", "data-value": "0"});
-            var $close_btn = $("<span>", {class: "w3-closebtn w3-large w3-margin-right"}).text("x");
-            var $container = $("<span>", {class: "w3-large"});
-            var $textarea = $("<textarea>", {class: "w3-input medication-li-text"});
-            var $br = $("<br>");
-
-            $textarea.bind("keypress", {}, keypressInBoxList);
-            $textarea.appendTo($container);
-            $close_btn.appendTo($li);
-            $container.appendTo($li);
-            $br.appendTo($li);
-            $li.appendTo($ul)
-        });
-
-
-        $("textarea.add-codition-li-text").bind("keypress", {}, keypressInBoxList);
-        $("textarea.support-diagnose-li-text").bind("keypress", {}, keypressInBoxList);
-        $("textarea.medication-li-text").bind("keypress", {}, keypressInBoxList);
-
-        function keypressInBoxList(e) {
-            var code = (e.keyCode ? e.keyCode : e.which);
-            if (code == 13) { //Enter keycode
-                e.preventDefault();
-                var $parent = $(this).parent();
-                var $value = $(this).val();
-
-                $($parent).html($value);
-            }
-        };
-
-        $("#btn-add-support-examination").click(function(e){
-            e.preventDefault();
-        });
-    });
-</script>
+<script src="<?php echo base_url();?>assets/custom/medical_record.js"></script>
 </body>
 </html>
