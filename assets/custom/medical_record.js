@@ -1,6 +1,7 @@
 
 $(document).ready(function(){
     var $base_url =  $("#base-url").val();
+    var $medical_record_data = new Array();
     autosize($('textarea'));
 
     // CLOSE BUTTON ON INPUT TEXT AREA
@@ -395,6 +396,191 @@ $(document).ready(function(){
         };
         $(".support-examination-column").easyAutocomplete(options6);
     }
+
+    function getData(){
+
+        var $main_condition = $("#main-condition-text").val();
+        var $working_diagnose = $("#working-diagnose-text").val();
+        var $condition_date = $("#condition-date-text").val();
+        var $rujukan = $("#rujukan-text").val();
+
+        //Physical Examination
+        var $blood = $("#blood-preasure-input").val();
+        var $pulse = $("#pulse-input").val();
+        var $temperature = $("#temperature-input").val();
+        var $respiration = $("#respiration-input").val();
+        var $height = $("#height-input").val();
+        var $weight = $("#weight-input").val();
+
+        var $additionalConditionList=[];
+        var $supportDiagnoseList=[];
+        var $supportExaminationList=[];
+        var $medicationList=[];
+
+
+        //KELUHAN TAMBAHAN
+        $('#additional-condition-ul li').each(function(){
+            var $data= $(this).find("textarea.add-codition-li-text").val();
+            var detailData = {
+                value : $data
+            };
+            $additionalConditionList.push(detailData);
+        });
+
+        //DIAGNOSA PENUNJANG
+        $('#support-diagnose-ul li').each(function(){
+            var $data= $(this).find("textarea.support-diagnose-li-text").val();
+            var detailData = {
+                value : $data
+            };
+            $supportDiagnoseList.push(detailData);
+        });
+
+        //SUPPORT EXAMINATION
+        $('#support-examination-ul li').each(function(){
+            var $data1= $(this).find("textarea.support-examination-column").val();
+            var $data2= $(this).find("textarea.support-examination-value").val();
+            var detailData = {
+                column : $data1,
+                value : $data2
+            };
+            $supportExaminationList.push(detailData);
+        });
+
+        //TERAPI
+        $('#medication-ul li').each(function(){
+            var $data= $(this).find("textarea.medication-li-text").val();
+            var detailData = {
+                value : $data
+            };
+            $medicationList.push(detailData);
+        });
+
+        var md_data = new Object();
+        md_data.main_condition = $main_condition;
+        md_data.additional_condition = $additionalConditionList;
+        md_data.condition_date = $condition_date;
+
+        md_data.blood = $blood;
+        md_data.pulse = $pulse;
+        md_data.respiration = $respiration;
+        md_data.temperature = $temperature;
+        md_data.height = $height;
+        md_data.weight = $weight;
+
+        md_data.support_examination = $supportExaminationList;
+        md_data.working_diagnose = $working_diagnose;
+        md_data.support_diagnose = $supportDiagnoseList;
+        md_data.medicationList = $medicationList;
+
+        md_data.rujukan = $rujukan;
+
+        $medical_record_data.push(md_data);
+
+        alert(JSON.stringify($medical_record_data));
+
+    }
+
+    function validateInput(){
+        var err = 0;
+
+        // MAIN CONDITION / KELUHAN UTAMA
+        if (!$("#main-condition-text").validateRequired({errMsg:"Harap diisi"})) {
+            err++;
+        }
+
+        // CONDITION DATE / MULAI SEJAK
+        if(!$("#condition-date-text").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+
+        // WORKING DIAGNOSE / DIAGNOSA KERJA
+        if(!$("#working-diagnose-text").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+
+        // PHYSICAL EXAMINATION
+        if(!$("#blood-preasure-input").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+        if(!$("#pulse-input").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+        if(!$("#temperature-input").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+        if(!$("#respiration-input").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+        if(!$("#height-input").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+        if(!$("#weight-input").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+        }
+
+        if ($('#additional-condition-ul li').length == 0){
+           $("#add-condition-err-msg").html("");
+        }
+        if ($('#support-diagnose-ul li').length == 0){
+            $("#support-diagnose-err-msg").html("");
+        }
+        if ($('#support-examination-ul li').length == 0){
+            $("#support-examination-err-msg").html("");
+        }
+        if ($('#medication-ul li').length == 0){
+            $("#medication-err-msg").html("");
+        }
+
+        //KELUHAN TAMBAHAN
+        $('#additional-condition-ul li').each(function(){
+            var $element= $(this).find("textarea.add-codition-li-text");
+            if(!$element.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+            }
+        });
+
+        //DIAGNOSA PENUNJANG
+        $('#support-diagnose-ul li').each(function(){
+            var $element= $(this).find("textarea.support-diagnose-li-text");
+            if(!$element.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+            }
+        });
+
+        //PEMERIKSAAN PENUNJANG
+        $('#support-examination-ul li').each(function(){
+            var $element1= $(this).find("textarea.support-examination-column");
+            var $element2= $(this).find("textarea.support-examination-value");
+
+            if(!$element1.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+            }
+            if(!$element2.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+            }
+        });
+
+        //TERAPI
+        $('#medication-ul li').each(function(){
+            var $element= $(this).find("textarea.medication-li-text");
+            if(!$element.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+            }
+        });
+
+        if (err != 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    $("#btn-save-medical-record").click(function(e){
+        if(validateInput()){
+            getData();
+        }
+    });
 
 
 });/**
