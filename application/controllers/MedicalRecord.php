@@ -20,16 +20,10 @@ class MedicalRecord extends CI_Controller {
 
     function index(){
         $role = $this->session->userdata('role');
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
-            $data['main_content'] = 'reservation/doctor/home_view';
-            $this->load->view('template/template', $data);
-        }else if($this->authentication->isAuthorizeDoctor($role)){
+        if($this->authentication->isAuthorizeDoctor($role)){
 
             $userID =  $this->session->userdata('userID');
             $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
-
-            // CREATE & CHECK RESERVATION CLINIC POLI
-            $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
 
             $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
             $data['reversation_clinic_data']  = $headerData;

@@ -18,21 +18,21 @@ class ReservationDoctor extends CI_Controller {
 
     function index(){
         $role = $this->session->userdata('role');
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
-            $data['main_content'] = 'reservation/doctor/home_view';
-            $this->load->view('template/template', $data);
-        }else if($this->authentication->isAuthorizeDoctor($role)){
-
+        if($this->authentication->isAuthorizeDoctor($role)){
             $userID =  $this->session->userdata('userID');
             $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
 
-            // CREATE & CHECK RESERVATION CLINIC POLI
-            $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
-
-            $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
-            $data['reversation_clinic_data']  = $headerData;
-            $data['main_content'] = 'reservation/doctor/home_view';
-            $this->load->view('template/template', $data);
+            $check_reservation = $this->test_model->checkUnfinishReservation($doctor_data->doctorID);
+            if(isset($check_reservation->detailReservationID)){
+                $this->goToMedicalRecord($check_reservation->detailReservationID);
+            }else{
+                // CREATE & CHECK RESERVATION CLINIC POLI
+                $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
+                $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
+                $data['reversation_clinic_data']  = $headerData;
+                $data['main_content'] = 'reservation/doctor/home_view';
+                $this->load->view('template/template', $data);
+            }
         }
     }
 
@@ -99,7 +99,7 @@ class ReservationDoctor extends CI_Controller {
             $checkReservation = $this->test_model->checkReservationDetail($detailID);
             if($checkReservation){
                 $doctor = $this->doctor_model->getDoctorByUserID($this->session->userdata('userID'));
-                $detail_data = $this->test_model->getReservationDetailByID($detailID);
+                $detail_data = $this->test_model->getReservationDetailWaitingByID($detailID);
 
                 //UPDATE CURRENT QUEUE
                 $data_header=array(
@@ -147,8 +147,10 @@ class ReservationDoctor extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
-    function goToMedicalRecord(){
-        $this->load->view('reservation/doctor/medical_record_view');
+    function goToMedicalRecord($detailReservation){
+        $detail_data = $this->test_model->getReservationDetailByIDStatus($detailReservation, 'confirm');
+        $data['reversation_data']  = $detail_data;
+        $this->load->view('reservation/doctor/medical_record_view', $data);
     }
 
     function is_logged_in(){

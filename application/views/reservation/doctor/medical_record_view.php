@@ -43,7 +43,7 @@
         width: 35%;
         min-width: 250px;
     }
-    #button-save{
+    #btn-save-medical-record,#btn-cancel-medical-record{
         margin-top: 32px;
         padding-left: 128px;
         padding-right: 128px;
@@ -475,6 +475,7 @@
             <input type="hidden" id="base-url" value="<?php echo site_url();?>"/>
         </div>
         <div class="w3-center">
+            <button class="w3-btn w3-red" id="btn-cancel-medical-record">BATAL</button>
             <button class="w3-btn w3-green" id="btn-save-medical-record">SIMPAN</button>
         </div>
     </div>
