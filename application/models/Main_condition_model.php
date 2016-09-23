@@ -13,9 +13,18 @@ class Main_condition_model extends CI_Model {
         return $query->result_array();
     }
 
-    function createPoli($data){
-        $this->db->insert('tbl_cyberits_m_poli',$data);
-        $result=$this->db->affected_rows();
+    function checkMainCondition($search_name){
+        $this->db->select('mainConditionID as id');
+        $this->db->from('tbl_cyberits_m_main_condition a');
+        $this->db->where('a.mainConditionText', $search_name);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function createMainCondition($data){
+        $this->db->insert('tbl_cyberits_m_main_condition',$data);
+        $result=$this->db->insert_id();
         return $result;
     }
 

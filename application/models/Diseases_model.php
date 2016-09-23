@@ -38,6 +38,21 @@
             return $query->result_array();
         }
 
+        function checkDisease($search_name){
+            $this->db->select('diseaseID as id');
+            $this->db->from('tbl_cyberits_m_diseases a');
+            $this->db->where('a.diseaseName', $search_name);
+
+            $query = $this->db->get();
+            return $query->row();
+        }
+
+        function createDisease($data){
+            $this->db->insert('tbl_cyberits_m_diseases',$data);
+            $result=$this->db->insert_id();
+            return $result;
+        }
+
 		function getDiagnosisResult($arraySymptomp){
 			$sql_string="SELECT d.diseaseID, d.diseaseName, d.TotalWeigth, SUM(z.weight) as Weight, CAST(SUM(z.weight) AS DECIMAL)/CAST(d.TotalWeigth AS DECIMAL)*100 AS Percentage FROM 
 						(SELECT a.diseaseID, a.diseaseName , SUM(b.weight) as TotalWeigth

@@ -1,7 +1,6 @@
 
 $(document).ready(function(){
     var $base_url =  $("#base-url").val();
-    var $medical_record_data = new Array();
     autosize($('textarea'));
 
     // CLOSE BUTTON ON INPUT TEXT AREA
@@ -398,14 +397,15 @@ $(document).ready(function(){
     }
 
     function getData(){
-
+        var $medical_record_data = new Array();
         var $main_condition = $("#main-condition-text").val();
         var $working_diagnose = $("#working-diagnose-text").val();
         var $condition_date = $("#condition-date-text").val();
         var $rujukan = $("#rujukan-text").val();
 
         //Physical Examination
-        var $blood = $("#blood-preasure-input").val();
+        var $blood_low = $("#blood-preasure-low-input").val();
+        var $blood_high = $("#blood-preasure-high-input").val();
         var $pulse = $("#pulse-input").val();
         var $temperature = $("#temperature-input").val();
         var $respiration = $("#respiration-input").val();
@@ -457,11 +457,14 @@ $(document).ready(function(){
         });
 
         var md_data = new Object();
+        md_data.detail_reservation = 1;
+        md_data.patient = 1;
         md_data.main_condition = $main_condition;
         md_data.additional_condition = $additionalConditionList;
         md_data.condition_date = $condition_date;
 
-        md_data.blood = $blood;
+        md_data.blood_low = $blood_low;
+        md_data.blood_high = $blood_high;
         md_data.pulse = $pulse;
         md_data.respiration = $respiration;
         md_data.temperature = $temperature;
@@ -471,13 +474,14 @@ $(document).ready(function(){
         md_data.support_examination = $supportExaminationList;
         md_data.working_diagnose = $working_diagnose;
         md_data.support_diagnose = $supportDiagnoseList;
-        md_data.medicationList = $medicationList;
+        md_data.medication = $medicationList;
 
         md_data.rujukan = $rujukan;
 
         $medical_record_data.push(md_data);
 
-        alert(JSON.stringify($medical_record_data));
+        return $medical_record_data;
+        //alert(JSON.stringify($medical_record_data));
 
     }
 
@@ -500,7 +504,8 @@ $(document).ready(function(){
         }
 
         // PHYSICAL EXAMINATION
-        if(!$("#blood-preasure-input").validateRequired({errMsg:"Harap diisi"})){
+        if(!$("#blood-preasure-low-input").validateRequired({errMsg:"Harap diisi"}) ||
+            !$("#blood-preasure-high-input").validateRequired({errMsg:"Harap diisi"}) ){
             err++;
         }
         if(!$("#pulse-input").validateRequired({errMsg:"Harap diisi"})){
@@ -519,21 +524,21 @@ $(document).ready(function(){
             err++;
         }
 
-        if ($('#additional-condition-ul li').length == 0){
+        if ($('#additional-condition-ul>li').length == 0){
            $("#add-condition-err-msg").html("");
         }
-        if ($('#support-diagnose-ul li').length == 0){
+        if ($('#support-diagnose-ul>li').length == 0){
             $("#support-diagnose-err-msg").html("");
         }
-        if ($('#support-examination-ul li').length == 0){
+        if ($('#support-examination-ul>li').length == 0){
             $("#support-examination-err-msg").html("");
         }
-        if ($('#medication-ul li').length == 0){
+        if ($('#medication-ul>li').length == 0){
             $("#medication-err-msg").html("");
         }
 
         //KELUHAN TAMBAHAN
-        $('#additional-condition-ul li').each(function(){
+        $('#additional-condition-ul>li').each(function(){
             var $element= $(this).find("textarea.add-codition-li-text");
             if(!$element.validateRequired({errMsg:"Harap diisi"})){
                 err++;
@@ -541,7 +546,7 @@ $(document).ready(function(){
         });
 
         //DIAGNOSA PENUNJANG
-        $('#support-diagnose-ul li').each(function(){
+        $('#support-diagnose-ul>li').each(function(){
             var $element= $(this).find("textarea.support-diagnose-li-text");
             if(!$element.validateRequired({errMsg:"Harap diisi"})){
                 err++;
@@ -549,7 +554,7 @@ $(document).ready(function(){
         });
 
         //PEMERIKSAAN PENUNJANG
-        $('#support-examination-ul li').each(function(){
+        $('#support-examination-ul>li').each(function(){
             var $element1= $(this).find("textarea.support-examination-column");
             var $element2= $(this).find("textarea.support-examination-value");
 
@@ -562,7 +567,7 @@ $(document).ready(function(){
         });
 
         //TERAPI
-        $('#medication-ul li').each(function(){
+        $('#medication-ul>li').each(function(){
             var $element= $(this).find("textarea.medication-li-text");
             if(!$element.validateRequired({errMsg:"Harap diisi"})){
                 err++;
@@ -578,7 +583,48 @@ $(document).ready(function(){
 
     $("#btn-save-medical-record").click(function(e){
         if(validateInput()){
-            getData();
+            var $medical_record_data = getData();
+            var data_post = {
+                data :$medical_record_data
+            }
+            alert(JSON.stringify(data_post));
+            $.ajax({
+                url: $base_url+"/MedicalRecord/saveMedicalRecordData",
+                data: data_post,
+                type: "POST",
+                dataType: 'json',
+                beforeSend:function(){
+                    $("#load_screen").show();
+                },
+                success:function(data){
+                    if(data.status != 'error'){
+                        swal({
+                            title: data.msg,
+                            text: 'This Page will be redirect after a few second !',
+                            type: 'success',
+                            allowOutsideClick: false,
+                            showConfirmButton:false
+                        })
+                        window.setTimeout(function () {
+                            location.href =  $base_url+"/ReservationDoctor";
+                        }, 2000);
+
+                    }else{
+                        swal(
+                            data.msg,
+                            '',
+                            'error'
+                        )
+                    }
+                    alert($data);
+                },
+                error: function(xhr, status, error) {
+                    //var err = eval("(" + xhr.responseText + ")");
+                    $("#load_screen").hide();
+                    //alertify.set('notifier','position', 'bottom-right');
+                    //alertify.error('Cannot response server !');
+                }
+            });
         }
     });
 

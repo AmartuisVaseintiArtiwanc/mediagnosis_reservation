@@ -13,9 +13,18 @@ class Support_examination_model extends CI_Model {
         return $query->result_array();
     }
 
-    function createPoli($data){
-        $this->db->insert('tbl_cyberits_m_poli',$data);
-        $result=$this->db->affected_rows();
+    function checkSupportExaminationColumn($search_name){
+        $this->db->select('supportExaminationColumnID as id');
+        $this->db->from('tbl_cyberits_m_support_examination_column a');
+        $this->db->where('a.supportExaminationColumnName', $search_name);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function createSupportExaminationColumn($data){
+        $this->db->insert('tbl_cyberits_m_support_examination_column',$data);
+        $result=$this->db->insert_id();
         return $result;
     }
 

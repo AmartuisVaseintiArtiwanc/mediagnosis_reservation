@@ -11,15 +11,21 @@
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/doctor.css">
     <!--Grid W3 System-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/grid.css">
+    <!--Font Awesome-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/font-awesome/css/font-awesome.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
-
     <!--Autocomplete-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/easyAutocomplete-1.3.5/easy-autocomplete.min.css">
+    <!--Sweet Alert-->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.css">
 
+    <!--Sweet Alert-->
+    <script src="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
     <!--Select2-->
     <script src="<?php echo base_url();?>assets/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <!--Autofit for Textarea-->
     <script src="<?php echo base_url();?>assets/plugins/autosize/autosize.min.js"></script>
+    <!--Autocomplete-->
     <script src="<?php echo base_url();?>assets/plugins/easyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
 
 </head>
@@ -43,6 +49,10 @@
         padding-right: 128px;
         padding-top: 24px;
         padding-bottom: 24px;
+    }
+    .w3-padding-lr{
+        padding-left: 12px;
+        padding-right: 12px;
     }
 </style>
 <body>
@@ -238,27 +248,72 @@
                     <form class="w3-container">
                         <p>
                             <label class="w3-label">Tekenan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
-                            <input class="w3-input" id="blood-preasure-input" data-label="#blood-preasure-err-msg" type="text">
-                        </p>
-                        <p>
-                            <label class="w3-label">Denyut Nadi</label> <span class="w3-tag w3-red" id="pulse-err-msg"></span>
-                            <input class="w3-input" id="pulse-input" data-label="#pulse-err-msg" type="text">
-                        </p>
-                        <p>
-                            <label class="w3-label">Suhu Tubuh</label> <span class="w3-tag w3-red" id="temperature-err-msg"></span>
-                            <input class="w3-input" id="temperature-input" data-label="#temperature-err-msg" type="text">
+                            <div class="w3-row">
+                                <div class="w3-col m4">
+                                    <input class="w3-input" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text">
+                                </div>
+                                <div class="w3-col m4 w3-padding-lr">
+                                    <input class="w3-input" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text">
+                                </div>
+                                <div class="w3-col m4">
+                                    <label class="w3-padding">mmHg</label>
+                                </div>
+                            </div>
                         </p>
                         <p>
                             <label class="w3-label">Tekanan Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
-                            <input class="w3-input" id="respiration-input" type="text" data-label="#respiration-err-msg">
+                            <div class="w3-row">
+                                <div class="w3-col m6">
+                                    <input class="w3-input" id="respiration-input" type="text" data-label="#respiration-err-msg">
+                                </div>
+                                <div class="w3-col m6">
+                                    <label class="w3-padding">x/minutes</label>
+                                </div>
+                            </div>
+                        </p>
+                        <p>
+                            <label class="w3-label">Denyut Nadi</label> <span class="w3-tag w3-red" id="pulse-err-msg"></span>
+                            <div class="w3-row">
+                                <div class="w3-col m6">
+                                    <input class="w3-input" id="pulse-input" data-label="#pulse-err-msg" type="text">
+                                </div>
+                                <div class="w3-col m6">
+                                    <label class="w3-padding">x/minutes</label>
+                                </div>
+                            </div>
+                        </p>
+                        <p>
+                            <label class="w3-label">Suhu Tubuh</label> <span class="w3-tag w3-red" id="temperature-err-msg"></span>
+                            <div class="w3-row">
+                                <div class="w3-col m6">
+                                    <input class="w3-input" id="temperature-input" data-label="#temperature-err-msg" type="text">
+                                </div>
+                                <div class="w3-col m6">
+                                    <label class="w3-padding">Celcius</label>
+                                </div>
+                            </div>
                         </p>
                         <p>
                             <label class="w3-label">Tinggi Badan</label> <span class="w3-tag w3-red" id="height-err-msg"></span>
-                            <input class="w3-input" id="height-input" data-label="#height-err-msg" type="text">
+                            <div class="w3-row">
+                                <div class="w3-col m6">
+                                    <input class="w3-input" id="height-input" data-label="#height-err-msg" type="text">
+                                </div>
+                                <div class="w3-col m6">
+                                    <label class="w3-padding">cm</label>
+                                </div>
+                            </div>
                         </p>
                         <p>
                             <label class="w3-label">Berat Badan</label> <span class="w3-tag w3-red" id="weight-err-msg"></span>
-                            <input class="w3-input" id="weight-input" data-label="#weight-err-msg" type="text">
+                            <div class="w3-row">
+                                <div class="w3-col m6">
+                                    <input class="w3-input" id="weight-input" data-label="#weight-err-msg" type="text">
+                                </div>
+                                <div class="w3-col m6">
+                                    <label class="w3-padding">Kg</label>
+                                </div>
+                            </div>
                         </p>
                     </form>
                 </div>
