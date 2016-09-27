@@ -14,6 +14,7 @@ class ReservationDoctor extends CI_Controller {
         $this->load->model('sclinic_model',"sclinic_model");
         $this->load->model('sschedule_model',"sschedule_model");
         $this->load->model('test_model',"test_model");
+        $this->load->model('patient_model',"patient_model");
     }
 
     function index(){
@@ -88,69 +89,93 @@ class ReservationDoctor extends CI_Controller {
         echo json_encode(array('status' => $status, 'output' => $output));
     }
 
+    /* Get Antrian Yang sudah di confirm andmin*/
+    function getStartQueueCurrent(){
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
+
+        $detailID = $this->security->xss_clean($this->input->post('detailReservation'));
+        $data = $this->test_model->checkReservationByDoctorDetailID($detailID,$doctor_data->doctorID);
+
+        $output = "";
+        $status = "error";
+        if(isset($data)){
+            if($data->status == "late"){
+                $status = "late";
+                $output = "Maaf pasien tidak datang, silahkan ambil pasien selanjutnya ...";
+            }else if($data->status == "confirm"){
+                $status="success";
+            }
+
+        }
+        echo json_encode(array('status' => $status, 'msg' => $output));
+    }
+
     function saveCurrentQueue(){
 
         $datetime = date('Y-m-d H:i:s', time());
-        $status_rev = $this->security->xss_clean($this->input->post('status'));
         $headerID = $this->security->xss_clean($this->input->post('headerID'));
         $detailID = $this->security->xss_clean($this->input->post('detailID'));
 
-        if($status_rev =='check'){
-            $checkReservation = $this->test_model->checkReservationDetail($detailID);
-            if($checkReservation){
-                $doctor = $this->doctor_model->getDoctorByUserID($this->session->userdata('userID'));
-                $detail_data = $this->test_model->getReservationDetailWaitingByID($detailID);
+        $checkReservation = $this->test_model->checkReservationDetail($detailID);
+        if($checkReservation){
+            $doctor = $this->doctor_model->getDoctorByUserID($this->session->userdata('userID'));
+            $detail_data = $this->test_model->getReservationDetailByIDStatus($detailID,"waiting");
 
-                //UPDATE CURRENT QUEUE
-                $data_header=array(
-                    'currentQueue'=>$detail_data->noQueue,
-                    "lastUpdated"=>$datetime,
-                    "lastUpdatedBy"=>$this->session->userdata('userID')
-                );
-                $query_header = $this->test_model->updateReservationHeader($data_header,$headerID);
+            //UPDATE HEADER CURRENT QUEUE
+            $data_header=array(
+                'currentQueue'=>$detail_data->noQueue,
+                "lastUpdated"=>$datetime,
+                "lastUpdatedBy"=>$this->session->userdata('userID')
+            );
+            $query_header = $this->test_model->updateReservationHeader($data_header,$headerID);
 
-                //UPDATE DATA DETAIL
-                $data=array(
-                    'doctorID'=>$doctor->doctorID,
-                    'status'=>'check',
-                    "lastUpdated"=>$datetime,
-                    "lastUpdatedBy"=>$this->session->userdata('userID')
-                );
+            //UPDATE RESERVATION DETAIL
+            $data=array(
+                'doctorID'=>$doctor->doctorID,
+                'status'=>'check',
+                "lastUpdated"=>$datetime,
+                "lastUpdatedBy"=>$this->session->userdata('userID')
+            );
 
-                $this->db->trans_begin();
-                $query_detail = $this->test_model->updateReservationDetail($data,$detailID);
+            $this->db->trans_begin();
+            $query_detail = $this->test_model->updateReservationDetail($data,$detailID);
 
-                if ($this->db->trans_status() === FALSE) {
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Cannot save to Database !";
+            } else {
+                if ($query_detail && $query_header) {
+                    $this->db->trans_commit();
+                    $status = "success";
+                    $msg = "Save data successfully !";
+                } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Cannot save to Database !";
-                } else {
-                    if ($query_detail && $query_header) {
-                        $this->db->trans_commit();
-                        $status = "success";
-                        $msg = "Save data successfully !";
-                    } else {
-                        $this->db->trans_rollback();
-                        $status = "error";
-                        $msg = "Failed to save data !";
-                    }
+                    $msg = "Failed to save data !";
                 }
-            }else{
-                $status = "taken";
-                $msg = "This Patient has been taken by Other Doctor!";
             }
         }else{
             $status = "taken";
-            $msg = "";
+            $msg = "This Patient has been taken by Other Doctor!";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
     function goToMedicalRecord($detailReservation){
-        $detail_data = $this->test_model->getReservationDetailByIDStatus($detailReservation, 'confirm');
-        $data['reversation_data']  = $detail_data;
-        $this->load->view('reservation/doctor/medical_record_view', $data);
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
+        $check_medical_record = $this->test_model->getReservationDetailDoctor($detailReservation,$doctor_data->doctorID,'confirm');
+
+        if(isset($check_medical_record)){
+            $data['patient_data']  = $this->patient_model->getPatientByID($check_medical_record->patientID);
+            $this->load->view('reservation/doctor/medical_record_view', $data);
+        }else{
+            $index = site_url("ReservationDoctor");
+            redirect($index, 'refresh');
+        }
     }
 
     function is_logged_in(){

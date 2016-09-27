@@ -8,6 +8,8 @@ class MedicalRecord extends CI_Controller {
         $this->load->library("pagination");
         $this->load->library("authentication");
         $this->is_logged_in();
+        $this->load->model('Doctor_model',"doctor_model");
+        $this->load->model('Test_model',"test_model");
         $this->load->model('Main_condition_model',"main_condition_model");
         $this->load->model('Additional_condition_model',"additional_condition_model");
         $this->load->model('Diseases_model',"diseases_model");

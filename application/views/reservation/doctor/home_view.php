@@ -187,6 +187,50 @@
         }
         setInterval(getCurrentQueue, 1000);
 
+        setInterval(startMedicalRecord, 1000);
+        function startMedicalRecord(){
+            var $base_url = "<?php echo site_url();?>/";
+            var $currQueue = $("#current-queue-box").attr("data-queue");
+            var $detail_reservation = $("#detail-reservation-value").val();
+            if($currQueue == 2) {
+                $.ajax({
+                    url: $base_url+"reservationDoctor/getStartQueueCurrent",
+                    data: {detailReservation : $detail_reservation},
+                    type: "POST",
+                    dataType: 'json',
+                    cache:false,
+                    beforeSend:function(){
+                        //SHOW LOADING SCREEN
+                        $(".loading-screen-queue").removeClass("hide");
+                        $(".loading-screen-queue").show();
+                    },
+                    success:function(data){
+                        if(data.status == "success"){
+                            //redirect to medical record
+                            location.href = $base_url+"reservationDoctor/goToMedicalRecord/"+$detail_reservation;
+                        }else if(data.status == "late"){
+                            alertify.error(data.msg);
+                            $(".loading-screen-queue").hide();
+                            //SET COUNTER QUEUE
+                            $("#current-queue-box").attr("data-queue",0);
+                            //REMOVE BOX
+                            $("#current-queue-box").children(".small-box").html("");
+                            $("#button-confirm-queue").hide();
+                        }else if(data.status == "error"){
+                            //alertify.error(data.msg);
+                            $(".loading-screen-queue").hide();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        //var err = eval("(" + xhr.responseText + ")");
+                        //alertify.error(xhr.responseText);
+                        //HIDE LOADING SCREEN
+                        $(".loading-screen-queue").hide();
+                    }
+                });
+            }
+        }
+
         function renderQueueBox(q_number,poli_name,patient_name){
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
@@ -227,14 +271,12 @@
             if($value=="confirm"){
                 $msg="Pasien Ada ?";
                 $data = {
-                    status : "check",
                     headerID : $reservation,
                     detailID : detailID
                 };
             }else if($value=="reject"){
                 $msg="Pasien Tidak Ada ?";
                 $data = {
-                    status : "uncheck",
                     headerID : $reservation,
                     detailID : detailID
                 };
@@ -256,8 +298,8 @@
                         success:function(data){
                             if(data.status == "success"){
                                 alertify.success(data.msg);
-                                //SET COUNTER QUEUE
-                                $("#current-queue-box").attr("data-queue",0);
+                                //SET COUNTER QUEUE to 2 (CHECK ADMIN CONFIRMATION)
+                                $("#current-queue-box").attr("data-queue",2);
                                 //HIDE LOADING SCREEN
                                 $(".loading-screen-queue").hide();
 

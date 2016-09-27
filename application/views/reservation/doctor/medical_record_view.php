@@ -120,30 +120,30 @@
                 </div>
             </div>
             <div class="w3-col m6">
-                <table id="identity-table">
+                <table class="w3-table-all w3-hoverable" id="identity-table">
                     <tr>
                         <td>No. Kartu BPJS</td>
-                        <td>001218236139</td>
+                        <td><?php echo $patient_data->bpjsID;?></td>
                     </tr>
                     <tr>
                         <td>NO KTP</td>
-                        <td>151820100183018</td>
+                        <td><?php echo $patient_data->ktpID;?></td>
                     </tr>
                     <tr>
                         <td>Name</td>
-                        <td>SATRIA WS</td>
+                        <td><?php echo $patient_data->patientName;?></td>
                     </tr>
                     <tr>
                         <td>Tempat, Tanngal Lahir</td>
-                        <td>Jakarta, 1 January 1992</td>
+                        <td><?php echo $patient_data->dob;?></td>
                     </tr>
                     <tr>
                         <td>Perusahaan</td>
-                        <td>Jl. Kebon Jeruk Raya No. 27, Kebon Jeruk, Kb. Jeruk, Jakarta Barat, Daerah Khusus Ibukota Jakarta 11530</td>
+                        <td><?php echo $patient_data->address;?></td>
                     </tr>
                     <tr>
                         <td>Telepon</td>
-                        <td>088828292820820</td>
+                        <td><?php echo $patient_data->phoneNumber;?></td>
                     </tr>
                     <tr>
                         <td>Email</td>
@@ -235,6 +235,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-bottombar w3-border-blue w3-margin-right">
                     <h4>OBJEKTIF</h4>
