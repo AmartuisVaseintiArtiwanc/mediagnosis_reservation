@@ -165,6 +165,15 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
+    function checkWaitingConfirmReservation($doctorID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->where("a.doctorID",$doctorID);
+        $this->db->where("a.status",'check');
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     function checkReservationByDoctorDetailID($detailID,$doctorID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_detail_reservation a');

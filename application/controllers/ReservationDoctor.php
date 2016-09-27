@@ -27,12 +27,22 @@ class ReservationDoctor extends CI_Controller {
             if(isset($check_reservation->detailReservationID)){
                 $this->goToMedicalRecord($check_reservation->detailReservationID);
             }else{
+                $check_reservation = $this->test_model->checkWaitingConfirmReservation($doctor_data->doctorID);
+                if(isset($check_reservation->detailReservationID)){
+                    $status = "waiting";
+                    $data['detailID']  = $check_reservation->detailReservationID;
+                }else{
+                    $status = "clear";
+                }
                 // CREATE & CHECK RESERVATION CLINIC POLI
                 $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
                 $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
                 $data['reversation_clinic_data']  = $headerData;
-                $data['main_content'] = 'reservation/doctor/home_view';
-                $this->load->view('template/template', $data);
+                $data['doctor_data']  = $doctor_data;
+                $data['status']  = $status;
+
+                //$data['main_content'] = 'reservation/doctor/home_view';
+                $this->load->view('reservation/doctor/reservation_doctor_view', $data);
             }
         }
     }

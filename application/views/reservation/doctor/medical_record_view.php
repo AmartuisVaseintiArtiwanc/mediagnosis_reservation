@@ -56,18 +56,6 @@
     }
 </style>
 <body>
-<div class="headline">
-
-    <h6></h6>
-
-    <h1>
-        Sample Page by Designscrazed.com
-        <h6></h6>
-    </h1>
-    <h2>Author: DavieB</h2>
-
-</div>
-
 <!--  Start here -->
 
 <body>
