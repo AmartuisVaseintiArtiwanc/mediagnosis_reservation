@@ -171,6 +171,7 @@
         $("#waiting-queue-container").hide();
 
         var $check_status = $("#reservation-status").val();
+
         if($check_status=='waiting'){
             $("#detail-reservation-value").val("<?php echo $detailID;?>");
             //SET COUNTER QUEUE

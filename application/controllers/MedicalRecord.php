@@ -9,6 +9,7 @@ class MedicalRecord extends CI_Controller {
         $this->load->library("authentication");
         $this->is_logged_in();
         $this->load->model('Doctor_model',"doctor_model");
+        $this->load->model('Patient_model',"patient_model");
         $this->load->model('Test_model',"test_model");
         $this->load->model('Main_condition_model',"main_condition_model");
         $this->load->model('Additional_condition_model',"additional_condition_model");
@@ -76,11 +77,30 @@ class MedicalRecord extends CI_Controller {
         $detail_reservation = $data[0]['detail_reservation'];
         $patient = $data[0]['patient'];
 
-        //TRANSACTION
         $this->db->trans_begin();
+        //GET PATIENT DATA
+        $patient_data = $this->patient_model->getPatientByID($patient);
+        // SAVE PATIENT DATA
+        $profile_patient_data=array(
+            'patientID'=>$patient,
+            'ktpID'=>$patient_data->ktpID,
+            'bpjsID'=>$patient_data->bpjsID,
+            'phoneNumber'=>$patient_data->phoneNumber,
+            'address'=>$patient_data->address,
+            'dob'=>$patient_data->dob,
+            'isActive'=>1,
+            'created'=>$datetime,
+            "createdBy" => $this->session->userdata('userID'),
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+        $save_patient_data = $this->patient_model->insertTransProfilePatient($profile_patient_data);
+
+        //TRANSACTION
         $mr_data=array(
             'detailReservationID'=>$detail_reservation,
             'patientID'=>$patient,
+            'tPatientProfileID'=>$save_patient_data,
             'isActive'=>1,
             'created'=>$datetime,
             "createdBy" => $this->session->userdata('userID'),
@@ -290,6 +310,14 @@ class MedicalRecord extends CI_Controller {
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
         $this->medical_record_detail_model->createMedicalRecordDetailPhysicalExamination($physical_examination_data);
+
+        //UPDATE RESERVATION DONE
+        $data_reservation=array(
+            'status'=>'done',
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+        $query_detail = $this->test_model->updateReservationDetail($data_reservation,$detail_reservation);
 
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();

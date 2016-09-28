@@ -397,6 +397,9 @@ $(document).ready(function(){
     }
 
     function getData(){
+        var $detail_reservation = $("#detail-reservation").val();
+        var $patient = $("#patient-id").val();
+
         var $medical_record_data = new Array();
         var $main_condition = $("#main-condition-text").val();
         var $working_diagnose = $("#working-diagnose-text").val();
@@ -457,8 +460,8 @@ $(document).ready(function(){
         });
 
         var md_data = new Object();
-        md_data.detail_reservation = 1;
-        md_data.patient = 1;
+        md_data.detail_reservation = $detail_reservation;
+        md_data.patient = $patient;
         md_data.main_condition = $main_condition;
         md_data.additional_condition = $additionalConditionList;
         md_data.condition_date = $condition_date;
@@ -587,47 +590,60 @@ $(document).ready(function(){
             var data_post = {
                 data :$medical_record_data
             }
-            alert(JSON.stringify(data_post));
-            $.ajax({
-                url: $base_url+"/MedicalRecord/saveMedicalRecordData",
-                data: data_post,
-                type: "POST",
-                dataType: 'json',
-                beforeSend:function(){
-                    $("#load_screen").show();
-                },
-                success:function(data){
-                    if(data.status != 'error'){
-                        swal({
-                            title: data.msg,
-                            text: 'This Page will be redirect after a few second !',
-                            type: 'success',
-                            allowOutsideClick: false,
-                            showConfirmButton:false
-                        })
-                        window.setTimeout(function () {
-                            location.href =  $base_url+"/ReservationDoctor";
-                        }, 2000);
 
-                    }else{
+            swal({
+                title: 'Are you sure save this data?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, save it!'
+            }).then(function() {
+                $.ajax({
+                    url: $base_url+"/MedicalRecord/saveMedicalRecordData",
+                    data: data_post,
+                    type: "POST",
+                    dataType: 'json',
+                    beforeSend:function(){
+                        $("#load_screen").show();
+                    },
+                    success:function(data){
+                        if(data.status != 'error'){
+                            swal({
+                                title: data.msg,
+                                text: 'This Page will be redirect after a few second !',
+                                type: 'success',
+                                allowOutsideClick: false,
+                                showConfirmButton:false
+                            })
+                            window.setTimeout(function () {
+                                location.href =  $base_url+"/ReservationDoctor";
+                            }, 2000);
+
+                        }else{
+                            swal(
+                                data.msg,
+                                '',
+                                'error'
+                            )
+                        }
+                        alert($data);
+                    },
+                    error: function(xhr, status, error) {
+                        //var err = eval("(" + xhr.responseText + ")");
+                        $("#load_screen").hide();
                         swal(
-                            data.msg,
+                            "Server Error ! Please Try Again",
                             '',
                             'error'
                         )
                     }
-                    alert($data);
-                },
-                error: function(xhr, status, error) {
-                    //var err = eval("(" + xhr.responseText + ")");
-                    $("#load_screen").hide();
-                    //alertify.set('notifier','position', 'bottom-right');
-                    //alertify.error('Cannot response server !');
-                }
-            });
+                });
+            })
+            //alert(JSON.stringify(data_post));
         }
     });
-
 
 });/**
  * Created by Vicky on 9/17/2016.

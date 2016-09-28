@@ -462,6 +462,8 @@
                 </div>
             </div>
             <input type="hidden" id="base-url" value="<?php echo site_url();?>"/>
+            <input type="hidden" id="detail-reservation" value="<?php echo $reservation_data->detailReservationID;?>"/>
+            <input type="hidden" id="patient-id" value="<?php echo $reservation_data->patientID;?>"/>
         </div>
         <div class="w3-center">
             <button class="w3-btn w3-red" id="btn-cancel-medical-record">BATAL</button>

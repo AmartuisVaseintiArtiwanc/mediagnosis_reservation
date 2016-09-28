@@ -33,6 +33,7 @@ class ReservationDoctor extends CI_Controller {
                     $data['detailID']  = $check_reservation->detailReservationID;
                 }else{
                     $status = "clear";
+                    $data['detailID']  = "";
                 }
                 // CREATE & CHECK RESERVATION CLINIC POLI
                 $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
@@ -43,6 +44,7 @@ class ReservationDoctor extends CI_Controller {
 
                 //$data['main_content'] = 'reservation/doctor/home_view';
                 $this->load->view('reservation/doctor/reservation_doctor_view', $data);
+                //$this->output->enable_profiler(TRUE);
             }
         }
     }
@@ -181,6 +183,7 @@ class ReservationDoctor extends CI_Controller {
 
         if(isset($check_medical_record)){
             $data['patient_data']  = $this->patient_model->getPatientByID($check_medical_record->patientID);
+            $data['reservation_data']  = $check_medical_record;
             $this->load->view('reservation/doctor/medical_record_view', $data);
         }else{
             $index = site_url("ReservationDoctor");
