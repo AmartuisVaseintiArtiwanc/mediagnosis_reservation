@@ -11,8 +11,8 @@ class SPoli extends CI_Controller {
         $this->load->model('doctor_model',"doctor_model");
 		$this->load->model('poli_model',"poli_model");
         $this->load->model('clinic_model',"clinic_model");
-		$this->load->model('spoli_model',"spoli_model");
-        $this->load->model('sschedule_model',"sschedule_model");
+		$this->load->model('sPoli_model',"spoli_model");
+        $this->load->model('sSchedule_model',"sschedule_model");
     }
     
 	function index(){

@@ -10,8 +10,8 @@ class Reservation extends CI_Controller {
         $this->is_logged_in();
         $this->load->model('clinic_model',"clinic_model");
         $this->load->model('poli_model',"poli_model");
-        $this->load->model('sclinic_model',"sclinic_model");
-        $this->load->model('sschedule_model',"sschedule_model");
+        $this->load->model('sClinic_model',"sclinic_model");
+        $this->load->model('sSchedule_model',"sschedule_model");
         $this->load->model('test_model',"test_model");
     }
 

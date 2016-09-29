@@ -12,7 +12,7 @@ class SettingSchedule extends CI_Controller
         $this->is_logged_in();
         $this->load->model('clinic_model', "clinic_model");
         $this->load->model('poli_model', "poli_model");
-        $this->load->model('sschedule_model', "sschedule_model");
+        $this->load->model('sSchedule_model', "sschedule_model");
     }
 
     function index(){
