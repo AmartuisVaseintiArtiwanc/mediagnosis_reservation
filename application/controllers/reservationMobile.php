@@ -12,6 +12,8 @@
 
 		    $this->load->model("HReservation_model");
 		    $this->load->model("DReservation_model");
+            $this->load->model("Patient_model");
+            $this->load->model('test_model',"test_model");
 		}
 
 		function doReserve(){
@@ -130,5 +132,23 @@
 			}
 
 		}
+
+        function checkTodayReservation(){
+            $userID = $this->input->post("userID");
+            $patient_data = $this->Patient_model->getPatientByUserID($userID);
+            $patientID = $patient_data->patientID;
+            $reservation = $this->test_model->getPatientCurrentQueue($patientID);
+
+            $currQueue="";
+            $totalQueue="";
+            $isQueue=false;
+            if(isset($reservation->reservationID)){
+                $currQueue = $reservation->currentQueue;
+                $totalQueue = $reservation->totalQueue;
+                $isQueue=true;
+            }
+            
+            echo json_encode(array('isQueue' => $isQueue, 'currentQueue' => $currQueue,'totalQueue'=>$totalQueue));
+        }
 	}
 ?>

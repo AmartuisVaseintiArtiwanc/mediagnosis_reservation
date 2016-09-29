@@ -10,6 +10,14 @@ class Patient_model extends CI_Model {
         return $query->row();
     }
 
+    function getPatientByUserID($id){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients a');
+        $this->db->where('userID',$id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     function insertTransProfilePatient($data){
         $this->db->insert('tbl_cyberits_t_patient_profile', $data);
         return $this->db->insert_id();
