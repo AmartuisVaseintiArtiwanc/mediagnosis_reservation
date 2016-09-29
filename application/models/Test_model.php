@@ -134,7 +134,7 @@ class Test_model extends CI_Model{
         #Create where clause
         $this->db->select('currentQueue');
         $this->db->from('tbl_cyberits_t_header_reservation');
-        $this->db->where("a.reservationID",$reservation);
+        $this->db->where("reservationID",$reservation);
         $this->db->where('isActive', 1);
         $this->db->like('created',$date);
         $where_clause = $this->db->get_compiled_select();

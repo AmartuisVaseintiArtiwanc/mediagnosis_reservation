@@ -98,6 +98,7 @@ class ReservationDoctor extends CI_Controller {
             );
             $status="success";
         }
+
         echo json_encode(array('status' => $status, 'output' => $output));
     }
 
