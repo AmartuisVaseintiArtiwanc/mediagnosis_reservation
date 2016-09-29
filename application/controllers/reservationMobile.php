@@ -133,7 +133,7 @@
 
 		}
 
-        function checkTodayReservation(){
+        function checkTodayReservationByUserID(){
             $userID = $this->input->post("userID");
             $patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
@@ -142,15 +142,62 @@
             $currQueue="";
             $totalQueue="";
             $yourQueue="";
+            $detailID="";
             $isQueue=false;
             if(isset($reservation->reservationID)){
                 $currQueue = $reservation->currentQueue;
                 $totalQueue = $reservation->totalQueue;
                 $yourQueue = $reservation->noQueue;
+                $detailID = $reservation->detailReservationID;
                 $isQueue=true;
             }
 
+            echo json_encode(array('isQueue' => $isQueue, 'currentQueue' => $currQueue,'totalQueue'=>$totalQueue,'yourQueue'=>$yourQueue,'detailReservationID'=>$detailID));
+        }
+
+        function checkTodayReservationByClinicID(){
+            $clinicID = $this->input->post("clinicID");
+
+            $reservation = $this->test_model->getClinicCurrentQueue($clinicID );
+
+            $currQueue="";
+            $totalQueue="";
+            $yourQueue="";
+            if(isset($reservation->reservationID)){
+                $currQueue = $reservation->currentQueue;
+                $totalQueue = $reservation->totalQueue;
+                $yourQueue = $reservation->noQueue;
+
+            }
+
+            $isQueue=true;
+
             echo json_encode(array('isQueue' => $isQueue, 'currentQueue' => $currQueue,'totalQueue'=>$totalQueue,'yourQueue'=>$yourQueue));
+        }
+
+        function cancelReservation(){
+            $datetime = date('Y-m-d H:i:s', time());
+            $detailReservationID = $this->input->post("detailReservationID");
+            $userID = $this->input->post("userID");
+
+            $data=array(
+                'status'=>'reject',
+                "lastUpdated"=>$datetime,
+                "lastUpdatedBy"=>$userID
+            );
+
+            $this->db->trans_begin();
+            $saveData = $this->test_model->updateReservationDetail($data,$detailReservationID);
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Cannot save to Database !";
+            } else {
+                $this->db->trans_commit();
+                $status = "success";
+                $msg = "Reservasi berhasil di batalkan !";
+            }
+            echo json_encode(array('status' => $status, 'msg' => $msg));
         }
 	}
 ?>
