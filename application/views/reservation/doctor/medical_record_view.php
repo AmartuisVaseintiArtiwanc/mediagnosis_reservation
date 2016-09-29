@@ -161,7 +161,7 @@
 
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4>KELUHAN UTAMA</h4>
+                        <h4>KELUHAN UTAMA   <!--ERROR MSG--><span class="w3-tag w3-red err-msg" id="main-condition-err-msg"></span></h4>
                     </div>
 
                     <div class="w3-container">
@@ -169,8 +169,7 @@
                             <textarea class="w3-input" id="main-condition-text"
                                 data-ul="#main-condition-ul" data-li="#main-condition-value"
                                 data-label="#main-condition-err-msg"></textarea>
-                            <!--ERROR MSG-->
-                            <span class="w3-tag w3-red err-msg" id="main-condition-err-msg"></span>
+
                             <!--VALUE-->
                             <ul class="w3-ul w3-card-4 w3-hide" id="main-condition-ul">
                                 <li class="w3-padding-8">
@@ -188,14 +187,13 @@
 
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4>MULAI SEJAK</h4>
+                        <h4>MULAI SEJAK  <span class="w3-tag w3-red err-msg" id="condition-date-err-msg"></span></h4>
                     </div>
                     <div class="w3-container">
                         <p>
                             <textarea class="w3-input" id="condition-date-text" data-label="#condition-date-err-msg"></textarea>
                             <br/>
                             <!--ERROR MSG-->
-                            <span class="w3-tag w3-red err-msg" id="condition-date-err-msg"></span>
                         </p>
                     </div>
                 </div>
@@ -203,11 +201,11 @@
                 <!--ADDITIONAL CONDITION-->
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">KELUHAN TAMBAHAN</h4>
+                        <h4 class="w3-left">KELUHAN TAMBAHAN           <!--ERROR MSG-->
+                            <span class="w3-tag w3-red err-msg" id="add-condition-err-msg"></span></h4>
                     </div>
                     <div class="w3-container w3-margin-top">
-                        <!--ERROR MSG-->
-                        <span class="w3-tag w3-red err-msg" id="add-condition-err-msg"></span>
+
                         <p>
                             <ul class="w3-ul w3-card-4 w3-ul-list" id="additional-condition-ul">
                                 <li class="w3-padding-8">
@@ -309,11 +307,10 @@
 
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">PEMERIKSAAN PENUNJANG</h4>
+                        <h4 class="w3-left">PEMERIKSAAN PENUNJANG  <span class="w3-tag w3-red err-msg" id="support-examination-err-msg"></span></h4>
                     </div>
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
-                        <span class="w3-tag w3-red err-msg" id="support-examination-err-msg"></span>
                         <p>
                             <ul class="w3-ul w3-ul-list w3-card-4" id="support-examination-ul">
                                 <li class="w3-padding-small">
@@ -355,7 +352,7 @@
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">DIAGNOSA KERJA</h4>
+                        <h4 class="w3-left">DIAGNOSA KERJA  <span class="w3-tag w3-red err-msg" id="working-diagnose-err-msg"></span></h4>
                     </div>
 
                     <form class="w3-container">
@@ -365,7 +362,6 @@
                                 data-ul="#working-diagnose-ul" data-li="#working-diagnose-value"></textarea>
                             <br>
                             <!--ERROR MSG-->
-                            <span class="w3-tag w3-red err-msg" id="working-diagnose-err-msg"></span>
                             <!--VALUE-->
                             <ul class="w3-ul w3-card-4 w3-hide" id="working-diagnose-ul">
                                 <li class="w3-padding-8">
@@ -386,11 +382,10 @@
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">DIAGNOSA PENUNJANG</h4>
+                        <h4 class="w3-left">DIAGNOSA PENUNJANG  <span class="w3-tag w3-red err-msg" id="support-diagnose-err-msg"></span></h4>
                     </div>
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
-                        <span class="w3-tag w3-red err-msg" id="support-diagnose-err-msg"></span>
                         <p>
                             <ul class="w3-ul w3-ul-list w3-card-4" id="support-diagnose-ul">
                                 <li class="w3-padding-8">
@@ -426,11 +421,10 @@
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">TERAPI</h4>
+                        <h4 class="w3-left">TERAPI   <span class="w3-tag w3-red err-msg" id="medication-err-msg"></span></h4>
                     </div>
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
-                        <span class="w3-tag w3-red err-msg" id="medication-err-msg"></span>
                         <p>
                             <ul class="w3-ul w3-ul-list w3-card-4" id="medication-ul">
                                 <li class="w3-padding-8">

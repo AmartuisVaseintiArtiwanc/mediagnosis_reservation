@@ -578,6 +578,11 @@ $(document).ready(function(){
         });
 
         if (err != 0) {
+            swal(
+                "Terdapat data yang masih kosong, Silahkan periksa kembali !",
+                '',
+                'error'
+            )
             return false;
         } else {
             return true;

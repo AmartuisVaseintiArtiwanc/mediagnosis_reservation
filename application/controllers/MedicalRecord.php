@@ -163,126 +163,134 @@ class MedicalRecord extends CI_Controller {
         $this->medical_record_detail_model->createMedicalRecordDetail($mr_detail_data);
 
         //ADDITIONAL CONDITION
-        foreach($data[0]['additional_condition'] as $row){
-            $additional_condition = $row['value'];
-            $check_additional_condition = $this->additional_condition_model->checkAdditionalCondition($additional_condition);
-            if(isset($check_additional_condition->id)){
-                $additional_condition =  $check_additional_condition->id;
-            }else{
-                $ac_data=array(
-                    'additionalConditionText'=>$additional_condition,
+        if(isset($data[0]['additional_condition'])){
+            foreach($data[0]['additional_condition'] as $row){
+                $additional_condition = $row['value'];
+                $check_additional_condition = $this->additional_condition_model->checkAdditionalCondition($additional_condition);
+                if(isset($check_additional_condition->id)){
+                    $additional_condition =  $check_additional_condition->id;
+                }else{
+                    $ac_data=array(
+                        'additionalConditionText'=>$additional_condition,
+                        'isActive'=>1,
+                        'created'=>$datetime,
+                        "createdBy" => $this->session->userdata('userID'),
+                        "lastUpdated"=>$datetime,
+                        "lastUpdatedBy"=>$this->session->userdata('userID')
+                    );
+                    $additional_condition = $this->additional_condition_model->createAdditionalCondition($ac_data);
+                }
+
+                $mrd_data=array(
+                    'medicalRecordID'=>$header_data,
+                    'additionalConditionID'=>$additional_condition,
                     'isActive'=>1,
                     'created'=>$datetime,
                     "createdBy" => $this->session->userdata('userID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
                 );
-                $additional_condition = $this->additional_condition_model->createAdditionalCondition($ac_data);
+                $this->medical_record_detail_model->createMedicalRecordDetailAdditonalCondition($mrd_data);
             }
-
-            $mrd_data=array(
-                'medicalRecordID'=>$header_data,
-                'additionalConditionID'=>$additional_condition,
-                'isActive'=>1,
-                'created'=>$datetime,
-                "createdBy" => $this->session->userdata('userID'),
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$this->session->userdata('userID')
-            );
-            $this->medical_record_detail_model->createMedicalRecordDetailAdditonalCondition($mrd_data);
         }
 
         // SUPPORT DIAGNOSA
-        foreach($data[0]['support_diagnose'] as $row){
-            $support_diagnose = $row['value'];
-            $check_support_diagnose = $this->diseases_model->checkDisease($support_diagnose);
-            if(isset($check_support_diagnose->id)){
-                $support_diagnose =  $check_support_diagnose->id;
-            }else{
-                $dis_data=array(
-                    'diseaseName'=>$support_diagnose,
+        if(isset($data[0]['support_diagnose'])){
+            foreach($data[0]['support_diagnose'] as $row){
+                $support_diagnose = $row['value'];
+                $check_support_diagnose = $this->diseases_model->checkDisease($support_diagnose);
+                if(isset($check_support_diagnose->id)){
+                    $support_diagnose =  $check_support_diagnose->id;
+                }else{
+                    $dis_data=array(
+                        'diseaseName'=>$support_diagnose,
+                        'isActive'=>1,
+                        'created'=>$datetime,
+                        "createdBy" => $this->session->userdata('userID'),
+                        "lastUpdated"=>$datetime,
+                        "lastUpdatedBy"=>$this->session->userdata('userID')
+                    );
+                    $support_diagnose = $this->diseases_model->createDisease($dis_data);
+                }
+
+                $mrd_data=array(
+                    'medicalRecordID'=>$header_data,
+                    'diseaseID'=>$support_diagnose,
                     'isActive'=>1,
                     'created'=>$datetime,
                     "createdBy" => $this->session->userdata('userID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
                 );
-                $support_diagnose = $this->diseases_model->createDisease($dis_data);
+                $this->medical_record_detail_model->createMedicalRecordDetailSupportDiagnose($mrd_data);
             }
-
-            $mrd_data=array(
-                'medicalRecordID'=>$header_data,
-                'diseaseID'=>$support_diagnose,
-                'isActive'=>1,
-                'created'=>$datetime,
-                "createdBy" => $this->session->userdata('userID'),
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$this->session->userdata('userID')
-            );
-            $this->medical_record_detail_model->createMedicalRecordDetailSupportDiagnose($mrd_data);
         }
 
         // SUPPORT EXAMINATION
-        foreach($data[0]['support_examination'] as $row){
-            $support_examination_column = $row['column'];
-            $support_examination_value = $row['value'];
+        if(isset($data[0]['support_examination'])){
+            foreach($data[0]['support_examination'] as $row){
+                $support_examination_column = $row['column'];
+                $support_examination_value = $row['value'];
 
-            $check_support_examination = $this->support_examination_model->checkSupportExaminationColumn($support_examination_column);
-            if(isset($check_support_examination->id)){
-                $support_examination_column =  $check_support_examination->id;
-            }else{
-                $se_data=array(
-                    'supportExaminationColumnName'=>$support_examination_column,
+                $check_support_examination = $this->support_examination_model->checkSupportExaminationColumn($support_examination_column);
+                if(isset($check_support_examination->id)){
+                    $support_examination_column =  $check_support_examination->id;
+                }else{
+                    $se_data=array(
+                        'supportExaminationColumnName'=>$support_examination_column,
+                        'isActive'=>1,
+                        'created'=>$datetime,
+                        "createdBy" => $this->session->userdata('userID'),
+                        "lastUpdated"=>$datetime,
+                        "lastUpdatedBy"=>$this->session->userdata('userID')
+                    );
+                    $support_examination_column = $this->support_examination_model->createSupportExaminationColumn($se_data);
+                }
+
+                $mrd_data=array(
+                    'medicalRecordID'=>$header_data,
+                    'supportExaminationColumnID'=>$support_examination_column,
+                    'supportExaminationValue'=>$support_examination_value,
                     'isActive'=>1,
                     'created'=>$datetime,
                     "createdBy" => $this->session->userdata('userID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
                 );
-                $support_examination_column = $this->support_examination_model->createSupportExaminationColumn($se_data);
+                $this->medical_record_detail_model->createMedicalRecordDetailSupportExamination($mrd_data);
             }
-
-            $mrd_data=array(
-                'medicalRecordID'=>$header_data,
-                'supportExaminationColumnID'=>$support_examination_column,
-                'supportExaminationValue'=>$support_examination_value,
-                'isActive'=>1,
-                'created'=>$datetime,
-                "createdBy" => $this->session->userdata('userID'),
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$this->session->userdata('userID')
-            );
-            $this->medical_record_detail_model->createMedicalRecordDetailSupportExamination($mrd_data);
         }
 
         //MEDICATION / TERAPI
-        foreach($data[0]['medication'] as $row){
-            $medication = $row['value'];
-            $check_medication = $this->medication_model->checkMedication($medication);
-            if(isset($check_medication->id)){
-                $medication =  $check_medication->id;
-            }else{
-                $med_data=array(
-                    'medicationText'=>$medication,
-                    'isActive'=>1,
-                    'created'=>$datetime,
-                    "createdBy" => $this->session->userdata('userID'),
-                    "lastUpdated"=>$datetime,
-                    "lastUpdatedBy"=>$this->session->userdata('userID')
-                );
-                $medication = $this->medication_model->createMedication($med_data);
-            }
+        if(isset($data[0]['medication'])) {
+            foreach ($data[0]['medication'] as $row) {
+                $medication = $row['value'];
+                $check_medication = $this->medication_model->checkMedication($medication);
+                if (isset($check_medication->id)) {
+                    $medication = $check_medication->id;
+                } else {
+                    $med_data = array(
+                        'medicationText' => $medication,
+                        'isActive' => 1,
+                        'created' => $datetime,
+                        "createdBy" => $this->session->userdata('userID'),
+                        "lastUpdated" => $datetime,
+                        "lastUpdatedBy" => $this->session->userdata('userID')
+                    );
+                    $medication = $this->medication_model->createMedication($med_data);
+                }
 
-            $mrd_data=array(
-                'medicalRecordID'=>$header_data,
-                'medicationID'=>$medication,
-                'isActive'=>1,
-                'created'=>$datetime,
-                "createdBy" => $this->session->userdata('userID'),
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$this->session->userdata('userID')
-            );
-            $this->medical_record_detail_model->createMedicalRecordDetailMedication($mrd_data);
+                $mrd_data = array(
+                    'medicalRecordID' => $header_data,
+                    'medicationID' => $medication,
+                    'isActive' => 1,
+                    'created' => $datetime,
+                    "createdBy" => $this->session->userdata('userID'),
+                    "lastUpdated" => $datetime,
+                    "lastUpdatedBy" => $this->session->userdata('userID')
+                );
+                $this->medical_record_detail_model->createMedicalRecordDetailMedication($mrd_data);
+            }
         }
 
         // EXAMINATION / PEMERIKSAAN
