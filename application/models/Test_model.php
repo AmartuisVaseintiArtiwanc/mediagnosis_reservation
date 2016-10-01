@@ -104,11 +104,9 @@ class Test_model extends CI_Model{
     function getClinicCurrentQueue($clinicID){
         $date = date('Y-m-d', time());
         $this->db->select('*');
-        $this->db->from('tbl_cyberits_t_detail_reservation a');
-        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
-        $this->db->like('b.clinicID',$clinicID);
+        $this->db->from('tbl_cyberits_t_header_reservation a');
+        $this->db->like('a.clinicID',$clinicID);
         $this->db->like('a.created',$date);
-        $this->db->where('a.status',"waiting");
         $query = $this->db->get();
         return $query->row();
     }

@@ -162,17 +162,14 @@
 
             $currQueue="";
             $totalQueue="";
-            $yourQueue="";
+            $isQueue=false;
             if(isset($reservation->reservationID)){
                 $currQueue = $reservation->currentQueue;
                 $totalQueue = $reservation->totalQueue;
-                $yourQueue = $reservation->noQueue;
-
+                $isQueue=true;
             }
 
-            $isQueue=true;
-
-            echo json_encode(array('isQueue' => $isQueue, 'currentQueue' => $currQueue,'totalQueue'=>$totalQueue,'yourQueue'=>$yourQueue));
+            echo json_encode(array('isQueue' => $isQueue, 'currentQueue' => $currQueue,'totalQueue'=>$totalQueue));
         }
 
         function cancelReservation(){
