@@ -83,6 +83,7 @@ class MedicalRecord extends CI_Controller {
         // SAVE PATIENT DATA
         $profile_patient_data=array(
             'patientID'=>$patient,
+            'patientName'=>$patient_data->patientName,
             'ktpID'=>$patient_data->ktpID,
             'bpjsID'=>$patient_data->bpjsID,
             'phoneNumber'=>$patient_data->phoneNumber,
@@ -340,8 +341,33 @@ class MedicalRecord extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
-    function saveMedicationDetail(){
+    function getMedicalRecordList($patientID){
+        //$data = $this->input->post('data');
+        $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
+        $data['medical_record_data']  = $medical_record_header;
+        $this->load->view('mr/medical_record_list_view', $data);
+    }
 
+    function getMedicalRecordDetail($medicalRecordID){
+        //$data = $this->input->post('data');
+
+        $medical_record_header = $this->medical_record_model->getMedicalRecordByID($medicalRecordID);
+        $medical_record_detail = $this->medical_record_detail_model->getMedicalRecordDetailByID($medicalRecordID);
+        $addtional_condition = $this->medical_record_detail_model->getAdditionalConditionByID($medicalRecordID);
+        $physical_examination = $this->medical_record_detail_model->getPhysicalExaminationByID($medicalRecordID);
+        $support_examination = $this->medical_record_detail_model->getSupportExaminationByID($medicalRecordID);
+        $support_diagnose = $this->medical_record_detail_model->getSupportDiagnoseByID($medicalRecordID);
+        $medication = $this->medical_record_detail_model->getMedicationByID($medicalRecordID);
+
+        $data['header']  = $medical_record_header;
+        $data['detail']  = $medical_record_detail;
+        $data['additional_condition']  = $addtional_condition;
+        $data['physical_examination']  = $physical_examination;
+        $data['support_examination']  = $support_examination;
+        $data['support_diagnose']  = $support_diagnose;
+        $data['medication']  = $medication;
+
+        $this->load->view('mr/medical_record_detail_view', $data);
     }
 
     function test(){

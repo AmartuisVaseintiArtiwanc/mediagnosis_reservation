@@ -2,15 +2,29 @@
 
 class Medical_record_model extends CI_Model {
 
-    function getMedicationAutocomplete($search_name){
-        $this->db->select('medicationText, medicationID');
-        $this->db->from('tbl_cyberits_m_medication a');
-        $this->db->like('a.medicationText', $search_name);
-
-        $this->db->limit(10);
-
+    function getMedicalRecordListByPatient($patientID){
+        $this->db->select('mr.medicalRecordID,doc.doctorID, doc.doctorName,
+         mr.detailReservationID, cl.clinicName, pl.poliName, dis.diseaseName, mr.created');
+        $this->db->from('tbl_cyberits_t_medical_record mr');
+        $this->db->join('tbl_cyberits_t_detail_medical_record  dmr', 'dmr.medicalRecordID = mr.medicalRecordID');
+        $this->db->join('tbl_cyberits_m_diseases  dis', 'dmr.workingDiagnose = dis.diseaseID');
+        $this->db->join('tbl_cyberits_t_detail_reservation  dr', 'mr.detailReservationID = dr.detailReservationID');
+        $this->db->join('tbl_cyberits_t_header_reservation  hr', 'dr.reservationID = hr.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics  cl', 'cl.clinicID = hr.clinicID');
+        $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = hr.poliID');
+        $this->db->join('tbl_cyberits_m_doctors  doc', 'dr.doctorID = doc.doctorID');
+        $this->db->where('mr.patientID', $patientID);
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    function getMedicalRecordByID($medicalRecordID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_medical_record a');
+        $this->db->join('tbl_cyberits_t_patient_profile  b', 'a.tPatientProfileID = b.tPatientProfileID');
+        $this->db->where('a.medicalRecordID', $medicalRecordID);
+        $query = $this->db->get();
+        return $query->row();
     }
 
     function checkMedication($search_name){
@@ -28,16 +42,4 @@ class Medical_record_model extends CI_Model {
         return $result;
     }
 
-    //
-    function updatePoli($data,$id){
-        $this->db->where('poliID',$id);
-        $this->db->update('tbl_cyberits_m_poli',$data);
-        $result=$this->db->affected_rows();
-        return $result;
-    }
-
-    function deletePoli($id){
-        $this->db->where('poliID',$id);
-        $this->db->delete('tbl_cyberits_m_poli');
-    }
 }

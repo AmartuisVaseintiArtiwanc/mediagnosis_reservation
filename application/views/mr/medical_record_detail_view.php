@@ -60,33 +60,6 @@
 
 <body>
 
-<!--MODAL OTP-->
-<div id="id01" class="w3-modal">
-    <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
-
-        <div class="w3-center"><br>
-            <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn w3-hover-red w3-container w3-padding-8 w3-display-topright" title="Close Modal">&times;</span>
-        </div>
-
-        <form class="w3-container" action="form.asp">
-            <div class="w3-section" id="otp-input-form">
-                <label class="w3-large"><b>OTP</b></label>
-                <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter OTP" name="usrname" required>
-            </div>
-            <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge" id="request-otp-btn" type="submit">REQUEST OTP</button>
-            <div class="w3-container w3-border-top w3-padding-16">
-                <div class="w3-col m6">
-                    <button onclick="document.getElementById('id01').style.display='none'"
-                            type="button" class="w3-btn-block w3-padding-xlarge w3-red">TIDAK ADA</button>
-                </div>
-                <div class="w3-col m6">
-                    <button type="button" class="w3-btn-block w3-padding-xlarge w3-green">ADA</button>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
 <div id="wrap">
     <div id="accordian">
         <div class="step" id="step1">
@@ -134,39 +107,33 @@
                         </ul>
                     </div>
                 </div>
-
                 <br>
-                <div class="w3-margin">
-                    <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple"
-                            onclick="document.getElementById('id01').style.display='block'">REQUEST OTP</button>
-                </div>
-
             </div>
             <div class="w3-col m6">
                 <table class="w3-table-all w3-hoverable" id="identity-table">
                     <tr>
                         <td>No. Kartu BPJS</td>
-                        <td><?php echo $patient_data->bpjsID;?></td>
+                        <td><?php echo $header->bpjsID;?></td>
                     </tr>
                     <tr>
                         <td>NO KTP</td>
-                        <td><?php echo $patient_data->ktpID;?></td>
+                        <td><?php echo $header->ktpID;?></td>
                     </tr>
                     <tr>
                         <td>Name</td>
-                        <td><?php echo $patient_data->patientName;?></td>
+                        <td><?php echo $header->patientName;?></td>
                     </tr>
                     <tr>
                         <td>Tempat, Tanngal Lahir</td>
-                        <td><?php echo $patient_data->dob;?></td>
+                        <td><?php echo $header->dob;?></td>
                     </tr>
                     <tr>
                         <td>Perusahaan</td>
-                        <td><?php echo $patient_data->address;?></td>
+                        <td><?php echo $header->address;?></td>
                     </tr>
                     <tr>
                         <td>Telepon</td>
-                        <td><?php echo $patient_data->phoneNumber;?></td>
+                        <td><?php echo $header->phoneNumber;?></td>
                     </tr>
                     <tr>
                         <td>Email</td>
@@ -199,21 +166,11 @@
                         <h4>KELUHAN UTAMA   <!--ERROR MSG--><span class="w3-tag w3-red err-msg" id="main-condition-err-msg"></span></h4>
                     </div>
 
-                    <div class="w3-container">
-                        <p>
-                            <textarea class="w3-input" id="main-condition-text"
-                                data-ul="#main-condition-ul" data-li="#main-condition-value"
-                                data-label="#main-condition-err-msg"></textarea>
-
-                            <!--VALUE-->
-                            <ul class="w3-ul w3-card-4 w3-hide" id="main-condition-ul">
+                    <div class="w3-container w3-margin-top">
+                        <p><!--VALUE-->
+                            <ul class="w3-ul w3-card-4" id="main-condition-ul">
                                 <li class="w3-padding-8">
-                                    <span class="w3-large" id="main-condition-value" data-value="" data-status=""></span>
-                                      <span
-                                          data-input-value="#main-condition-value"
-                                            data-input-element="#main-condition-text"
-                                            data-ul="#main-condition-ul"
-                                            class="w3-closebtn w3-margin-right w3-medium"><i class="fa fa-pencil"></i></span>
+                                    <?php echo $detail->mainConditionText;?>
                                 </li>
                             </ul>
                         </p>
@@ -224,9 +181,13 @@
                     <div class="w3-container w3-green">
                         <h4>MULAI SEJAK  <span class="w3-tag w3-red err-msg" id="condition-date-err-msg"></span></h4>
                     </div>
-                    <div class="w3-container">
+                    <div class="w3-container w3-margin-top">
                         <p>
-                            <textarea class="w3-input" id="condition-date-text" data-label="#condition-date-err-msg"></textarea>
+                            <ul class="w3-ul w3-card-4" id="condition-date-ul">
+                                <li class="w3-padding-8">
+                                    <?php echo $detail->conditionDate;?>
+                                </li>
+                            </ul>
                             <br/>
                             <!--ERROR MSG-->
                         </p>
@@ -236,23 +197,18 @@
                 <!--ADDITIONAL CONDITION-->
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">KELUHAN TAMBAHAN           <!--ERROR MSG-->
-                            <span class="w3-tag w3-red err-msg" id="add-condition-err-msg"></span></h4>
+                        <h4 class="w3-left">KELUHAN TAMBAHAN </h4>
                     </div>
                     <div class="w3-container w3-margin-top">
-
                         <p>
                             <ul class="w3-ul w3-card-4 w3-ul-list" id="additional-condition-ul">
-                                <li class="w3-padding-8">
-                                    <span class="w3-closebtn w3-closebtn-list w3-large w3-margin-right">x</span><br/>
-                                    <div class="w3-medium w3-padding-medium">
-                                        <textarea class="w3-input add-codition-li-text" data-label="#add-condition-err-msg"></textarea>
-                                    </div>
-                                </li>
+                                <?php foreach($additional_condition as $row){?>
+                                    <li class="w3-padding-8">
+                                        <?php echo $row['additionalConditionText'];?>
+                                    </li>
+                                <?php } ?>
                             </ul>
                         </p>
-                        <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin"
-                                id="btn-add-additional-condition">+ TAMBAH BARU</button>
                     </div>
                 </div>
             </div>
@@ -271,13 +227,10 @@
                         <p>
                             <label class="w3-label">Tekenan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
                             <div class="w3-row">
-                                <div class="w3-col m4">
-                                    <input class="w3-input" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text">
+                                <div class="w3-col m6">
+                                    <?php echo $physical_examination->bloodPreasureLow."/ ".$physical_examination->bloodPreasureHigh;?>
                                 </div>
-                                <div class="w3-col m4 w3-padding-lr">
-                                    <input class="w3-input" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text">
-                                </div>
-                                <div class="w3-col m4">
+                                <div class="w3-col m6">
                                     <label class="w3-padding">mmHg</label>
                                 </div>
                             </div>
@@ -286,7 +239,7 @@
                             <label class="w3-label">Tekanan Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="respiration-input" type="text" data-label="#respiration-err-msg">
+                                    <?php echo $physical_examination->respirationRate;?>
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">x/minutes</label>
@@ -297,7 +250,7 @@
                             <label class="w3-label">Denyut Nadi</label> <span class="w3-tag w3-red" id="pulse-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="pulse-input" data-label="#pulse-err-msg" type="text">
+                                    <?php echo $physical_examination->pulse;?>
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">x/minutes</label>
@@ -308,7 +261,7 @@
                             <label class="w3-label">Suhu Tubuh</label> <span class="w3-tag w3-red" id="temperature-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="temperature-input" data-label="#temperature-err-msg" type="text">
+                                    <?php echo $physical_examination->temperature;?>
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">Celcius</label>
@@ -319,7 +272,7 @@
                             <label class="w3-label">Tinggi Badan</label> <span class="w3-tag w3-red" id="height-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="height-input" data-label="#height-err-msg" type="text">
+                                    <?php echo $physical_examination->height;?>
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">cm</label>
@@ -330,7 +283,7 @@
                             <label class="w3-label">Berat Badan</label> <span class="w3-tag w3-red" id="weight-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="weight-input" data-label="#weight-err-msg" type="text">
+                                    <?php echo $physical_examination->weight;?>
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">Kg</label>
@@ -347,23 +300,21 @@
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
                         <p>
-                            <ul class="w3-ul w3-ul-list w3-card-4" id="support-examination-ul">
+                        <ul class="w3-ul w3-ul-list w3-card-4" id="support-examination-ul">
+                            <?php foreach($support_examination as $row){?>
                                 <li class="w3-padding-small">
-                                    <span class="w3-closebtn w3-closebtn-list w3-large w3-margin-right">x</span><br/>
-                                    <span class="w3-clear"></span>
                                     <div class="w3-row">
                                         <div class="w3-col m6 w3-padding-small">
-                                            <textarea class="w3-input w3-border support-examination-column" data-label="#support-examination-err-msg"></textarea>
+                                            <?php echo $row['supportExaminationColumnName'];?>
                                         </div>
                                         <div class="w3-col m6 w3-padding-small">
-                                            <textarea class="w3-input w3-border support-examination-value" data-label="#support-examination-err-msg"></textarea>
+                                            : <?php echo $row['supportExaminationValue'];?>
                                         </div>
                                     </div>
                                 </li>
-                            </ul>
+                            <?php } ?>
+                        </ul>
                         </p>
-                        <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin"
-                                id="btn-add-support-examination">+ TAMBAH BARU</button>
                         <br/>
                     </form>
                 </div>
@@ -390,22 +341,11 @@
                         <h4 class="w3-left">DIAGNOSA KERJA  <span class="w3-tag w3-red err-msg" id="working-diagnose-err-msg"></span></h4>
                     </div>
 
-                    <form class="w3-container">
+                    <form class="w3-container w3-margin-top">
                         <p>
-                            <textarea class="w3-input" id="working-diagnose-text"
-                                data-label="#working-diagnose-err-msg"
-                                data-ul="#working-diagnose-ul" data-li="#working-diagnose-value"></textarea>
-                            <br>
-                            <!--ERROR MSG-->
-                            <!--VALUE-->
-                            <ul class="w3-ul w3-card-4 w3-hide" id="working-diagnose-ul">
+                            <ul class="w3-ul w3-card-4" id="working-diagnose-ul">
                                 <li class="w3-padding-8">
-                                    <span class="w3-large" id="working-diagnose-value" data-value="" data-status=""></span>
-                                          <span
-                                              data-input-value="#working-diagnose-value"
-                                              data-input-element="#working-diagnose-text"
-                                              data-ul="#working-diagnose-ul"
-                                              class="w3-closebtn w3-margin-right w3-medium">x</span>
+                                    <?php echo $detail->diseaseName;?>
                                 </li>
                             </ul>
                         </p>
@@ -423,16 +363,13 @@
                         <!--ERROR MSG-->
                         <p>
                             <ul class="w3-ul w3-ul-list w3-card-4" id="support-diagnose-ul">
-                                <li class="w3-padding-8">
-                                        <span class="w3-closebtn w3-large w3-margin-right w3-closebtn-list">x</span><br>
-                                    <div class="w3-medium w3-padding-medium">
-                                        <textarea class="w3-input support-diagnose-li-text" data-label="#support-diagnose-err-msg"></textarea>
-                                    </div>
-                                </li>
+                                <?php foreach($support_diagnose as $row){?>
+                                    <li class="w3-padding-8">
+                                        <?php echo $row['diseaseName'];?>
+                                    </li>
+                                <?php } ?>
                             </ul>
                         </p>
-                        <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin"
-                                id="btn-add-support-diagnose">+ TAMBAH BARU</button>
                         <br/>
                     </form>
                 </div>
@@ -462,15 +399,13 @@
                         <!--ERROR MSG-->
                         <p>
                             <ul class="w3-ul w3-ul-list w3-card-4" id="medication-ul">
-                                <li class="w3-padding-8">
-                                        <span class="w3-closebtn w3-closebtn-list w3-large w3-margin-right">x</span><br>
-                                    <div class="w3-medium w3-padding-medium">
-                                        <textarea class="w3-input medication-li-text" data-label="#medication-err-msg"></textarea>
-                                    </div>
-                                </li>
+                                <?php foreach($medication as $row){?>
+                                    <li class="w3-padding-8">
+                                        <?php echo $row['medicationText'];?>
+                                    </li>
+                                <?php } ?>
                             </ul>
                         </p>
-                       <button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-red w3-margin" id="btn-add-medication">+ TAMBAH BARU</button>
                         <br/>
                     </form>
                 </div>
@@ -482,27 +417,22 @@
                         <h4 class="w3-left">RUJUKAN</h4>
                     </div>
 
-                    <form class="w3-container">
+                    <form class="w3-container w3-margin-top">
                         <p>
-                            <textarea class="w3-input" id="rujukan-text"></textarea>
+                            <ul class="w3-ul w3-ul-list w3-card-4">
+                                <li class="w3-padding-8">
+                                    <?php echo $detail->reference;?>
+                                </li>
+                            </ul>
                         </p>
                         <br/>
                     </form>
                 </div>
             </div>
-            <input type="hidden" id="base-url" value="<?php echo site_url();?>"/>
-            <input type="hidden" id="detail-reservation" value="<?php echo $reservation_data->detailReservationID;?>"/>
-            <input type="hidden" id="patient-id" value="<?php echo $reservation_data->patientID;?>"/>
-        </div>
-        <div class="w3-center">
-            <button class="w3-btn w3-red" id="btn-cancel-medical-record">BATAL</button>
-            <button class="w3-btn w3-green" id="btn-save-medical-record">SIMPAN</button>
         </div>
     </div>
 </div>
 
-<script src="<?php echo base_url();?>assets/custom/validate_master.js"></script>
-<script src="<?php echo base_url();?>assets/custom/medical_record.js"></script>
 <script>
     $(document).ready(function(){
         $("#otp-input-form").hide();

@@ -114,7 +114,7 @@
 <body>
 	<div class="header_doctor_reservation">
 		<div class="welcome_message">Selamat Datang, <span class="green"><?php echo $doctor_data->doctorName;?></span></div>
-		<div class="current_date">Rabu, 07 Desember 2016, pkl 15:00:00 WIB</div>
+		<div class="current_date"><?php echo date("l, d F Y H:i:s ");?></div>
 	</div>
 	<div class="clear"></div>
 
