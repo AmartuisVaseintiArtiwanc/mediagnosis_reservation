@@ -597,13 +597,13 @@ $(document).ready(function(){
             }
 
             swal({
-                title: 'A?',
-                text: "You won't be able to revert this!",
+                title: 'Apakah Anda yakin untuk menyimpan data ini?',
+                text: "Data yang di simpan tidak bisa diganti lagi",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, save it!'
+                confirmButtonText: 'Ya, Simpan Data!'
             }).then(function() {
                 $.ajax({
                     url: $base_url+"/MedicalRecord/saveMedicalRecordData",
@@ -650,17 +650,57 @@ $(document).ready(function(){
         }
     });
 
-    $("#btn-save-medical-record").click(function(e){
+    $("#btn-cancel-medical-record").click(function(e){
+        var $detail_reservation = $("#detail-reservation").val();
         swal({
-            title: 'Are you sure save this data?',
-            text: "You won't be able to revert this!",
-            type: 'warning',
+            title: 'Apakah Anda yakin untuk keluar dari rekam medis ini ?',
+            text: "Data yang di simpan tidak bisa diganti lagi !",
+            type: 'error',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, save it!'
+            confirmButtonText: 'Keluar'
         }).then(function(){
+            $.ajax({
+                url: $base_url+"/MedicalRecord/rejectReservationMedicalRecord",
+                data: {detailReservation : $detail_reservation},
+                type: "POST",
+                dataType: 'json',
+                beforeSend:function(){
+                    $("#load_screen").show();
+                },
+                success:function(data){
+                    if(data.status != 'error'){
+                        swal({
+                            title: data.msg,
+                            text: 'This Page will be redirect after a few second !',
+                            type: 'success',
+                            allowOutsideClick: false,
+                            showConfirmButton:false
+                        })
+                        window.setTimeout(function () {
+                            location.href =  $base_url+"/ReservationDoctor";
+                        }, 2000);
 
+                    }else{
+                        swal(
+                            data.msg,
+                            '',
+                            'error'
+                        )
+                    }
+                    alert($data);
+                },
+                error: function(xhr, status, error) {
+                    //var err = eval("(" + xhr.responseText + ")");
+                    $("#load_screen").hide();
+                    swal(
+                        "Server Error ! Please Try Again",
+                        '',
+                        'error'
+                    )
+                }
+            });
         });
     });
 

@@ -341,6 +341,32 @@ class MedicalRecord extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
+    function rejectReservationMedicalRecord(){
+        $detail_reservation = $this->input->post('detailReservation');
+        $datetime = date('Y-m-d H:i:s', time());
+        //UPDATE RESERVATION REJECT
+        $data_reservation=array(
+            'status'=>'reject',
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+
+        $this->db->trans_begin();
+        $query_detail = $this->test_model->updateReservationDetail($data_reservation,$detail_reservation);
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg="Cannot save Medical Record to Database";
+        }
+        else {
+            $this->db->trans_commit();
+            $status = "success";
+            $msg="Medical Record has been saved successfully.";
+        }
+
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
     function getMedicalRecordList($patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
