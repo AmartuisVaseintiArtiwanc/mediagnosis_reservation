@@ -15,10 +15,10 @@
 			return $result;
 		}
 
-		function checkOtpByPatientID($OtpCode){
+		function checkOtpByPatientID($patientID){
 			$this->db->select('*');
 		    $this->db->from('tbl_cyberits_t_user_otp a');
-		    $this->db->where('a.otpCode',$OtpCode);
+		    $this->db->where('a.patientID',$patientID);
 		    
 		    $query = $this->db->get();
 	        if($query->num_rows()>0){

@@ -21,7 +21,7 @@
 			$userID = $this->input->post("userID");
             $patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
-            $exisitingOtp_data = $this->UserOtp_model->checkOtpByPatientID($OtpCode);
+            $exisitingOtp_data = $this->UserOtp_model->checkOtpByPatientID($patientID);
 
             if($userID == null || $userID == ""){
             	echo json_encode("empty");
