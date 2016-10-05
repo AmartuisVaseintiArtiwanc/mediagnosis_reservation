@@ -135,10 +135,6 @@
                         <td>Telepon</td>
                         <td><?php echo $header->phoneNumber;?></td>
                     </tr>
-                    <tr>
-                        <td>Email</td>
-                        <td>satriaws@gmail.com</td>
-                    </tr>
                 </table>
             </div>
         </div>

@@ -107,11 +107,11 @@
                             <div class="row hide" id="button-confirm-queue">
                                 <div class="col-lg-6">
                                     <a href="#" class="btn btn-lg btn-danger btn-block btn-reservation-confirmation" data-value="reject">
-                                        <i class="fa fa-remove"></i><b>NO</b></a>
+                                        <i class="fa fa-remove"></i><b>LEWATI</b></a>
                                 </div>
                                 <div class="col-lg-6">
                                     <a href="#" class="btn btn-lg btn-success btn-block btn-reservation-confirmation" data-value="confirm">
-                                        <i class="fa fa-check-circle"></i><b> CONFIRM</b></a>
+                                        <i class="fa fa-check-circle"></i><b> TERIMA</b></a>
                                 </div>
                             </div>
 
@@ -269,13 +269,13 @@
             var $base_url = "<?php echo site_url();?>/";
 
             if($value=="confirm"){
-                $msg="Pasien Ada ?";
+                $msg="Anda yakin untuk memeriksa pasien ini ?";
                 $data = {
                     headerID : $reservation,
                     detailID : detailID
                 };
             }else if($value=="reject"){
-                $msg="Pasien Tidak Ada ?";
+                $msg="Anda yakin untuk tidak memeriksa pasien ini ?";
                 $data = {
                     headerID : $reservation,
                     detailID : detailID

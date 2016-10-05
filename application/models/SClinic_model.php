@@ -12,6 +12,17 @@ class SClinic_Model extends CI_Model {
         $query = $this->db->get();
 		return $query->result_array();
 	}
+
+    function getClinicListByID($clinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_s_clinic a');
+        $this->db->join('tbl_cyberits_m_poli b', 'a.poliID = b.poliID');
+        $this->db->where('a.clinicID',$clinicID);
+        $this->db->where('a.isActive',1);
+        $this->db->order_by('b.poliName','asc');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 	
     function createSettingClinic($data){
         $this->db->insert('tbl_cyberits_s_clinic',$data);	

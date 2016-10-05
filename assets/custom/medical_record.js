@@ -597,7 +597,7 @@ $(document).ready(function(){
             }
 
             swal({
-                title: 'Are you sure save this data?',
+                title: 'A?',
                 text: "You won't be able to revert this!",
                 type: 'warning',
                 showCancelButton: true,
@@ -648,6 +648,20 @@ $(document).ready(function(){
             })
             //alert(JSON.stringify(data_post));
         }
+    });
+
+    $("#btn-save-medical-record").click(function(e){
+        swal({
+            title: 'Are you sure save this data?',
+            text: "You won't be able to revert this!",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, save it!'
+        }).then(function(){
+
+        });
     });
 
 });/**

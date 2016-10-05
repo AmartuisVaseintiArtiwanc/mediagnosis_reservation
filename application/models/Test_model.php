@@ -89,6 +89,33 @@ class Test_model extends CI_Model{
         return $query->result_array();
     }
 
+    function getReservationNextQueue($clinic){
+        $date = date('Y-m-d', time());
+
+        #Create where clause
+        $this->db->select('reservationID');
+        $this->db->from('tbl_cyberits_t_header_reservation');
+        $this->db->where('clinicID',$clinic);
+        $this->db->where('isActive', 1);
+        $this->db->like('created',$date);
+        $where_clause = $this->db->get_compiled_select();
+
+        #Create main query
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
+        $this->db->join('tbl_cyberits_m_doctors d', 'a.doctorID = d.doctorID');
+        $this->db->like('a.created',$date);
+        $this->db->where('a.status ',"waiting");
+
+        $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
+        $this->db->order_by('a.created','desc');
+        //$this->db->limit(5, 0);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     function getPatientCurrentQueue($patientID){
         $date = date('Y-m-d', time());
         $this->db->select('*');
@@ -111,7 +138,35 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
-    function getCurrentQueue($clinic){
+    function getCurrentQueue($clinic,$poli){
+        $date = date('Y-m-d', time());
+
+        #Create where clause
+        $this->db->select('reservationID');
+        $this->db->from('tbl_cyberits_t_header_reservation');
+        $this->db->where('clinicID',$clinic);
+        $this->db->where('poliID',$poli);
+        $this->db->where('isActive', 1);
+        $this->db->like('created',$date);
+        $where_clause = $this->db->get_compiled_select();
+
+        #Create main query
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
+        $this->db->join('tbl_cyberits_m_doctors d', 'a.doctorID = d.doctorID');
+        $this->db->join('tbl_cyberits_m_patients e', 'a.patientID = e.patientID');
+        $this->db->like('a.created',$date);
+        $this->db->where('a.status',"check");
+        $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
+        $this->db->order_by('a.created','asc');
+        //$this->db->limit(5, 0);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function getCurrentQueueOLD(){
         $date = date('Y-m-d', time());
 
         #Create where clause

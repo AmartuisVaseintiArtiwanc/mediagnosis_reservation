@@ -1,5 +1,5 @@
 <style>
-    #current-queue-box{
+    .current-queue-box{
         min-height: 180px;
     }
     .small-box>.inner {
@@ -103,50 +103,9 @@
     <div class="row">
 
         <div class="col-lg-6">
-            <div class="box" id="content-container" >
+            <div class="box">
                 <div class="box-header">
                     <h3 class="box-title">Antrian Berikutnya</h3>
-                </div>
-
-                <div class="box-body">
-                    <div class="box box-primary">
-                        <div class="box-body box-profile" id="current-queue-box" data-queue="0">
-                            <div class="row hide" id="button-confirm-queue">
-                                <div class="col-lg-6">
-                                    <a href="#" class="btn btn-lg btn-danger btn-block btn-reservation-confirmation" data-value="reject">
-                                        <i class="fa fa-remove"></i><b> TIDAK ADA</b></a>
-                                </div>
-                                <div class="col-lg-6">
-                                    <a href="#" class="btn btn-lg btn-success btn-block btn-reservation-confirmation" data-value="confirm">
-                                        <i class="fa fa-check-circle"></i><b> ADA</b></a>
-                                </div>
-                            </div>
-
-                            <input type="hidden" id="detail-reservation-value" value="0" />
-                            <div id="current-queue-info" data-queue-number="" data-queue-poli="" data-queue-doctor=""></div>
-
-                            <div class="overlay loading-screen-queue">
-                                <i class="fa fa-user-times"></i>
-                                <br/>
-                                <h3 class="text-center">TIDAK ADA ANTRIAN</h3>
-                            </div>
-                        </div>
-                        <!-- /.box-body -->
-                        <div class="hide">
-                            <audio id="loading-beep">
-                                <source src="../assets/custom/audio.mp3" type="audio/mp3"/>
-                            </audio>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="box" id="content-container" >
-                <div class="box-header">
-                    <h3 class="box-title">Antrian Sebelumnya</h3>
                 </div>
 
                 <div class="box-body"id="current-queue-box-list">
@@ -166,78 +125,132 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6">
+            <?php foreach($poli_list as $row){?>
+                <div class="box box-poli" data-poli="<?php echo $row['poliID'];?>">
+                    <div class="box-header">
+                        <h3 class="box-title"><?php echo strtoupper($row['poliName']);?></h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="box box-primary">
+                            <div class="box-body box-profile current-queue-box" id="current-queue-box-<?php echo $row['poliID'];?>" data-queue="0">
+                                <div class="row hide" id="button-confirm-queue-<?php echo $row['poliID'];?>">
+                                    <div class="col-lg-6">
+                                        <a href="#" class="btn btn-lg btn-danger btn-block btn-reservation-confirmation" data-poli="<?php echo $row['poliID'];?>" data-value="reject">
+                                            <i class="fa fa-remove"></i><b> TIDAK ADA</b></a>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <a href="#" class="btn btn-lg btn-success btn-block btn-reservation-confirmation" data-poli="<?php echo $row['poliID'];?>" data-value="confirm">
+                                            <i class="fa fa-check-circle"></i><b> ADA</b></a>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" id="detail-reservation-value-<?php echo $row['poliID'];?>" value="0" />
+                                <div id="current-queue-info-<?php echo $row['poliID'];?>" data-queue-number="" data-queue-poli="" data-queue-doctor=""></div>
+
+                                <div class="overlay loading-screen-queue" id="loading-screen-queue-<?php echo $row['poliID'];?>">
+                                    <i class="fa fa-user-times"></i>
+                                    <br/>
+                                    <h3 class="text-center">TIDAK ADA ANTRIAN</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } ?>
+            <!-- /.box-body -->
+            <div class="hide">
+                <audio id="loading-beep">
+                    <source src="../assets/custom/audio.mp3" type="audio/mp3"/>
+                </audio>
+
+            </div>
+        </div>
     </div>
 </section>
 
 <script>
     $(function(){
         var count = 1;
-
         var $detailID,$headerID;
-        function getCurrentQueue() {
+        var $poliList = [];
+
+        getPoliList();
+        function getPoliList(){
+            $('.box-poli').each(function(){
+                var $poli= $(this).attr("data-poli");
+                $poliList.push($poli);
+            });
+        }
+        function getCurrentQueueEachPoli(poli){
             var $base_url = "<?php echo site_url();?>/";
-            var $currQueue = $("#current-queue-box").attr("data-queue");
+            var $currQueue = $("#current-queue-box-"+poli).attr("data-queue");
             var $clinic = $("#clinic-header-value").val();
             if($currQueue == 0) {
                 $.ajax({
                     url: $base_url+"reservation/getQueueCurrent",
-                    data: {clinic : $clinic},
+                    data: {clinic : $clinic, poli : poli},
                     type: "POST",
                     dataType: 'json',
                     cache:false,
                     beforeSend:function(){
                         //SHOW LOADING SCREEN
-                        $(".loading-screen-queue").removeClass("hide");
-                        $(".loading-screen-queue").show();
+                        $("#loading-screen-queue-"+poli).removeClass("hide");
+                        $("#loading-screen-queue-"+poli).show();
                     },
                     success:function(data){
                         if(data.status != "error"){
                             //RENDER QUEUE BOX
-                            renderQueueBox(data.output['noQueue'],data.output['poliName'],data.output['doctorName']);
-                            //SET DATA RESERVATION
-                            $detailID = data.output['detailID'];
-                            $("#detail-reservation-value").val($detailID);
-                            //SET COUNTER QUEUE
-                            $("#current-queue-box").attr("data-queue",1);
+                            if(data.output['poliID'] == poli){
+                                renderQueueBox(data.output['noQueue'],data.output['poliName'],data.output['doctorName'],data.output['poliID']);
+                                //SET DATA RESERVATION
+                                $detailID = data.output['detailID'];
+                                $poliID = data.output['poliID'];
+                                $("#detail-reservation-value-"+$poliID).val($detailID);
+                                //SET COUNTER QUEUE
+                                $("#current-queue-box-"+poli).attr("data-queue",1);
 
-                            //HIDE LOADING SCREEN
-                            $(".loading-screen-queue").hide();
-                            alertSound();
+                                //HIDE LOADING SCREEN
+                                $("#loading-screen-queue-"+$poliID).hide();
+                                alertSound();
+                            }
                         }
                     },
                     error: function(xhr, status, error) {
                         //var err = eval("(" + xhr.responseText + ")");
                         //alertify.error(xhr.responseText);
                         //HIDE LOADING SCREEN
-                        $(".loading-screen-queue").hide();
+                        $("#loading-screen-queue-"+poli).hide();
                     }
                 });
             }
         }
-        setInterval(getCurrentQueue, 1000);
 
-        function renderQueueBox(q_number,poli_name, doctor_name){
+        function loopGetCurrentQuery(){
+            $.each($poliList, function( index, value ) {
+                getCurrentQueueEachPoli(value);
+            });
+        }
+
+        setInterval(loopGetCurrentQuery, 2000);
+
+        function renderQueueBox(q_number,poli_name, doctor_name, poli){
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
-            var $queue_number = $("<h3>").html(q_number);
-            var $poli_doctor = $("<p>").html(poli_name+" - "+doctor_name);
-
-            var $icon = $("<div>", {class: "icon"});
-            var $i = $("<i>", {class: "ion ion-person"});
-            $i.appendTo($icon)
+            var $queue_number = $("<h3>", {class: "text-center"}).html(q_number);
+            var $poli_doctor = $("<p>", {class: "text-center"}).html(poli_name+" - "+doctor_name);
 
             $queue_number.appendTo($inner);
             $poli_doctor.appendTo($inner);
             $inner.appendTo($small_box);
-            $icon.appendTo($small_box)
-            $("#current-queue-box").prepend($small_box);
+            $("#current-queue-box-"+poli).prepend($small_box);
 
-            $("#current-queue-info").attr("data-queue-number",q_number);
-            $("#current-queue-info").attr("data-queue-poli",poli_name);
-            $("#current-queue-info").attr("data-queue-doctor",doctor_name);
+            $("#current-queue-info-"+poli).attr("data-queue-number",q_number);
+            $("#current-queue-info-"+poli).attr("data-queue-poli",poli_name);
+            $("#current-queue-info-"+poli).attr("data-queue-doctor",doctor_name);
 
-            $("#button-confirm-queue").removeClass("hide");
-            $("#button-confirm-queue").show();
+            $("#button-confirm-queue-"+poli).removeClass("hide");
+            $("#button-confirm-queue-"+poli).show();
         }
 
         function alertSound(){
@@ -248,9 +261,10 @@
         // CONFIRM ANTRIAN SEKARANG
         $(".btn-reservation-confirmation").click(function(){
             var $value = $(this).attr("data-value");
+            var $poli = $(this).attr("data-poli");
             var $title = "Confirmation";
             var $msg = "";
-            var detailID = $("#detail-reservation-value").val();
+            var detailID = $("#detail-reservation-value-"+$poli).val();
             var $base_url = "<?php echo site_url();?>/";
 
             if($value=="confirm"){
@@ -277,25 +291,23 @@
                         cache:false,
                         beforeSend:function(){
                             //SHOW LOADING SCREEN
-                            $(".loading-screen-queue").removeClass("hide");
-                            $(".loading-screen-queue").show();
+                            $("#loading-screen-queue-"+$poli).removeClass("hide");
+                            $("#loading-screen-queue-"+$poli).show();
                         },
                         success:function(data){
                             if(data.status != "error"){
                                 alertify.success(data.msg);
                                 //SET COUNTER QUEUE
-                                $("#current-queue-box").attr("data-queue",0);
+                                $("#current-queue-box-"+$poli).attr("data-queue",0);
                                 //HIDE LOADING SCREEN
-                                $(".loading-screen-queue").hide();
+                                $("#loading-screen-queue-"+$poli).hide();
 
                                 //REMOVE BOX
-                                $("#current-queue-box").children(".small-box").html("");
-                                $("#button-confirm-queue").hide();
-
-                                renderQueueListBox();
+                                $("#current-queue-box-"+$poli).children(".small-box").html("");
+                                $("#button-confirm-queue-"+$poli).hide();
                             }else{
                                 alertify.error(data.msg);
-                                $(".loading-screen-queue").hide();
+                                $("#loading-screen-queue-"+$poli).hide();
                             }
                         },
                         error: function(xhr, status, error) {
@@ -303,7 +315,7 @@
                             //alertify.error(xhr.responseText);
                             //HIDE LOADING SCREEN
                             alertify.error("Cannot response server !");
-                            $(".loading-screen-queue").hide();
+                            $("#loading-screen-queue-"+$poli).hide();
                         }
                     });
                 }
@@ -322,14 +334,9 @@
             var $queue_number = $("<h3>").html($qnumber);
             var $poli_doctor = $("<p>").html($poli+" - "+$doctor);
 
-            var $icon = $("<div>", {class: "icon"});
-            var $i = $("<i>", {class: "ion ion-person"});
-            $i.appendTo($icon)
-
             $queue_number.appendTo($inner);
             $poli_doctor.appendTo($inner);
             $inner.appendTo($small_box);
-            $icon.appendTo($small_box);
             $small_box.appendTo($div);
             $("#current-queue-box-list").prepend($div);
         }

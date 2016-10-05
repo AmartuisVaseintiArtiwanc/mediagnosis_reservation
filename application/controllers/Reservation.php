@@ -35,7 +35,9 @@ class Reservation extends CI_Controller {
         $this->createHeaderReservation($clinicPoliList,$clinicID );
 
         $data['reversation_clinic_data']  = $this->test_model->getHeaderReservationData($clinicID);
-        $data['reservation_latest_queue'] = $this->test_model->getReservationLatestQueue($clinicID);
+        $data['reservation_latest_queue'] = $this->test_model->getReservationNextQueue($clinicID);
+        $data['poli_list']  = $this->sclinic_model->getClinicListByID($clinicID);
+
         $data['main_content'] = 'reservation/reservation_home_view';
         $this->load->view('template/template', $data);
     }
@@ -77,7 +79,8 @@ class Reservation extends CI_Controller {
     /* Get Antrian Sekarang, Per Clinic*/
     function getQueueCurrent(){
         $clinicID = $this->security->xss_clean($this->input->post('clinic'));
-        $data = $this->test_model->getCurrentQueue($clinicID);
+        $poliID = $this->security->xss_clean($this->input->post('poli'));
+        $data = $this->test_model->getCurrentQueue($clinicID,$poliID);
 
         $output="";
         $status="error";
@@ -86,6 +89,7 @@ class Reservation extends CI_Controller {
                 "headerID"=>$data->reservationID,
                 "detailID"=>$data->detailReservationID,
                 "noQueue"=>$data->noQueue,
+                "poliID"=>$data->poliID,
                 "poliName" => strtoupper($data->poliName),
                 "doctorName" => $data->doctorName
             );
