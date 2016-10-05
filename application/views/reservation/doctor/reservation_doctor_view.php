@@ -35,15 +35,15 @@
 		display: block;
 		position: relative;
 		overflow: hidden;
-		margin-bottom: 15%;
+		margin-bottom: 10%;
 		margin-top: 3%;
 	}
 
 	div.welcome_message{
 		font-family: 'Roboto', sans-serif;
-		font-weight: 300;
+		font-weight: 500;
 		color: white;
-		font-size: 20px;
+		font-size: 25px;
 		margin-left: 2%;
 		float:left;
 	}
@@ -54,6 +54,7 @@
 
 	div.current_date{
 		font-family: 'Roboto', sans-serif;
+        font-size: 20px;
 		color: white;
 		float:right;
 		margin-right: 2%;
@@ -112,6 +113,10 @@
     }
 </style>
 <body>
+    <div class="pull-right box-body">
+        <a href="<?php echo site_url('Login/logout')?>" class="btn btn-lg btn-danger">Sign out</a>
+    </div><div class="clear"></div>
+
 	<div class="header_doctor_reservation">
 		<div class="welcome_message">Selamat Datang, <span class="green"><?php echo $doctor_data->doctorName;?></span></div>
 		<div class="current_date"><?php echo date("l, d F Y H:i:s ");?></div>
