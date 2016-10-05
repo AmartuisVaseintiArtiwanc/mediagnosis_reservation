@@ -21,6 +21,8 @@
 			$clinicID = $this->input->post('clinicID');
 			$poliID = $this->input->post('poliID');
 			$userID = $this->input->post('userID');
+			$patient_data = $this->Patient_model->getPatientByUserID($userID);
+            $patientID = $patient_data->patientID;
 			$verifyReservation = $this->HReservation_model->checkReservationToday($clinicID, $poliID);
 
 			if($userID!=null){
@@ -52,7 +54,7 @@
 		            	$data_reservasi = array(
 							'reservationID' => $query,
 							'noQueue' => 1,
-							'patientID' => $userID,
+							'patientID' => $patientID,
 							'status' => 'waiting',
 							'isActive' => 1,
 							'created' => $datetime,
@@ -100,7 +102,7 @@
 		            	$data_reservasi = array(
 							'reservationID' => $existingReservation->reservationID,
 							'noQueue' => $existingReservation->totalQueue + 1,
-							'patientID' => $userID,
+							'patientID' => $patientID,
 							'status' => 'waiting',
 							'isActive' => 1,
 							'created' => $datetime,
