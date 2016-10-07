@@ -54,6 +54,10 @@
         padding-left: 12px;
         padding-right: 12px;
     }
+    .margin-wrap{
+        width: 90%;
+        margin: 20px auto;
+    }
 </style>
 <body>
     <div class="headline">
@@ -70,7 +74,7 @@
         </h1>
 
     </div>
-<!--MODAL OTP-->
+<!--MODAL OTP
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
 
@@ -95,8 +99,17 @@
             </div>
         </form>
     </div>
+</div>-->
+<div class="w3-container w3-row margin-wrap">
+    <div class="w3-col m6">
+        <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $doctor_data->doctorName;?></span>
+    </div>
+    <div class="w3-col m6 w3-right-align">
+        <span class="w3-large w3-text-green" id="date-name"></span>
+        <span class="w3-large w3-text-green">, pkl </span>
+        <span class="w3-large w3-text-green" id="time-name"></span>
+    </div>
 </div>
-
 <div id="wrap">
     <div id="accordian">
         <div class="step" id="step1">
@@ -518,6 +531,44 @@
         $("#request-otp-btn").click(function(){
             $("#otp-input-form").show();
         });
+    });
+</script>
+<script>
+    $(function(){
+        //DIGITAL ANALOG
+        function dateTime(){
+            var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            var myDays = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            var date = new Date();
+            var day = date.getDate();
+            var month = date.getMonth();
+            var thisDay = date.getDay(),
+                thisDay = myDays[thisDay];
+            var yy = date.getYear();
+            var year = (yy < 1000) ? yy + 1900 : yy;
+
+            $("#date-name").html(thisDay + ', ' + day + ' ' + months[month] + ' ' + year);
+        }
+
+        function startTime() {
+            var today=new Date(),
+                curr_hour=today.getHours(),
+                curr_min=today.getMinutes(),
+                curr_sec=today.getSeconds();
+            curr_hour=checkTime(curr_hour);
+            curr_min=checkTime(curr_min);
+            curr_sec=checkTime(curr_sec);
+            $("#time-name").html(curr_hour+":"+curr_min+":"+curr_sec);
+        }
+        function checkTime(i) {
+            if (i<10) {
+                i="0" + i;
+            }
+            return i;
+        }
+        dateTime();
+        setInterval(startTime, 500);
+
     });
 </script>
 </body>

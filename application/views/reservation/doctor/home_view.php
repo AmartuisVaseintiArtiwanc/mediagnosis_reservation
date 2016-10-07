@@ -262,11 +262,6 @@
         // CONFIRM ANTRIAN SEKARANG
         $(".btn-reservation-confirmation").click(function(){
             var $value = $(this).attr("data-value");
-            var $title = "Confirmation";
-            var $msg = "";
-            var $reservation = $("#reservation-header-value").val();
-            var detailID = $("#detail-reservation-value").val();
-            var $base_url = "<?php echo site_url();?>/";
 
             if($value=="confirm"){
                 $msg="Anda yakin untuk memeriksa pasien ini ?";
@@ -274,13 +269,19 @@
                     headerID : $reservation,
                     detailID : detailID
                 };
+                // SAVE CONFIRMATION TO DB
+                saveConfirmReservation($data, $msg);
             }else if($value=="reject"){
-                $msg="Anda yakin untuk tidak memeriksa pasien ini ?";
-                $data = {
-                    headerID : $reservation,
-                    detailID : detailID
-                };
+                $msg="Anda yakin untuk melewati pasien ini ?";
+                $("#current-queue-box").attr("data-queue",0);
             }
+        });
+
+        function saveConfirmReservation($data,$msg){
+            var $title = "Confirmation";
+            var $reservation = $("#reservation-header-value").val();
+            var detailID = $("#detail-reservation-value").val();
+            var $base_url = "<?php echo site_url();?>/";
 
             alertify.confirm($msg,
                 function(){
@@ -331,7 +332,7 @@
                     });
                 }
             ).setHeader($title);
-        });
+        }
     });
 </script>
 

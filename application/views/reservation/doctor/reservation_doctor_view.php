@@ -119,7 +119,7 @@
 
 	<div class="header_doctor_reservation">
 		<div class="welcome_message">Selamat Datang, <span class="green"><?php echo $doctor_data->doctorName;?></span></div>
-		<div class="current_date"><?php echo date("l, d F Y H:i:s ");?></div>
+		<div class="current_date"><span id="date-name"></span>, pkl <span id="time-name"></span></div>
 	</div>
 	<div class="clear"></div>
 
@@ -167,6 +167,44 @@
         <h2 class="text-center">MENUNGGU KONFIRMASI ADMIN</h2>
     </div>
 
+    <script>
+        $(function(){
+            //DIGITAL ANALOG
+            function dateTime(){
+                var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                var myDays = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+                var date = new Date();
+                var day = date.getDate();
+                var month = date.getMonth();
+                var thisDay = date.getDay(),
+                    thisDay = myDays[thisDay];
+                var yy = date.getYear();
+                var year = (yy < 1000) ? yy + 1900 : yy;
+
+                $("#date-name").html(thisDay + ', ' + day + ' ' + months[month] + ' ' + year);
+            }
+
+            function startTime() {
+                var today=new Date(),
+                    curr_hour=today.getHours(),
+                    curr_min=today.getMinutes(),
+                    curr_sec=today.getSeconds();
+                curr_hour=checkTime(curr_hour);
+                curr_min=checkTime(curr_min);
+                curr_sec=checkTime(curr_sec);
+                $("#time-name").html(curr_hour+":"+curr_min+":"+curr_sec);
+            }
+            function checkTime(i) {
+                if (i<10) {
+                    i="0" + i;
+                }
+                return i;
+            }
+            dateTime();
+            setInterval(startTime, 500);
+
+        });
+    </script>
 	<script>
     $(function(){
         var count = 1;
@@ -286,25 +324,38 @@
         // CONFIRM ANTRIAN SEKARANG
         $(".btn-reservation-confirmation").click(function(){
             var $value = $(this).attr("data-value");
-            var $title = "Confirmation";
-            var $msg = "";
             var $reservation = $("#reservation-header-value").val();
             var detailID = $("#detail-reservation-value").val();
-            var $base_url = "<?php echo site_url();?>/";
 
             if($value=="confirm"){
-                $msg="Apakah Anda yakin menerima pasien ini ?";
+                $msg="Apakah Anda yakin untuk menerima pasien ini ?";
                 $data = {
                     headerID : $reservation,
                     detailID : detailID
                 };
+                saveConfirmReservation($data,$msg);
             }else if($value=="reject"){
-                $msg="Lewati Pasien ini ?";
-                $data = {
-                    headerID : $reservation,
-                    detailID : detailID
-                };
+                $msg="Apakah Anda yakin untuk melewati pasien ini ?";
+                alertify.confirm($msg,
+                    function() {
+                        //SET COUNTER QUEUE
+                        $("#current-queue-info").attr("data-queue",0);
+                        //REMOVE BOX
+                        //HIDE LOADING SCREEN
+                        $(".content_doctor_reservartion").hide();
+                        $(".button_reservation").hide();
+                        $("#empty-queue-container").show();
+
+                    }
+                ).setHeader("KONFIRMASI");
+
             }
+
+        });
+
+        function saveConfirmReservation($data,$msg){
+            var $title = "KONFIRMASI";
+            var $base_url = "<?php echo site_url();?>/";
 
             alertify.confirm($msg,
                 function(){
@@ -354,7 +405,7 @@
                     });
                 }
             ).setHeader($title);
-        });
+        }
     });
 </script>
 </body>
