@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>
-        Sample Page by Designscrazed.com
+        Mediagnosis | MRIS
     </title>
     <!--Main CSS-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/doctor.css">
@@ -56,10 +56,20 @@
     }
 </style>
 <body>
-<!--  Start here -->
+    <div class="headline">
 
-<body>
+        <h6></h6>
 
+        <h1>
+            <b><?php echo $header_data->clinicName;?></b>
+            <h6></h6>
+        </h1>
+        <h4> <?php echo $header_data->clinicAddress;?></h4>
+        <h1>
+            <b>REKAM MEDIS</b>
+        </h1>
+
+    </div>
 <!--MODAL OTP-->
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
@@ -265,15 +275,16 @@
 
                     <form class="w3-container">
                         <p>
-                            <label class="w3-label">Tekenan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
+                            <label class="w3-label">Tekanan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
                             <div class="w3-row">
-                                <div class="w3-col m4">
+                                <div class="w3-col m2">
                                     <input class="w3-input" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text">
                                 </div>
-                                <div class="w3-col m4 w3-padding-lr">
+                                <div class="w3-col m1 w3-center"><span class="w3-xlarge">/</span></div>
+                                <div class="w3-col m2">
                                     <input class="w3-input" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text">
                                 </div>
-                                <div class="w3-col m4">
+                                <div class="w3-col m3">
                                     <label class="w3-padding">mmHg</label>
                                 </div>
                             </div>
@@ -307,7 +318,7 @@
                                     <input class="w3-input" id="temperature-input" data-label="#temperature-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m6">
-                                    <label class="w3-padding">Celcius</label>
+                                    <label class="w3-padding">&deg Celcius</label>
                                 </div>
                             </div>
                         </p>

@@ -46,6 +46,18 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
+    function getHeaderMedicalRecordByDetail($detailID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics c', 'c.clinicID = b.clinicID');
+        $this->db->where('a.detailReservationID',$detailID);
+
+        //$this->db->limit(5, 0);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     function getHeaderReservationDataByDoctor($clinic,$poli){
         $date = date('Y-m-d', time());
 

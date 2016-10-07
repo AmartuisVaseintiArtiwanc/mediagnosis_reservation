@@ -183,6 +183,7 @@ class ReservationDoctor extends CI_Controller {
         $check_medical_record = $this->test_model->getReservationDetailDoctor($detailReservation,$doctor_data->doctorID,'confirm');
 
         if(isset($check_medical_record)){
+            $data['header_data'] = $this->test_model->getHeaderMedicalRecordByDetail($detailReservation);
             $data['patient_data']  = $this->patient_model->getPatientByID($check_medical_record->patientID);
             $data['reservation_data']  = $check_medical_record;
             $this->load->view('reservation/doctor/medical_record_view', $data);
