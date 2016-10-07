@@ -293,13 +293,13 @@
             var $base_url = "<?php echo site_url();?>/";
 
             if($value=="confirm"){
-                $msg="Pasien Ada ?";
+                $msg="Apakah Anda yakin menerima pasien ini ?";
                 $data = {
                     headerID : $reservation,
                     detailID : detailID
                 };
             }else if($value=="reject"){
-                $msg="Pasien Tidak Ada ?";
+                $msg="Lewati Pasien ini ?";
                 $data = {
                     headerID : $reservation,
                     detailID : detailID

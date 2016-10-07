@@ -100,6 +100,14 @@ class Reservation extends CI_Controller {
 
     function getQueueNext(){
         $clinicID = $this->security->xss_clean($this->input->post('clinic'));
+
+        $data= $this->test_model->getReservationNextQueue($clinicID);
+        $output="";
+        $status="error";
+        if(isset($data)){
+            $output =$data;
+            $status="success";
+        }
         echo json_encode(array('status' => $status, 'output' => $output));
     }
 

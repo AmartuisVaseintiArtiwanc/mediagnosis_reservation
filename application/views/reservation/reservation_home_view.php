@@ -53,6 +53,11 @@
         font-size: 16px;
     }
 
+    #next-queue-box-list{
+        max-height: 600px;
+        overflow-x: scroll;
+    }
+
     /*Overlay*/
     .overlay h3{
         top: 57px;
@@ -108,13 +113,13 @@
                     <h3 class="box-title">Antrian Berikutnya</h3>
                 </div>
 
-                <div class="box-body"id="current-queue-box-list">
+                <div class="box-body" id="next-queue-box-list">
                     <?php foreach($reservation_latest_queue as $row) { ?>
-                        <div class="col-lg-12 col-xs-12">
+                        <div class="col-lg-12 col-xs-12" id="next-queue-<?php echo $row['detailReservationID'];?>">
                             <div class="small-box-list bg-green">
                                 <div class="inner">
-                                    <h3><?php echo $row['noQueue'];?></h3>
-                                    <p><?php echo strtoupper($row['poliName']);?>- <?php echo ($row['doctorName']);?></p>
+                                    <h3><?php echo $row['noQueue'];?> - <?php echo $row['patientName'];?></h3>
+                                    <p><?php echo strtoupper($row['poliName']);?></p>
                                 </div>
                                 <div class="icon">
                                     <i class="ion ion-person"></i>
@@ -209,9 +214,10 @@
                                 $("#detail-reservation-value-"+$poliID).val($detailID);
                                 //SET COUNTER QUEUE
                                 $("#current-queue-box-"+poli).attr("data-queue",1);
-
+                                // REMOVE NEXT QUEUE ON LIST
+                                //$("#next-queue-"+$detailID).remove();
                                 //HIDE LOADING SCREEN
-                                $("#loading-screen-queue-"+$poliID).hide();
+                                $("#loading-screen-queue-"+poli).hide();
                                 alertSound();
                             }
                         }
@@ -230,6 +236,8 @@
             $.each($poliList, function( index, value ) {
                 getCurrentQueueEachPoli(value);
             });
+
+            getNextQueueList();
         }
 
         setInterval(loopGetCurrentQuery, 2000);
@@ -322,8 +330,35 @@
             ).setHeader($title);
         });
 
-        function renderQueueListBox(){
+        function getNextQueueList(){
+            var $clinic = $("#clinic-header-value").val();
+            var $base_url = "<?php echo site_url();?>/";
+            $.ajax({
+                url: $base_url+"reservation/getQueueNext",
+                data: {clinic : $clinic},
+                type: "POST",
+                dataType: 'json',
+                cache:false,
+                beforeSend:function(){
 
+                },
+                success:function(data){
+                    if(data.status != "error"){
+                        $("#next-queue-box-list").html("");
+                        $queue_data = data.output;
+
+                        $.each($queue_data, function( key, value ) {
+                            renderNextQueue(value.noQueue,value.poliName,value.patientName,value.poliID);
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    //HIDE LOADING SCREEN
+                }
+            });
+        }
+
+        function renderNextQueue(q_number,poli_name, patient_name, poli){
             var $qnumber = $("#current-queue-info").attr("data-queue-number");
             var $poli = $("#current-queue-info").attr("data-queue-poli");
             var $doctor =  $("#current-queue-info").attr("data-queue-doctor");
@@ -331,14 +366,14 @@
             var $div = $("<div>", {class: "col-lg-12 col-xs-12"});
             var $small_box = $("<div>", {class: "small-box-list bg-green", "data-value": "0"});
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
-            var $queue_number = $("<h3>").html($qnumber);
-            var $poli_doctor = $("<p>").html($poli+" - "+$doctor);
+            var $queue_number = $("<h3>").html(q_number+" - "+patient_name);
+            var $poli_doctor = $("<p>").html(poli_name);
 
             $queue_number.appendTo($inner);
             $poli_doctor.appendTo($inner);
             $inner.appendTo($small_box);
             $small_box.appendTo($div);
-            $("#current-queue-box-list").prepend($div);
+            $("#next-queue-box-list").append($div);
         }
     });
 </script>

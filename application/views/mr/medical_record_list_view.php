@@ -11,16 +11,24 @@
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/doctor.css">
     <!--Grid W3 System-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/grid.css">
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/css/bootstrap.min.css">
     <!--Font Awesome-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/font-awesome/css/font-awesome.css">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700,600' rel='stylesheet' type='text/css'>
     <!--Sweet Alert-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.css">
+    <!--DatePicker-->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/bootstrap-material-datepicker/css/bootstrap-material-datetimepicker.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <!--Sweet Alert-->
     <script src="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
     <!--Select2-->
     <script src="<?php echo base_url();?>assets/plugins/jQuery/jQuery-2.2.0.min.js"></script>
+    <!--DatePicker-->
+    <script src="<?php echo base_url();?>assets/plugins/bootstrap-material-datepicker/js/moment.js"></script>
+    <script src="<?php echo base_url();?>assets/plugins/bootstrap-material-datepicker/js/bootstrap-material-datetimepicker.js"></script>
 
 </head>
 <style>
@@ -53,8 +61,8 @@
         <div class="w3-row content">
             <div class="we-col-m12">
                 <div class="w3-btn-group w3-right search-btn-container">
-                    <button class="w3-btn w3-padding-medium w3-margin-left w3-teal">DATE</button>
-                    <button class="w3-btn w3-padding-medium w3-margin-left w3-teal">PERIODE</button>
+                    <button onclick="document.getElementById('id01').style.display='block'" class="w3-btn w3-padding-medium w3-margin-left w3-teal">DATE</button>
+                    <button onclick="document.getElementById('id01').style.display='block'" class="w3-btn w3-padding-medium w3-margin-left w3-teal">PERIODE</button>
                 </div>
                 <div class="w3-clear"></div>
             </div>
@@ -94,7 +102,49 @@
             </div>
         </div>
     </div>
+    <!--MODAL-->
+    <div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
+
+            <div class="w3-center"><br>
+                <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn w3-hover-red w3-container w3-padding-8 w3-display-topright" title="Close Modal">&times;</span>
+            </div>
+
+            <form class="w3-container w3-margin-top" action="form.asp">
+                <div class="w3-section">
+                    <label><b>Pilih Tanggal</b></label>
+                    <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Enter Username" name="usrname" required>
+
+                    <label><b>Periode</b></label>
+                    <input class="w3-input w3-border" id="date-start" type="text" placeholder="Tanggal Mulai" name="psw" required>
+                    <input class="w3-input w3-border" id="date-end" type="text" placeholder="Sampai Tanggal" name="psw" required>
+                    <button class="w3-btn-block w3-green w3-section w3-padding" type="submit">CARI</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#date').bootstrapMaterialDatePicker
+        ({
+            time: false,
+            clearButton: true
+        });
+
+        $('#date-end').bootstrapMaterialDatePicker
+        ({
+            weekStart: 0, format: 'DD/MM/YYYY', time: false
+        });
+        $('#date-start').bootstrapMaterialDatePicker
+        ({
+            weekStart: 0, format: 'DD/MM/YYYY', time: false
+        }).on('change', function(e, date)
+        {
+            $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
+        });
+    });
+</script>
 </body>
 </html>

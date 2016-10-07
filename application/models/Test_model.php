@@ -105,12 +105,13 @@ class Test_model extends CI_Model{
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
-        $this->db->join('tbl_cyberits_m_doctors d', 'a.doctorID = d.doctorID');
+        $this->db->join('tbl_cyberits_m_patients e', 'a.patientID = e.patientID');
+
         $this->db->like('a.created',$date);
         $this->db->where('a.status ',"waiting");
 
         $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
-        $this->db->order_by('a.created','desc');
+        $this->db->order_by('a.detailReservationID','asc');
         //$this->db->limit(5, 0);
         $query = $this->db->get();
         return $query->result_array();
@@ -166,7 +167,7 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
-    function getCurrentQueueOLD(){
+    function getCurrentQueueOLD($clinic){
         $date = date('Y-m-d', time());
 
         #Create where clause
