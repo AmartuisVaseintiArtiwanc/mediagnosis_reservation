@@ -11,6 +11,16 @@ class Login_model extends CI_Model {
 		return $query->row();
 		
 	}
+
+	public function validateByEmail($email, $password)
+	{
+		$this->db->where('email', $email);
+		$this->db->where('Password', md5($password));
+		$query = $this->db->get('tbl_cyberits_m_users');
+		
+		return $query->row();
+		
+	}	
 	
 	public function create_member()
 	{
