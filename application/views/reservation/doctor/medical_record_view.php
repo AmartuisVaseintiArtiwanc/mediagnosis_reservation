@@ -74,7 +74,7 @@
         </h1>
 
     </div>
-<!--MODAL OTP-->
+<!--MODAL OTP
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
 
@@ -99,7 +99,7 @@
             </div>
         </form>
     </div>
-</div>
+</div>-->
 <div class="w3-container w3-row margin-wrap">
     <div class="w3-col m6">
         <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $doctor_data->doctorName;?></span>
