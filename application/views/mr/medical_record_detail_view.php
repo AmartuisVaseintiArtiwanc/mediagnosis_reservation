@@ -353,7 +353,7 @@
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">DIAGNOSA PENUNJANG  <span class="w3-tag w3-red err-msg" id="support-diagnose-err-msg"></span></h4>
+                        <h4 class="w3-left">DIAGNOSA BANDING  <span class="w3-tag w3-red err-msg" id="support-diagnose-err-msg"></span></h4>
                     </div>
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->

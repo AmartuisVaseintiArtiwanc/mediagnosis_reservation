@@ -74,7 +74,7 @@
         </h1>
 
     </div>
-<!--MODAL OTP
+<!--MODAL OTP-->
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
 
@@ -85,9 +85,9 @@
         <form class="w3-container" action="form.asp">
             <div class="w3-section" id="otp-input-form">
                 <label class="w3-large"><b>OTP</b></label>
-                <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter OTP" name="usrname" required>
+                <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter OTP" name="usrname">
             </div>
-            <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge" id="request-otp-btn" type="submit">REQUEST OTP</button>
+            <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge" id="request-otp-btn" type="button">REQUEST OTP</button>
             <div class="w3-container w3-border-top w3-padding-16">
                 <div class="w3-col m6">
                     <button onclick="document.getElementById('id01').style.display='none'"
@@ -99,7 +99,7 @@
             </div>
         </form>
     </div>
-</div>-->
+</div>
 <div class="w3-container w3-row margin-wrap">
     <div class="w3-col m6">
         <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $doctor_data->doctorName;?></span>
@@ -180,11 +180,27 @@
                         <td><?php echo $patient_data->patientName;?></td>
                     </tr>
                     <tr>
-                        <td>Tempat, Tanngal Lahir</td>
-                        <td><?php echo $patient_data->dob;?></td>
+                        <td>Tempat, Tanggal Lahir</td>
+                        <td>
+                            <?php
+                            $date_created=date_create($patient_data->dob);
+                            echo date_format($date_created,"d F Y");?>
+                        </td>
                     </tr>
                     <tr>
-                        <td>Perusahaan</td>
+                        <td>Jenis Kelamin</td>
+                        <td><?php echo $patient_data->gender;?></td>
+                    </tr>
+                    <tr>
+                        <td>Status Peserta</td>
+                        <td><?php echo $patient_data->participantStatus;?></td>
+                    </tr>
+                    <tr>
+                        <td>Jenis Peserta</td>
+                        <td><?php echo $patient_data->participantType;?></td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
                         <td><?php echo $patient_data->address;?></td>
                     </tr>
                     <tr>
@@ -287,6 +303,20 @@
                     </div>
 
                     <form class="w3-container">
+                        <p>
+                            <label class="w3-label">Kesadaran</label> <span class="w3-tag w3-red" id="conscious-err-msg"></span>
+                            <div class="w3-row">
+                            <select class="w3-select" name="option" id="conscious-input">
+                                <option value="Compos Mentis" selected>Compos Mentis</option>
+                                <option value="Apatis">Apatis</option>
+                                <option value="Delirium">Delirium</option>
+                                <option value="Somnolen">Somnolen</option>
+                                <option value="Stupor">Stupor</option>
+                                <option value="Semi Coma">Semi Coma</option>
+                                <option value="Coma">Coma</option>
+                            </select>
+                            </div>
+                        </p>
                         <p>
                             <label class="w3-label">Tekanan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
                             <div class="w3-row">
@@ -437,7 +467,7 @@
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
-                        <h4 class="w3-left">DIAGNOSA PENUNJANG  <span class="w3-tag w3-red err-msg" id="support-diagnose-err-msg"></span></h4>
+                        <h4 class="w3-left">DIAGNOSA BANDING  <span class="w3-tag w3-red err-msg" id="support-diagnose-err-msg"></span></h4>
                     </div>
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
@@ -496,6 +526,7 @@
                 </div>
             </div>
 
+            <!--Rujukan-->
             <div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
@@ -510,10 +541,96 @@
                     </form>
                 </div>
             </div>
+        </div>
+
+        <!-- KUNJUNGAN -->
+        <div class="step" id="step4">
+            <div class="number">
+                <span>5</span>
+            </div>
+            <div class="title">
+                <h1>KUNJUNGAN</h1>
+            </div>
+            <div class="modify">
+                <i class="fa fa-plus-circle"></i>
+            </div>
+        </div>
+        <div class="content w3-row">
+
+            <!--Rujukan-->
+            <div class="w3-col m6 w3-padding-small">
+                <div class="w3-card-4 w3-margin">
+                    <div class="w3-container w3-green">
+                        <h4 class="w3-left">JENIS KUNJUNGAN</h4>
+                    </div>
+
+                    <form class="w3-container" id="visit-form">
+                        <p>
+                            <div class="w3-row-padding">
+                                <div class="w3-half">
+                                    <input class="w3-radio" type="radio" name="visit-type-input" value="Kunjungan Sehat">
+                                    <label class="w3-validate w3-large">Kunjungan Sehat</label>
+                                </div>
+                                <div class="w3-half">
+                                    <input class="w3-radio" type="radio" name="visit-type-input" value="Kunjungan Sakit" checked>
+                                    <label class="w3-validate w3-large">Kunjungan Sakit</label>
+                                </div>
+                            </div>
+                        </p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+
+            <!--Rujukan-->
+            <div class="w3-col m6 w3-padding-small">
+                <div class="w3-card-4 w3-margin">
+                    <div class="w3-container w3-green">
+                        <h4 class="w3-left">PERAWATAN</h4>
+                    </div>
+
+                    <form class="w3-container" id="treatment-form">
+                        <p>
+                            <div class="w3-row-padding">
+                                <div class="w3-half">
+                                    <input class="w3-radio" type="radio" name="treatment-input" value="Rawat Jalan">
+                                    <label class="w3-validate w3-large">Rawat Jalan</label>
+                                </div>
+                                <div class="w3-half">
+                                    <input class="w3-radio" type="radio" name="treatment-input" value="Rawat Inap" checked>
+                                    <label class="w3-validate w3-large">Rawat Inap</label>
+                                </div>
+                            </div>
+                        </p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+
+            <!--Rujukan-->
+            <div class="w3-col m6 w3-padding-small">
+                <div class="w3-card-4 w3-margin">
+                    <div class="w3-container w3-green">
+                        <h4 class="w3-left">STATUS PULANG</h4>
+                    </div>
+
+                    <form class="w3-container">
+                        <p>
+                            <select class="w3-select" name="option" id="status-diagnose-input">
+                                <option value="Sembuh" selected>Sembuh</option>
+                                <option value="Sakit">Sakit</option>
+                            </select>
+                        </p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+
             <input type="hidden" id="base-url" value="<?php echo site_url();?>"/>
             <input type="hidden" id="detail-reservation" value="<?php echo $reservation_data->detailReservationID;?>"/>
             <input type="hidden" id="patient-id" value="<?php echo $reservation_data->patientID;?>"/>
         </div>
+
         <div class="w3-center">
             <button class="w3-btn w3-red" id="btn-cancel-medical-record">BATAL</button>
             <button class="w3-btn w3-green" id="btn-save-medical-record">SIMPAN</button>

@@ -148,6 +148,9 @@ class MedicalRecord extends CI_Controller {
         // SAVE MEDICAL RECORD DETAIL
         $condition_date = $data[0]['condition_date'];
         $reference = $data[0]['rujukan'];
+        $visitType = $data[0]['visit_type'];
+        $treatment = $data[0]['treatment'];
+        $statusDiagnose = $data[0]['status_diagnose'];
 
         $mr_detail_data=array(
             'medicalRecordID'=>$header_data,
@@ -155,6 +158,9 @@ class MedicalRecord extends CI_Controller {
             'workingDiagnose'=>$working_diagnose,
             'conditionDate'=>$condition_date,
             'reference'=>$reference,
+            'visitType'=>$visitType,
+            'treatment'=>$treatment,
+            'statusDiagnose'=>$statusDiagnose,
             'isActive'=>1,
             'created'=>$datetime,
             "createdBy" => $this->session->userdata('userID'),
@@ -295,6 +301,7 @@ class MedicalRecord extends CI_Controller {
         }
 
         // EXAMINATION / PEMERIKSAAN
+        $conscious = $data[0]['conscious'];
         $blood_low = $data[0]['blood_low'];
         $blood_high = $data[0]['blood_high'];
         $pulse = $data[0]['pulse'];
@@ -305,6 +312,7 @@ class MedicalRecord extends CI_Controller {
 
         $physical_examination_data=array(
             'medicalRecordID'=>$header_data,
+            'conscious'=>$conscious,
             'bloodPreasureLow'=>$blood_low,
             'bloodPreasureHigh'=>$blood_high,
             'pulse'=>$pulse,
@@ -370,7 +378,29 @@ class MedicalRecord extends CI_Controller {
     function getMedicalRecordList($patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
+        $patient_data = $this->patient_model->getPatientByID($patientID);
+
         $data['medical_record_data']  = $medical_record_header;
+        $data['patient_data']  = $patient_data;
+        $this->load->view('mr/medical_record_list_view', $data);
+    }
+
+    function getMedicalRecordBySearchDate(){
+        //$data = $this->input->post('data');
+        $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
+        $patient_data = $this->patient_model->getPatientByID($patientID);
+
+        $data['medical_record_data']  = $medical_record_header;
+        $data['patient_data']  = $patient_data;
+        $this->load->view('mr/medical_record_list_view', $data);
+    }
+    function getMedicalRecordBySearchPeriod(){
+        //$data = $this->input->post('data');
+        $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
+        $patient_data = $this->patient_model->getPatientByID($patientID);
+
+        $data['medical_record_data']  = $medical_record_header;
+        $data['patient_data']  = $patient_data;
         $this->load->view('mr/medical_record_list_view', $data);
     }
 

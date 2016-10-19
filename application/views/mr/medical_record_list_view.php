@@ -56,21 +56,32 @@
 <!--  Start here -->
 
 <body>
+<div class="headline">
+
+    <h6></h6>
+    <h1>
+        <b>REKAM MEDIS</b>
+    </h1>
+    <h6></h6>
+    <h2><?php echo $patient_data->patientName;?></h2>
+</div>
+
 <div id="wrap">
+    <div class="we-col-m12">
+        <div class="w3-btn-group w3-right search-btn-container">
+            <button onclick="document.getElementById('id01').style.display='block'"
+                    id="btn-search-date" class="w3-btn w3-padding-medium w3-margin-left w3-teal">DATE</button>
+            <button onclick="document.getElementById('id01').style.display='block'"
+                    id="btn-search-period" class="w3-btn w3-padding-medium w3-margin-left w3-teal">PERIODE</button>
+        </div>
+        <div class="w3-clear"></div>
+    </div>
     <div id="accordian">
         <div class="w3-row content">
-            <div class="we-col-m12">
-                <div class="w3-btn-group w3-right search-btn-container">
-                    <button onclick="document.getElementById('id01').style.display='block'" class="w3-btn w3-padding-medium w3-margin-left w3-teal">DATE</button>
-                    <button onclick="document.getElementById('id01').style.display='block'" class="w3-btn w3-padding-medium w3-margin-left w3-teal">PERIODE</button>
-                </div>
-                <div class="w3-clear"></div>
-            </div>
-            <br>
             <div class="w3-col m12">
-                <ul class="w3-ul w3-card-4">
+                <ul class="w3-ul w3-card-4" id="mr-ul">
                     <?php foreach($medical_record_data as $row){?>
-                        <li class="w3-padding-16 w3-hover-blue-grey">
+                        <li class="w3-padding-16 w3-hover-green">
                             <div class="w3-row">
                                 <div class="w3-col m6">
                                     <div class="w3-padding-medium w3-left w3-circle ">
@@ -89,8 +100,8 @@
                                     <div class="w3-padding-medium w3-left w3-circle ">
                                         <i class="fa fa-stethoscope fa-icon"></i>
                                     </div>
-                                    <span class="w3-xlarge">DIAGNOSA</span><br>
-                                    <span class="w3-large"><?php echo $row['diseaseName'];?></span><br>
+                                    <span class="w3-large">DIAGNOSA</span><br>
+                                    <span class="w3-large"><b><?php echo $row['diseaseName'];?></b></span><br>
                                     <div class="w3-padding-medium">
                                         <a href="<?php echo site_url("MedicalRecord/getMedicalRecordDetail/".$row['medicalRecordID']);?>"><button class="w3-btn w3-light-grey"> <i class="fa fa-search"></i> Lihat Detail</button></a>
                                     </div>
@@ -112,13 +123,23 @@
 
             <form class="w3-container w3-margin-top" action="form.asp">
                 <div class="w3-section">
-                    <label><b>Pilih Tanggal</b></label>
-                    <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Enter Username" name="usrname" required>
+                    <div id="search-date-field">
+                        <label><b>Pilih Tanggal</b></label>
+                        <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Enter Username" name="usrname" required>
+                    </div>
 
-                    <label><b>Periode</b></label>
-                    <input class="w3-input w3-border" id="date-start" type="text" placeholder="Tanggal Mulai" name="psw" required>
-                    <input class="w3-input w3-border" id="date-end" type="text" placeholder="Sampai Tanggal" name="psw" required>
-                    <button class="w3-btn-block w3-green w3-section w3-padding" type="submit">CARI</button>
+                    <div id="search-period-field">
+                        <label><b>Periode</b></label>
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <input class="w3-input w3-border" id="date-start" type="text" placeholder="Tanggal Mulai" name="psw">
+                            </div>
+                            <div class="w3-half">
+                                <input class="w3-input w3-border" id="date-end" type="text" placeholder="Sampai Tanggal" name="psw">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w3-btn-block w3-green w3-section w3-padding" id="btn-search-modal" data-search="" type="button">CARI</button>
                 </div>
             </form>
         </div>
@@ -144,6 +165,129 @@
         {
             $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
         });
+
+        $("#btn-search-date").click(function(){
+            $("#search-period-field").hide();
+            $("#search-date-field").show();
+            $("#btn-search-modal").attr("data-search","date");
+        });
+        $("#btn-search-period").click(function(){
+            $("#search-date-field").hide();
+            $("#search-period-field").show();
+            $("#btn-search-modal").attr("data-search","period");
+        });
+
+        $("#btn-search-modal").click(function(){
+            var $base_url,$data;
+            var $search = $("#btn-search-modal").attr("data-search");
+            var $patient = "<?php echo $patient_data->patientID;?>";
+
+            if($search == "date"){
+                $base_url = "<?php echo site_url("MedicalRecord/getMedicalRecordBySearchDate");?>";
+                var $date = $('#date').val();
+                $data={
+                    patientID : $patient,
+                    date : $date
+                };
+
+            }else if($search == "periode"){
+                $base_url = "<?php echo site_url("MedicalRecord/getMedicalRecordBySearchPeriod");?>";
+                var $start_date = $('#date-start').val();
+                var $end_date = $('#date-end').val();
+                $data={
+                    patientID : $patient,
+                    startDate : $start_date,
+                    endDate : $end_date
+                };
+            }
+
+            $.ajax({
+                url: $base_url,
+                data: $data,
+                type: "POST",
+                dataType: 'json',
+                beforeSend:function(){
+                    $("#load_screen").show();
+                },
+                success:function(data){
+                    if(data.status != 'error') {
+                        $("#load_screen").hide();
+                        $(".modal").hide();
+                        alertify.set('notifier','position', 'bottom-right');
+                        alertify.success(data.msg);
+                        if(settings.redirect) {
+                            window.setTimeout(function () {
+                                location.href = settings.locationHref;
+                            }, settings.hrefDuration);
+                        }
+                    }else{
+                        $("#load_screen").hide();
+                        alertify.set('notifier','position', 'bottom-right');
+                        alertify.error(data.msg);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    //var err = eval("(" + xhr.responseText + ")");
+                    //alertify.error(xhr.responseText);
+                    $("#load_screen").hide();
+                    alertify.set('notifier','position', 'bottom-right');
+                    alertify.error('Cannot response server !');
+                }
+            });
+        });
+
+        function renderList(){
+            var $li = $("<li>", {class: "w3-padding-16 w3-hover-green"});
+            var $row = $("<div>", {class: "w3-row"});
+            var $container_1 = $("<div>", {class: "w3-col m6"});
+            var $icon_container_1= $("<div>", {class: "w3-padding-medium w3-left w3-circle"});
+            var $icon_1= $("<i>", {class: "fa fa-file-text fa-icon"});
+            var $container_2 = $("<div>", {class: "w3-col m6"});
+            var $icon_container_2= $("<div>", {class: "w3-padding-medium w3-left w3-circle"});
+            var $icon_2= $("<i>", {class: "fa fa-stethoscope fa-icon"});
+
+            var $date = $("<span>", {class: "w3-xlarge"}).text("date");
+            var $clinic = $("<span>", {class: "w3-large"}).text("clinic");
+            var $doctor = $("<span>", {class: "w3-large"}).text("doctor");
+            var $text_1 = $("<span>", {class: "w3-large"}).text("DIAGNOSA");
+            var $disease = $("<span>", {class: "w3-large"}).text("disease").css("font-weight","Bold");
+
+            var $button_container = $("<div>", {class: "w3-padding-medium"});
+            var $a_href = $("<a>", {class: "w3-padding-medium"});
+            var $button_detail = $("<div>", {class: "w3-btn w3-light-grey"});
+            var $icon_search = $("<i>", {class: "fa fa-search"});
+
+            //button search
+            $icon_search.appendTo($button_detail);
+            $("<span>LIHAT DETAIL</span>").appendTo($button_detail);
+            $button_detail.appendTo($a_href);
+            $a_href.appendTo($button_container);
+
+            // INFO MEDICAL RECORD
+            $icon_1.appendTo($icon_container_1);
+            $icon_container_1.appendTo($container_1);
+            $date.appendTo($container_1);
+            $("<br>").appendTo($container_1);
+            $clinic.appendTo($container_1);
+            $("<br>").appendTo($container_1);
+            $doctor.appendTo($container_1);
+
+            // INFO DIAGNOSE
+            $icon_2.appendTo($icon_container_2);
+            $icon_container_2.appendTo($container_2);
+            $text_1.appendTo($container_2);
+            $("<br>").appendTo($container_2);
+            $disease.appendTo($container_2);
+            $("<br>").appendTo($container_2);
+            $button_container.appendTo($container_2);
+
+            $row.append($container_1);
+            $row.append($container_2);
+            $li.append($row);
+
+            var $ul = $("ul#mr-ul");
+            $li.appendTo($ul);
+        }
     });
 </script>
 </body>

@@ -396,6 +396,7 @@ $(document).ready(function(){
         $(".support-examination-column").easyAutocomplete(options6);
     }
 
+    alert($('#status-diagnose-input').val());
     function getData(){
         var $detail_reservation = $("#detail-reservation").val();
         var $patient = $("#patient-id").val();
@@ -406,7 +407,12 @@ $(document).ready(function(){
         var $condition_date = $("#condition-date-text").val();
         var $rujukan = $("#rujukan-text").val();
 
+        var $visit_type = $('input[name=visit-type-input]:checked', '#visit-form').val();
+        var $treatment = $('input[name=treatment-input]:checked', '#treatment-form').val();
+        var $status_diagnose = $('#status-diagnose-input').val();
+
         //Physical Examination
+        var $conscious = $("#conscious-input").val();
         var $blood_low = $("#blood-preasure-low-input").val();
         var $blood_high = $("#blood-preasure-high-input").val();
         var $pulse = $("#pulse-input").val();
@@ -466,6 +472,11 @@ $(document).ready(function(){
         md_data.additional_condition = $additionalConditionList;
         md_data.condition_date = $condition_date;
 
+        md_data.visit_type = $visit_type;
+        md_data.treatment = $treatment;
+        md_data.status_diagnose = $status_diagnose;
+
+        md_data.conscious = $conscious;
         md_data.blood_low = $blood_low;
         md_data.blood_high = $blood_high;
         md_data.pulse = $pulse;
