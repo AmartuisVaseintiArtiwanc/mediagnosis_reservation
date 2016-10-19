@@ -207,7 +207,7 @@
                         if(data.status != "error"){
                             //RENDER QUEUE BOX
                             if(data.output['poliID'] == poli){
-                                renderQueueBox(data.output['noQueue'],data.output['poliName'],data.output['doctorName'],data.output['poliID']);
+                                renderQueueBox(data.output['noQueue'],data.output['poliName'],data.output['doctorName'], data.output['patientName'],data.output['poliID']);
                                 //SET DATA RESERVATION
                                 $detailID = data.output['detailID'];
                                 $poliID = data.output['poliID'];
@@ -242,10 +242,10 @@
 
         setInterval(loopGetCurrentQuery, 2000);
 
-        function renderQueueBox(q_number,poli_name, doctor_name, poli){
+        function renderQueueBox(q_number,poli_name, doctor_name, patient_name, poli){
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
-            var $queue_number = $("<h3>", {class: "text-center"}).html(q_number);
+            var $queue_number = $("<h3>", {class: "text-center"}).html(q_number+" - "+patient_name);
             var $poli_doctor = $("<p>", {class: "text-center"}).html(poli_name+" - "+doctor_name);
 
             $queue_number.appendTo($inner);

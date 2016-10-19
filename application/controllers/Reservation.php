@@ -91,7 +91,8 @@ class Reservation extends CI_Controller {
                 "noQueue"=>$data->noQueue,
                 "poliID"=>$data->poliID,
                 "poliName" => strtoupper($data->poliName),
-                "doctorName" => $data->doctorName
+                "doctorName" => $data->doctorName,
+                "patientName" => $data->patientName
             );
             $status="success";
         }

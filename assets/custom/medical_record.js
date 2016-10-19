@@ -395,7 +395,7 @@ $(document).ready(function(){
         };
         $(".support-examination-column").easyAutocomplete(options6);
     }
-    
+
     function getData(){
         var $detail_reservation = $("#detail-reservation").val();
         var $patient = $("#patient-id").val();
