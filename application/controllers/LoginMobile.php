@@ -6,6 +6,8 @@ class LoginMobile extends CI_Controller{
         $status = "";
         $msg="";
         $userID = "";
+        $username = "";
+        $patientName = "";
 
 		$this->load->model('login_model');
         $email = $this->security->xss_clean($this->input->post('email'));
@@ -17,16 +19,20 @@ class LoginMobile extends CI_Controller{
 		{
 
 			$userID = $user->userID;
+			$username = $user->userName;
+			$patientname = $user->patientName;
             $status = 'success';
-            $msg = "";
+            $msg = "Proses Login Berhasil";
 		}
 		else // incorrect username or password
 		{
 			$userID = 0;
+			$username = "";
+			$patientName = "";
             $status = 'error';
-            $msg = "Username or Password is Wrong ! ";
+            $msg = "Username atau Password kurang tepat ";
 		}
-        echo json_encode(array('userID' => $userID ,'status' => $status, 'msg' => $msg));
+        echo json_encode(array('userID' => $userID , 'username' => $username, 'patientName' => $patientname ,'status' => $status, 'msg' => $msg));
 	}
 }
 ?>
