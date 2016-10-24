@@ -45,6 +45,7 @@ class Poli extends CI_Controller {
             $row[] = $no;
             $row[] = $item['poliID'];
             $row[] = $item['poliName'];
+            $row[] = $item['isActive'];
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
             $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
             $data[] = $row;
@@ -59,16 +60,6 @@ class Poli extends CI_Controller {
         //output to json format
         echo json_encode($output);
     }
-    
-    function getPoliData($start=1){
- 
-        $this->load->model(array('Poli_Model'));
-        $data = $this->Poli_Model->getPoliList(null,null);
-        //$this->output->set_content_type('application/json')->set_output(json_encode($data));
-        
-        print_r(json_encode($data));
-        exit();
-    }	
 	
 	function createPoli(){
         $status = "";
@@ -79,6 +70,7 @@ class Poli extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $data=array(
             'poliName'=>$name,
+            'isActive'=>1,
             'created'=>$datetime,
             "createdBy" => $this->session->userdata('userID'),
             "lastUpdated"=>$datetime,
@@ -120,11 +112,13 @@ class Poli extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
+        $isActive = $this->security->xss_clean($this->input->post('isActive'));
         // OLD DATA
         $old_data = $this->poli_model->getPoliByID($id);
 
         $data=array(
             'poliName'=>$name,
+            'isActive'=>$isActive,
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
@@ -167,10 +161,18 @@ class Poli extends CI_Controller {
     }
 
     function deletePoli(){
-        $status = 'success';
-        $msg = "Poli has been deleted successfully !";
+
         $id = $this->security->xss_clean($this->input->post("delID"));
         $this->poli_model->deletePoli($id);
+
+        $e = $this->db->error();
+        if ($e){
+            $status = 'error';
+            $msg = "Poli cannot be deleted !";
+        }else{
+            $status = 'success';
+            $msg = "Poli has been deleted successfully !";
+        }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }

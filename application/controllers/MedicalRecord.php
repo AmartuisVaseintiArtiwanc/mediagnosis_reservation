@@ -18,6 +18,7 @@ class MedicalRecord extends CI_Controller {
         $this->load->model('Support_examination_model',"support_examination_model");
         $this->load->model('Medical_record_model',"medical_record_model");
         $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
+        $this->load->model('UserOtp_model',"userOtp_model");
 
     }
 
@@ -375,6 +376,22 @@ class MedicalRecord extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
+    function checkUserOTP(){
+        $patient = $this->security->xss_clean($this->input->post('patient'));
+        $data = $this->userOtp_model->validateOTP($patient);
+
+        if(isset($data)){
+            $status = "success";
+            $msg= "Success";
+        }else{
+            $status = "error";
+            $msg= "Kode OTP Anda salah atau sudah habis masa berlakunya";
+        }
+
+
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
     function getMedicalRecordList($patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
@@ -424,6 +441,7 @@ class MedicalRecord extends CI_Controller {
         $data['medication']  = $medication;
 
         $this->load->view('mr/medical_record_detail_view', $data);
+        //$this->output->enable_profiler(TRUE);
     }
 
     function test(){

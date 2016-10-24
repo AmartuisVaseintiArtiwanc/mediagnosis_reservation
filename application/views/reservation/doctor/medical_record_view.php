@@ -74,7 +74,8 @@
         </h1>
 
     </div>
-<!--MODAL OTP
+
+<!--MODAL OTP-->
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width:600px">
 
@@ -85,21 +86,21 @@
         <form class="w3-container" action="form.asp">
             <div class="w3-section" id="otp-input-form">
                 <label class="w3-large"><b>OTP</b></label>
-                <input class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Enter OTP" name="usrname">
+                <input class="w3-input w3-border w3-margin-bottom" id="otp-input" type="text" placeholder="Enter OTP" name="otp_input">
             </div>
-            <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge" id="request-otp-btn" type="button">REQUEST OTP</button>
+            <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge w3-hide" id="request-otp-btn" type="button">REQUEST OTP</button>
             <div class="w3-container w3-border-top w3-padding-16">
                 <div class="w3-col m6">
                     <button onclick="document.getElementById('id01').style.display='none'"
                             type="button" class="w3-btn-block w3-padding-xlarge w3-red">TIDAK ADA</button>
                 </div>
                 <div class="w3-col m6">
-                    <button type="button" class="w3-btn-block w3-padding-xlarge w3-green">ADA</button>
+                    <button type="button" class="w3-btn-block w3-padding-xlarge w3-green" id="btn-confirm-otp">ADA</button>
                 </div>
             </div>
         </form>
     </div>
-</div>-->
+</div>
 <div class="w3-container w3-row margin-wrap">
     <div class="w3-col m6">
         <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $doctor_data->doctorName;?></span>
@@ -642,11 +643,54 @@
 <script src="<?php echo base_url();?>assets/custom/medical_record.js"></script>
 <script>
     $(document).ready(function(){
-        $("#otp-input-form").hide();
+        //$("#otp-input-form").hide();
         $(".w3-modal").show();
 
         $("#request-otp-btn").click(function(){
             $("#otp-input-form").show();
+        });
+
+        $("#btn-confirm-otp").click(function(){
+            $.ajax({
+                url: $base_url+"/MedicalRecord/checkUserOTP",
+                data: data_post,
+                type: "POST",
+                dataType: 'json',
+                beforeSend:function(){
+                    $("#load_screen").show();
+                },
+                success:function(data){
+                    if(data.status != 'error'){
+                        swal({
+                            title: data.msg,
+                            text: 'This Page will be redirect after a few second !',
+                            type: 'success',
+                            allowOutsideClick: false,
+                            showConfirmButton:false
+                        })
+                        window.setTimeout(function () {
+                            location.href =  $base_url+"/ReservationDoctor";
+                        }, 2000);
+
+                    }else{
+                        swal(
+                            data.msg,
+                            '',
+                            'error'
+                        )
+                    }
+                    alert($data);
+                },
+                error: function(xhr, status, error) {
+                    //var err = eval("(" + xhr.responseText + ")");
+                    $("#load_screen").hide();
+                    swal(
+                        "Server Error ! Please Try Again",
+                        '',
+                        'error'
+                    )
+                }
+            });
         });
     });
 </script>

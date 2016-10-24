@@ -45,6 +45,7 @@ class Clinic extends CI_Controller {
             $row[] = $no;
             $row[] = $item['clinicID'];
             $row[] = $item['clinicName'];
+            $row[] = $item['isActive'];
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
             $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
             $data[] = $row;
@@ -61,16 +62,6 @@ class Clinic extends CI_Controller {
         //output to json format
         echo json_encode($output);
     }
-    
-    function getClinicData($start=1){
- 
-        $this->load->model(array('Clinic_Model'));
-        $data = $this->Clinic_Model->getClinicList(null,null);
-        //$this->output->set_content_type('application/json')->set_output(json_encode($data));
-        
-        print_r(json_encode($data));
-        exit();
-    }	
 	
 	function createClinic(){
         $status = "";
@@ -82,6 +73,7 @@ class Clinic extends CI_Controller {
         $data=array(
             'isActive'=>1,
             'clinicName'=>$name,
+            'isActive'=>1,
             'created'=>$datetime,
             "createdBy" => $this->session->userdata('userID'),
 			"lastUpdated"=>$datetime,
@@ -123,12 +115,14 @@ class Clinic extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
+        $isActive = $this->security->xss_clean($this->input->post('isActive'));
         // OLD DATA
         $old_data = $this->clinic_model->getClinicByID($id);
 
         $data=array(
             'clinicName'=>$name,
             "lastUpdated"=>$datetime,
+            'isActive'=>$isActive,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
 
@@ -170,10 +164,35 @@ class Clinic extends CI_Controller {
     }
 
     function deleteClinic(){
-        $status = 'success';
-        $msg = "Clinic has been deleted successfully !";
+
+        $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post("delID"));
-        $this->clinic_model->deleteClinic($id);
+
+        $data=array(
+            'isActive'=>0,
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+
+        $this->db->trans_begin();
+        //$this->clinic_model->deleteClinic($id);
+        $query = $this->clinic_model->updateClinic($data, $id);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg = "Cannot delete master in Database";
+        } else {
+            if ($query == 1) {
+                $this->db->trans_commit();
+                $status = "success";
+                $msg = "Clinic has been deleted successfully !";
+            } else {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Failed to delete data Master ! ";
+            }
+        }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }

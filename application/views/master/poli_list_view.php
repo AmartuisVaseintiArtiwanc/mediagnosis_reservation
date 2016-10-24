@@ -45,6 +45,7 @@
                     <tr>
                         <th>No</th>
                         <th style = "text-align:left;">Poli</th>
+                        <th style = "text-align:center;">Status</th>
                         <th style = "text-align:left;display:none;">Created</th>
                         <th style = "text-align:left;display:none;">Created By</th>
                         <th style = "text-align:left;display:none;">Last Modified</th>
@@ -85,8 +86,9 @@
              },
              columns: [
                  { data: 0,"width": "10%" },
-                 { data: 2, "width": "50%"},
-                 { data: 1, "width": "40%"}
+                 { data: 2, "width": "40%"},
+                 { data: 3, "width": "10%"},
+                 { data: 4, "width": "40%"}
              ],
              //Set column definition initialisation properties.
              "columnDefs": [
@@ -96,20 +98,34 @@
                      "className": "dt-center",
                      "createdCell": function (td, cellData, rowData, row, col) {
                          var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
-                             "data-toggle":"modal","data-target":"#poli-modal-edit","data-value": cellData});
+                             "data-toggle":"modal","data-target":"#poli-modal-edit","data-value": rowData[1]});
                          $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
                          var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
-                            "data-value": cellData});
+                            "data-value": rowData[1]});
                          $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
 
-                         var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[3],"data-last-modifed":rowData[4]});
+                         var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[4],"data-last-modifed":rowData[5]});
                          $(td).html($btn_edit).append(" ").append($btn_del).append($div_info);
                      }
                  },
                  {
-                     "targets": [0], //last column
+                     "targets": [0], //first column
                      "orderable": false//set not orderable}
+                 },
+                 {
+                     "targets": [2], //thrid column
+                     "className": "dt-center",
+                     "createdCell": function (td, cellData, rowData, row, col) {
+
+                         var $active = $("<span>", { class:"badge bg-green status-label","data-status":1}).html("ACTIVE");
+                         var $no_active = $("<span>", { class:"badge bg-red status-label","data-status":0}).html("NO ACTIVE");
+                         if(cellData==1){
+                             $(td).html($active);
+                         }else if(cellData==0){
+                             $(td).html($no_active)
+                         }
+                     }
                  }
              ],
              "rowCallback": function( row, data ) {
@@ -153,12 +169,23 @@
              var $tr =  $(this).closest("tr");
              var $td =  $(this).closest("td");
              var text = $tr.find('td').eq(1).text();
+             var status = $tr.find('td span.status-label').attr("data-status");
              var created = $td.find('div.item-info').attr("data-created");
              var last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
              $('#modal-title-edit').html("Edit Poli - <b>"+text+"</b>");
              $('#master-name-edit').val(text);
              $('#master-id').val(id_item);
+
+             if(status == 1){
+                 $("#btn-status-active").removeClass("btn-default").addClass("btn-success");
+                 $("#btn-status-no-active").removeClass("btn-danger").addClass("btn-default");
+                 $("#master-isactive-edit").val(1);
+             }else if(status==0){
+                 $("#btn-status-active").removeClass("btn-success").addClass("btn-default");
+                 $("#btn-status-no-active").removeClass("btn-default").addClass("btn-danger");
+                 $("#master-isactive-edit").val(0);
+             }
 
              $('#created').empty();
              $('#created').append("Created : "+"<b>"+created+"</b>");

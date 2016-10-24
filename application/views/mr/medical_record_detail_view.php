@@ -125,10 +125,26 @@
                     </tr>
                     <tr>
                         <td>Tempat, Tanngal Lahir</td>
-                        <td><?php echo $header->dob;?></td>
+                        <td>
+                            <?php
+                            $date_created=date_create($header->dob);
+                            echo date_format($date_created,"d F Y");?>
+                        </td>
                     </tr>
                     <tr>
-                        <td>Perusahaan</td>
+                        <td>Jenis Kelamin</td>
+                        <td><?php echo $header->gender;?></td>
+                    </tr>
+                    <tr>
+                        <td>Status Peserta</td>
+                        <td><?php echo $header->participantStatus;?></td>
+                    </tr>
+                    <tr>
+                        <td>Jenis Peserta</td>
+                        <td><?php echo $header->participantType;?></td>
+                    </tr>
+                    <tr>
+                        <td>Alamat</td>
                         <td><?php echo $header->address;?></td>
                     </tr>
                     <tr>
@@ -220,6 +236,14 @@
                     </div>
 
                     <form class="w3-container">
+                        <p>
+                            <label class="w3-label">Kesadaran</label> <span class="w3-tag w3-red" id="concious-err-msg"></span>
+                            <div class="w3-row">
+                                <div class="w3-col m12">
+                                    <?php echo $physical_examination->conscious;?>
+                                </div>
+                            </div>
+                        </p>
                         <p>
                             <label class="w3-label">Tekenan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
                             <div class="w3-row">
@@ -420,6 +444,73 @@
                                     <?php echo $detail->reference;?>
                                 </li>
                             </ul>
+                        </p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- KUNJUNGAN -->
+        <div class="step" id="step5">
+            <div class="number">
+                <span>5</span>
+            </div>
+            <div class="title">
+                <h1>KUNJUNGAN</h1>
+            </div>
+            <div class="modify">
+                <i class="fa fa-plus-circle"></i>
+            </div>
+        </div>
+        <div class="content w3-row">
+
+            <!--Rujukan-->
+            <div class="w3-col m6 w3-padding-small">
+                <div class="w3-card-4 w3-margin">
+                    <div class="w3-container w3-green">
+                        <h4 class="w3-left">JENIS KUNJUNGAN</h4>
+                    </div>
+
+                    <form class="w3-container" id="visit-form">
+                        <p>
+                        <div class="w3-row-padding">
+                            <?php echo $detail->visitType;?>
+                        </div>
+                        </p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+
+            <!--Rujukan-->
+            <div class="w3-col m6 w3-padding-small">
+                <div class="w3-card-4 w3-margin">
+                    <div class="w3-container w3-green">
+                        <h4 class="w3-left">PERAWATAN</h4>
+                    </div>
+
+                    <form class="w3-container" id="treatment-form">
+                        <p>
+                        <div class="w3-row-padding">
+                            <?php echo $detail->treatment;?>
+                        </div>
+                        </p>
+                        <br/>
+                    </form>
+                </div>
+            </div>
+
+            <!--Rujukan-->
+            <div class="w3-col m6 w3-padding-small">
+                <div class="w3-card-4 w3-margin">
+                    <div class="w3-container w3-green">
+                        <h4 class="w3-left">STATUS PULANG</h4>
+                    </div>
+
+                    <form class="w3-container">
+                        <p>
+                            <?php echo $detail->statusDiagnose;?>
                         </p>
                         <br/>
                     </form>

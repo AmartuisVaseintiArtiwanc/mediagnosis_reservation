@@ -54,6 +54,15 @@
                         <input type="text" class="form-control" id="master-name-edit" name="kategori_name"
                                placeholder="Name" data-label="#err-master-name-edit">
                     </div>
+                    <div class="form-group">
+                        <label for="master-isactive-edit" class="control-label">Status :</label>
+                        <input type="hidden" class="form-control" id="master-isactive-edit">
+                        <br/>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-isactive" data-status="1" id="btn-status-active">ACTIVE</button>
+                            <button type="button" class="btn btn-default btn-isactive" data-status="0" id="btn-status-no-active">NO ACTIVE</button>
+                        </div>
+                    </div>
                 </form>
             </div><!--modal body-->
 
@@ -71,6 +80,20 @@
 <script>
 
     $(document).ready( function($) {
+
+        $(".btn-isactive").click(function(){
+            var $status = $(this).attr("data-status");
+            if($status == 1){
+                $("#btn-status-active").removeClass("btn-default").addClass("btn-success");
+                $("#btn-status-no-active").removeClass("btn-danger").addClass("btn-default");
+                $("#master-isactive-edit").val(1);
+            }else if($status==0){
+                $("#btn-status-active").removeClass("btn-success").addClass("btn-default");
+                $("#btn-status-no-active").removeClass("btn-default").addClass("btn-danger");
+                $("#master-isactive-edit").val(0);
+            }
+        });
+
         function validate() {
             var err = 0;
 
@@ -118,6 +141,7 @@
                 var formData = new FormData();
                 formData.append("id", $("#master-id").val());
                 formData.append("name", $("#master-name-edit").val());
+                formData.append("isActive", $("#master-isactive-edit").val());
 
                 $(this).saveData({
                     url: "<?php echo site_url('Doctor/editDoctor')?>",

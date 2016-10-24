@@ -4,7 +4,7 @@ class Medical_record_detail_model extends CI_Model {
 
     // GET MEDICAL RECORD DETAIL
     function getMedicalRecordDetailByID($medicalRecordID){
-        $this->db->select('*');
+        $this->db->select('mainConditionText, conditionDate, diseaseName, reference, visitType, a.treatment, statusDiagnose');
         $this->db->from('tbl_cyberits_t_detail_medical_record a');
         $this->db->join('tbl_cyberits_m_main_condition  b', 'a.mainCondition = b.mainConditionID');
         $this->db->join('tbl_cyberits_m_diseases  c', 'a.workingDiagnose = c.diseaseID');

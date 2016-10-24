@@ -91,7 +91,7 @@ class SSchedule_model extends CI_Model {
         return $query->row();
     }
 
-    function getSettingDetailSchedule($poliID, $clinicID){
+    function getSettingDetailSchedule($clinicID,$poliID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_s_schedule a');
         $this->db->where('a.clinicID',$clinicID);

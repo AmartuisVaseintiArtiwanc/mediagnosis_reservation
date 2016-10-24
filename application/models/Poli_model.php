@@ -5,23 +5,10 @@ class Poli_model extends CI_Model {
     var $column_order = array('poliID','poliName',null); //set column field database for datatable orderable
     var $column_search = array('poliName'); //set column field database for datatable searchable just firstname ,
 
-	function getPoliList( $sWhere, $sOrder, $sLimit) //$num=10, $start=0
-	{
-		$user = $this->session->userdata('id_user');
-		$user = $this->session->userdata('id_user');
-        $query = $this->db->query("
-           SELECT poliID, poliName, created, createdBy, lastUpdated, lastUpdatedBy, poliID as action
-           FROM tbl_cyberits_m_poli
-            $sWhere
-            $sOrder
-            $sLimit
-        ");
-		return $query->result_array();
-	}
-
     function getPoliListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit){
         $this->_dataPoliQuery($searchText,$orderByColumnIndex,$orderDir);
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+
         // LIMIT
         if($limit!=null || $start!=null){
             $this->db->limit($limit, $start);
@@ -34,6 +21,7 @@ class Poli_model extends CI_Model {
     function count_filtered($searchText){
         $this->_dataPoliQuery($searchText,null,null);
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -41,6 +29,7 @@ class Poli_model extends CI_Model {
     public function count_all(){
         $this->db->from("tbl_cyberits_m_poli a");
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+
         return $this->db->count_all_results();
     }
 
@@ -72,32 +61,6 @@ class Poli_model extends CI_Model {
         if($orderByColumnIndex != null && $orderDir != null ) {
             $this->db->order_by($this->column_order[$orderByColumnIndex], $orderDir);
         }
-    }
-    
-    function getPoliListBySearch($start,$limit, $search_name){
-   	    $user = $this->session->userdata('id_user');
-		$this->db->select('*'); 
-		$this->db->from('tbl_cyberits_m_poli a');
-        $this->db->like('a.poliName', $search_name);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
-
-        $this->db->limit($limit, $start);
-		
-		$this->db->order_by('a.poliName','asc');
-		
-		$query = $this->db->get();
-		return $query->result_array();
-    }
-    
-    function countPoliList($sWhere){
-
-        $query = $this->db->query("
-            SELECT poliID
-            FROM tbl_cyberits_m_poli
-			$sWhere
-        ");
-
-        return $query->num_rows();
     }
 
     function getPoliByName($name, $isEdit, $old_data){

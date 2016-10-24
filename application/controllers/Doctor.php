@@ -45,6 +45,7 @@ class Doctor extends CI_Controller {
             $row[] = $no;
             $row[] = $item['doctorID'];
             $row[] = $item['doctorName'];
+            $row[] = $item['isActive'];
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
             $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
             $data[] = $row;
@@ -59,16 +60,6 @@ class Doctor extends CI_Controller {
         //output to json format
         echo json_encode($output);
     }
-    
-    function getDoctorData($start=1){
- 
-        $this->load->model(array('Doctor_Model'));
-        $data = $this->Doctor_Model->getDoctorList(null,null);
-        //$this->output->set_content_type('application/json')->set_output(json_encode($data));
-        
-        print_r(json_encode($data));
-        exit();
-    }	
 	
 	function createDoctor(){
         $status = "";
@@ -80,6 +71,7 @@ class Doctor extends CI_Controller {
         $data=array(
             'isActive'=>1,
             'doctorName'=>$name,
+            'isActive'=>1,
             'created'=>$datetime,
             "createdBy" => $this->session->userdata('userID'),
 			"lastUpdated"=>$datetime,
@@ -121,11 +113,13 @@ class Doctor extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
+        $isActive = $this->security->xss_clean($this->input->post('isActive'));
         // OLD DATA
         $old_data = $this->doctor_model->getDoctorByID($id);
 
         $data=array(
             'doctorName'=>$name,
+            'isActive'=>$isActive,
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
