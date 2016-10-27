@@ -36,6 +36,7 @@ class MedicalRecord extends CI_Controller {
         }
     }
 
+    // Auto Complete Main Condition (Keluhan Utama)
     function getMainConditionList(){
         $search = $this->security->xss_clean($this->input->post('phrase'));
         $result = $this->main_condition_model->getMainConditionAutocomplete($search);
@@ -43,6 +44,7 @@ class MedicalRecord extends CI_Controller {
         echo json_encode($result);
     }
 
+    // Auto Complete Additional Condition (Keluhan Tambahan)
     function getAdditionalConditionList(){
         $search = $this->security->xss_clean($this->input->post('phrase'));
         $result = $this->additional_condition_model->getAdditionalConditionAutocomplete($search);
@@ -50,6 +52,7 @@ class MedicalRecord extends CI_Controller {
         echo json_encode($result);
     }
 
+    // Auto Complete Disease (Working Diagnose, Support Diagnose) - (Diagnosa Kerja - Diagnosa Banding)
     function getDiseaseList(){
         $search = $this->security->xss_clean($this->input->post('phrase'));
         $result = $this->diseases_model->getDiseaseAutocomplete($search);
@@ -57,6 +60,7 @@ class MedicalRecord extends CI_Controller {
         echo json_encode($result);
     }
 
+    // Auto Complete Medication(Terapi)
     function getMedicationList(){
         $search = $this->security->xss_clean($this->input->post('phrase'));
         $result = $this->medication_model->getMedicationAutocomplete($search);
@@ -64,6 +68,7 @@ class MedicalRecord extends CI_Controller {
         echo json_encode($result);
     }
 
+    // Auto Complete Support Examination (Pemeriksaan Penunjang)
     function getSupportExaminationColumnList(){
         $search = $this->security->xss_clean($this->input->post('phrase'));
         $result = $this->support_examination_model->getSupportExaminationColumnAutocomplete($search);
@@ -71,6 +76,7 @@ class MedicalRecord extends CI_Controller {
         echo json_encode($result);
     }
 
+    // Save Medical Record
     function saveMedicalRecordData(){
         $data = $this->input->post('data');
 
@@ -350,6 +356,7 @@ class MedicalRecord extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
+    // Reject Medical Record by Doctor
     function rejectReservationMedicalRecord(){
         $detail_reservation = $this->input->post('detailReservation');
         $datetime = date('Y-m-d H:i:s', time());
@@ -376,23 +383,114 @@ class MedicalRecord extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
+    function checkUserOTPView($detailReservationID, $patientID){
+        $patient_data = $this->patient_model->getPatientByID($patientID);
+        $data['patient_data']  = $patient_data;
+        $data['detail_reservation']  = $detailReservationID;
+
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getDoctorByUserID($userID);
+
+        // Check validate role Doctor
+        if(isset($doctor_data)){
+            // Check Status Reservation Doctor
+            if($this->checkDoctorReservation($detailReservationID,$doctor_data->doctorID,$patientID)){
+                $this->load->view('mr/otp_medical_record_view', $data);
+            }else{
+                $this->load->view('template/error');
+            }
+        }else{
+            $this->load->view('template/error');
+        }
+    }
+
     function checkUserOTP(){
         $patient = $this->security->xss_clean($this->input->post('patient'));
-        $data = $this->userOtp_model->validateOTP($patient);
+        $detail_reservation = $this->security->xss_clean($this->input->post('detail_reservation'));
+        $otp = $this->security->xss_clean($this->input->post('otp'));
 
-        if(isset($data)){
-            $status = "success";
-            $msg= "Success";
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getDoctorByUserID($userID);
+
+        // Check validate role Doctor
+        if(isset($doctor_data)){
+            // Check Status Reservation Doctor
+            if($this->checkDoctorReservation($detail_reservation,$doctor_data->doctorID,$patient)){
+                $data = $this->userOtp_model->validateOTP($patient,$otp);
+                $datetime = date('Y-m-d H:i:s', time());
+                if(isset($data)){
+                    //UPDATE OTP
+                    $otp_data=array(
+                        'doctorID'=>$doctor_data->doctorID,
+                        'isActive'=>1,
+                        "lastUpdated"=>$datetime,
+                        "lastUpdatedBy"=>$this->session->userdata('userID')
+                    );
+                    $this->userOtp_model->updateOtp($patient,$otp_data);
+
+                    $status = "success";
+                    $msg= "Success";
+                }else{
+                    $status = "error";
+                    $msg= "Kode OTP Anda salah atau sudah habis masa berlakunya !";
+                }
+            }else{
+                $status = "error";
+                $msg= "Maaf Anda bukan Dokter untuk pasien ini !";
+            }
         }else{
             $status = "error";
-            $msg= "Kode OTP Anda salah atau sudah habis masa berlakunya";
+            $msg= "Maaf Anda Tidak berhas mengakses halaman ini !";
         }
-
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
-    function getMedicalRecordList($patientID){
+    // Check Doctor Reservation on This Patient
+    function checkDoctorReservation($detailReservation, $doctor, $patient){
+        // Check Detail Reservation status Confirm (dalam proses pemeriksaan)
+        $return = $this->test_model->checkOTPMedicalRecord($detailReservation, $doctor, $patient);
+        return $return;
+    }
+
+    // Check Doctor Reservation on This Patient
+    function checkDoctorValidateOTP($doctor, $patient){
+        // Check Detail Reservation status Confirm (dalam proses pemeriksaan)
+        $return = $this->userOtp_model->checkOtpByPatientDoctor($doctor, $patient);
+        return $return;
+    }
+
+    // Get Medical Record List For OTP
+    function getMedicalRecordList($detailReservation,$patient){
+        //$data = $this->input->post('data');
+
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getDoctorByUserID($userID);
+
+        if(isset($doctor_data)){
+            $checkReservation = $this->checkDoctorReservation($detailReservation,$doctor_data->doctorID,$patient);
+            $checkOTP = $this->checkDoctorValidateOTP($doctor_data->doctorID,$patient);
+            if($checkReservation && $checkOTP){
+
+                $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patient);
+                $patient_data = $this->patient_model->getPatientByID($patient);
+
+                $data['medical_record_data']  = $medical_record_header;
+                $data['patient_data']  = $patient_data;
+                $data['detail_reservation']  = $detailReservation;
+
+                $this->load->view('mr/medical_record_list_view', $data);
+
+            }else{
+                $this->load->view('template/error');
+            }
+        }else{
+            $this->load->view('template/error');
+        }
+    }
+
+    // Get Medical Record List For OTP by Date
+    function getMedicalRecordBySearchDate($patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
         $patient_data = $this->patient_model->getPatientByID($patientID);
@@ -402,7 +500,8 @@ class MedicalRecord extends CI_Controller {
         $this->load->view('mr/medical_record_list_view', $data);
     }
 
-    function getMedicalRecordBySearchDate(){
+    // Get Medical Record List For OTP by Periode
+    function getMedicalRecordBySearchPeriod($patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
         $patient_data = $this->patient_model->getPatientByID($patientID);
@@ -411,36 +510,41 @@ class MedicalRecord extends CI_Controller {
         $data['patient_data']  = $patient_data;
         $this->load->view('mr/medical_record_list_view', $data);
     }
-    function getMedicalRecordBySearchPeriod(){
+
+    // Get Medical Record Detail For OTP
+    function getMedicalRecordDetail($detailReservation,$patient,$medicalRecordID){
         //$data = $this->input->post('data');
-        $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
-        $patient_data = $this->patient_model->getPatientByID($patientID);
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getDoctorByUserID($userID);
 
-        $data['medical_record_data']  = $medical_record_header;
-        $data['patient_data']  = $patient_data;
-        $this->load->view('mr/medical_record_list_view', $data);
-    }
+        if(isset($doctor_data)){
+            $checkReservation = $this->checkDoctorReservation($detailReservation,$doctor_data->doctorID,$patient);
+            $checkOTP = $this->checkDoctorValidateOTP($doctor_data->doctorID,$patient);
 
-    function getMedicalRecordDetail($medicalRecordID){
-        //$data = $this->input->post('data');
+            if($checkReservation && $checkOTP){
+                $medical_record_header = $this->medical_record_model->getMedicalRecordByID($medicalRecordID);
+                $medical_record_detail = $this->medical_record_detail_model->getMedicalRecordDetailByID($medicalRecordID);
+                $addtional_condition = $this->medical_record_detail_model->getAdditionalConditionByID($medicalRecordID);
+                $physical_examination = $this->medical_record_detail_model->getPhysicalExaminationByID($medicalRecordID);
+                $support_examination = $this->medical_record_detail_model->getSupportExaminationByID($medicalRecordID);
+                $support_diagnose = $this->medical_record_detail_model->getSupportDiagnoseByID($medicalRecordID);
+                $medication = $this->medical_record_detail_model->getMedicationByID($medicalRecordID);
 
-        $medical_record_header = $this->medical_record_model->getMedicalRecordByID($medicalRecordID);
-        $medical_record_detail = $this->medical_record_detail_model->getMedicalRecordDetailByID($medicalRecordID);
-        $addtional_condition = $this->medical_record_detail_model->getAdditionalConditionByID($medicalRecordID);
-        $physical_examination = $this->medical_record_detail_model->getPhysicalExaminationByID($medicalRecordID);
-        $support_examination = $this->medical_record_detail_model->getSupportExaminationByID($medicalRecordID);
-        $support_diagnose = $this->medical_record_detail_model->getSupportDiagnoseByID($medicalRecordID);
-        $medication = $this->medical_record_detail_model->getMedicationByID($medicalRecordID);
+                $data['header']  = $medical_record_header;
+                $data['detail']  = $medical_record_detail;
+                $data['additional_condition']  = $addtional_condition;
+                $data['physical_examination']  = $physical_examination;
+                $data['support_examination']  = $support_examination;
+                $data['support_diagnose']  = $support_diagnose;
+                $data['medication']  = $medication;
 
-        $data['header']  = $medical_record_header;
-        $data['detail']  = $medical_record_detail;
-        $data['additional_condition']  = $addtional_condition;
-        $data['physical_examination']  = $physical_examination;
-        $data['support_examination']  = $support_examination;
-        $data['support_diagnose']  = $support_diagnose;
-        $data['medication']  = $medication;
-
-        $this->load->view('mr/medical_record_detail_view', $data);
+                $this->load->view('mr/medical_record_detail_view', $data);
+            }else{
+                $this->load->view('template/error');
+            }
+        }else{
+            $this->load->view('template/error');
+        }
         //$this->output->enable_profiler(TRUE);
     }
 

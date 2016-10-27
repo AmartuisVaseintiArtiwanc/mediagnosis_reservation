@@ -54,11 +54,39 @@
         padding-left: 12px;
         padding-right: 12px;
     }
+    .margin-wrap{
+        width: 90%;
+        margin: 20px auto;
+    }
 </style>
 <body>
 <!--  Start here -->
 
 <body>
+
+<div class="headline">
+
+    <h6></h6>
+
+    <h1>
+        <b><?php echo $header->clinicName;?></b> - <b><?php echo $header->poliName;?></b>
+        <h6></h6>
+    </h1>
+    <h4> <?php echo $header->clinicAddress;?></h4>
+    <h1>
+        <b>REKAM MEDIS</b>
+    </h1>
+
+</div>
+
+<div class="w3-container w3-row margin-wrap">
+    <div class="w3-col m6">
+        <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $header->doctorName;?></span>
+    </div>
+    <div class="w3-col m6 w3-right-align">
+        <button class="w3-btn w3-teal">Kembali ke List</button>
+    </div>
+</div>
 
 <div id="wrap">
     <div id="accordian">
@@ -180,7 +208,7 @@
 
                     <div class="w3-container w3-margin-top">
                         <p><!--VALUE-->
-                            <ul class="w3-ul w3-card-4" id="main-condition-ul">
+                            <ul class="w3-ul w3-border" id="main-condition-ul">
                                 <li class="w3-padding-8">
                                     <?php echo $detail->mainConditionText;?>
                                 </li>
@@ -195,7 +223,7 @@
                     </div>
                     <div class="w3-container w3-margin-top">
                         <p>
-                            <ul class="w3-ul w3-card-4" id="condition-date-ul">
+                            <ul class="w3-ul w3-border" id="condition-date-ul">
                                 <li class="w3-padding-8">
                                     <?php echo $detail->conditionDate;?>
                                 </li>
@@ -213,7 +241,7 @@
                     </div>
                     <div class="w3-container w3-margin-top">
                         <p>
-                            <ul class="w3-ul w3-card-4 w3-ul-list" id="additional-condition-ul">
+                            <ul class="w3-ul w3-border w3-ul-list" id="additional-condition-ul">
                                 <?php foreach($additional_condition as $row){?>
                                     <li class="w3-padding-8">
                                         <?php echo $row['additionalConditionText'];?>
@@ -320,7 +348,7 @@
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
                         <p>
-                        <ul class="w3-ul w3-ul-list w3-card-4" id="support-examination-ul">
+                        <ul class="w3-ul w3-ul-list w3-border" id="support-examination-ul">
                             <?php foreach($support_examination as $row){?>
                                 <li class="w3-padding-small">
                                     <div class="w3-row">
@@ -363,7 +391,7 @@
 
                     <form class="w3-container w3-margin-top">
                         <p>
-                            <ul class="w3-ul w3-card-4" id="working-diagnose-ul">
+                            <ul class="w3-ul w3-border" id="working-diagnose-ul">
                                 <li class="w3-padding-8">
                                     <?php echo $detail->diseaseName;?>
                                 </li>
@@ -382,7 +410,7 @@
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
                         <p>
-                            <ul class="w3-ul w3-ul-list w3-card-4" id="support-diagnose-ul">
+                            <ul class="w3-ul w3-ul-list w3-border" id="support-diagnose-ul">
                                 <?php foreach($support_diagnose as $row){?>
                                     <li class="w3-padding-8">
                                         <?php echo $row['diseaseName'];?>
@@ -418,7 +446,7 @@
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
                         <p>
-                            <ul class="w3-ul w3-ul-list w3-card-4" id="medication-ul">
+                            <ul class="w3-ul w3-ul-list w3-border" id="medication-ul">
                                 <?php foreach($medication as $row){?>
                                     <li class="w3-padding-8">
                                         <?php echo $row['medicationText'];?>
@@ -439,7 +467,7 @@
 
                     <form class="w3-container w3-margin-top">
                         <p>
-                            <ul class="w3-ul w3-ul-list w3-card-4">
+                            <ul class="w3-ul w3-ul-list w3-border">
                                 <li class="w3-padding-8">
                                     <?php echo $detail->reference;?>
                                 </li>

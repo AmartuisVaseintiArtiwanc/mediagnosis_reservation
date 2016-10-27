@@ -185,9 +185,9 @@
                 });
             }
         }
-        setInterval(getCurrentQueue, 1000);
+        setInterval(getCurrentQueue, 2000);
 
-        setInterval(startMedicalRecord, 1000);
+        setInterval(startMedicalRecord, 2000);
         function startMedicalRecord(){
             var $base_url = "<?php echo site_url();?>/";
             var $currQueue = $("#current-queue-box").attr("data-queue");

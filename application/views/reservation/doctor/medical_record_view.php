@@ -65,7 +65,7 @@
         <h6></h6>
 
         <h1>
-            <b><?php echo $header_data->clinicName;?></b>
+            <b><?php echo $header_data->clinicName;?></b> - <b><?php echo $header_data->poliName;?></b>
             <h6></h6>
         </h1>
         <h4> <?php echo $header_data->clinicAddress;?></h4>
@@ -84,11 +84,15 @@
         </div>
 
         <form class="w3-container" action="form.asp">
-            <div class="w3-section" id="otp-input-form">
+            <!--<div class="w3-section" id="otp-input-form">
                 <label class="w3-large"><b>OTP</b></label>
                 <input class="w3-input w3-border w3-margin-bottom" id="otp-input" type="text" placeholder="Enter OTP" name="otp_input">
-            </div>
-            <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge w3-hide" id="request-otp-btn" type="button">REQUEST OTP</button>
+            </div>-->
+            <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$reservation_data->detailReservationID."/".$reservation_data->patientID);?>"
+               target="_blank">
+                <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge request-otp-btn" type="button">REQUEST OTP</button>
+            </a>
+            <!--
             <div class="w3-container w3-border-top w3-padding-16">
                 <div class="w3-col m6">
                     <button onclick="document.getElementById('id01').style.display='none'"
@@ -97,7 +101,7 @@
                 <div class="w3-col m6">
                     <button type="button" class="w3-btn-block w3-padding-xlarge w3-green" id="btn-confirm-otp">ADA</button>
                 </div>
-            </div>
+            </div>-->
         </form>
     </div>
 </div>
@@ -161,8 +165,10 @@
 
                 <br>
                 <div class="w3-margin">
-                    <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple"
-                            onclick="document.getElementById('id01').style.display='block'">REQUEST OTP</button>
+                    <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$reservation_data->detailReservationID."/".$reservation_data->patientID);?>"
+                       target="_blank">
+                        <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple request-otp-btn">REQUEST OTP</button>
+                    </a>
                 </div>
 
             </div>
@@ -646,52 +652,7 @@
         //$("#otp-input-form").hide();
         $(".w3-modal").show();
 
-        $("#request-otp-btn").click(function(){
-            $("#otp-input-form").show();
-        });
 
-        $("#btn-confirm-otp").click(function(){
-            $.ajax({
-                url: $base_url+"/MedicalRecord/checkUserOTP",
-                data: data_post,
-                type: "POST",
-                dataType: 'json',
-                beforeSend:function(){
-                    $("#load_screen").show();
-                },
-                success:function(data){
-                    if(data.status != 'error'){
-                        swal({
-                            title: data.msg,
-                            text: 'This Page will be redirect after a few second !',
-                            type: 'success',
-                            allowOutsideClick: false,
-                            showConfirmButton:false
-                        })
-                        window.setTimeout(function () {
-                            location.href =  $base_url+"/ReservationDoctor";
-                        }, 2000);
-
-                    }else{
-                        swal(
-                            data.msg,
-                            '',
-                            'error'
-                        )
-                    }
-                    alert($data);
-                },
-                error: function(xhr, status, error) {
-                    //var err = eval("(" + xhr.responseText + ")");
-                    $("#load_screen").hide();
-                    swal(
-                        "Server Error ! Please Try Again",
-                        '',
-                        'error'
-                    )
-                }
-            });
-        });
     });
 </script>
 <script>

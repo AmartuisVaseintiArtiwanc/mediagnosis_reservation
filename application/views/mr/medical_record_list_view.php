@@ -64,6 +64,7 @@
     </h1>
     <h6></h6>
     <h2><?php echo $patient_data->patientName;?></h2>
+    <input type="hidden" id="detail-reservation-value" value="<?php echo $detail_reservation;?>"/>
 </div>
 
 <div id="wrap">
@@ -103,7 +104,9 @@
                                     <span class="w3-large">DIAGNOSA</span><br>
                                     <span class="w3-large"><b><?php echo $row['diseaseName'];?></b></span><br>
                                     <div class="w3-padding-medium">
-                                        <a href="<?php echo site_url("MedicalRecord/getMedicalRecordDetail/".$row['medicalRecordID']);?>"><button class="w3-btn w3-light-grey"> <i class="fa fa-search"></i> Lihat Detail</button></a>
+                                        <a href="<?php echo site_url("MedicalRecord/getMedicalRecordDetail/".$detail_reservation."/".$row['patientID']."/".$row['medicalRecordID']);?>">
+                                            <button class="w3-btn w3-light-grey"> <i class="fa fa-search"></i> Lihat Detail</button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -213,13 +216,7 @@
                     if(data.status != 'error') {
                         $("#load_screen").hide();
                         $(".modal").hide();
-                        alertify.set('notifier','position', 'bottom-right');
-                        alertify.success(data.msg);
-                        if(settings.redirect) {
-                            window.setTimeout(function () {
-                                location.href = settings.locationHref;
-                            }, settings.hrefDuration);
-                        }
+
                     }else{
                         $("#load_screen").hide();
                         alertify.set('notifier','position', 'bottom-right');

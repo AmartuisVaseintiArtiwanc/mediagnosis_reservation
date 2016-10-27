@@ -3,7 +3,7 @@
 class Medical_record_model extends CI_Model {
 
     function getMedicalRecordListByPatient($patientID){
-        $this->db->select('mr.medicalRecordID,doc.doctorID, doc.doctorName,
+        $this->db->select('mr.medicalRecordID,doc.doctorID, doc.doctorName, mr.patientID,
          mr.detailReservationID, cl.clinicName, pl.poliName, dis.diseaseName, mr.created');
         $this->db->from('tbl_cyberits_t_medical_record mr');
         $this->db->join('tbl_cyberits_t_detail_medical_record  dmr', 'dmr.medicalRecordID = mr.medicalRecordID');
@@ -20,9 +20,14 @@ class Medical_record_model extends CI_Model {
 
     function getMedicalRecordByID($medicalRecordID){
         $this->db->select('*');
-        $this->db->from('tbl_cyberits_t_medical_record a');
-        $this->db->join('tbl_cyberits_t_patient_profile  b', 'a.tPatientProfileID = b.tPatientProfileID');
-        $this->db->where('a.medicalRecordID', $medicalRecordID);
+        $this->db->from('tbl_cyberits_t_medical_record mr');
+        $this->db->join('tbl_cyberits_t_patient_profile  b', 'mr.tPatientProfileID = b.tPatientProfileID');
+        $this->db->join('tbl_cyberits_t_detail_reservation  dr', 'mr.detailReservationID = dr.detailReservationID');
+        $this->db->join('tbl_cyberits_t_header_reservation  hr', 'dr.reservationID = hr.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics  cl', 'cl.clinicID = hr.clinicID');
+        $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = hr.poliID');
+        $this->db->join('tbl_cyberits_m_doctors  doc', 'dr.doctorID = doc.doctorID');
+        $this->db->where('mr.medicalRecordID', $medicalRecordID);
         $query = $this->db->get();
         return $query->row();
     }

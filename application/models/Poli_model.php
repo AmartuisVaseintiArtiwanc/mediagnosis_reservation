@@ -7,7 +7,7 @@ class Poli_model extends CI_Model {
 
     function getPoliListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit){
         $this->_dataPoliQuery($searchText,$orderByColumnIndex,$orderDir);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
 
         // LIMIT
         if($limit!=null || $start!=null){
@@ -20,7 +20,7 @@ class Poli_model extends CI_Model {
 
     function count_filtered($searchText){
         $this->_dataPoliQuery($searchText,null,null);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
 
         $query = $this->db->get();
         return $query->num_rows();
@@ -28,7 +28,7 @@ class Poli_model extends CI_Model {
 
     public function count_all(){
         $this->db->from("tbl_cyberits_m_poli a");
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
 
         return $this->db->count_all_results();
     }
@@ -67,7 +67,7 @@ class Poli_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_poli a');
         $this->db->where('poliName',$name);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
         if($isEdit){
             $this->db->where('poliName != ', $old_data);
         }
@@ -79,7 +79,7 @@ class Poli_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_poli a');
         $this->db->where('poliID',$id);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
         $query = $this->db->get();
         return $query->row();
     }
