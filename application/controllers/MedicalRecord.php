@@ -490,7 +490,7 @@ class MedicalRecord extends CI_Controller {
     }
 
     // Get Medical Record List For OTP by Date
-    function getMedicalRecordBySearchDate($patientID){
+    function getMedicalRecordBySearchDate($detailReservation, $patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
         $patient_data = $this->patient_model->getPatientByID($patientID);
@@ -501,7 +501,7 @@ class MedicalRecord extends CI_Controller {
     }
 
     // Get Medical Record List For OTP by Periode
-    function getMedicalRecordBySearchPeriod($patientID){
+    function getMedicalRecordBySearchPeriod($detailReservation, $patientID){
         //$data = $this->input->post('data');
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
         $patient_data = $this->patient_model->getPatientByID($patientID);
@@ -538,6 +538,8 @@ class MedicalRecord extends CI_Controller {
                 $data['support_diagnose']  = $support_diagnose;
                 $data['medication']  = $medication;
 
+                $data['detailReservation']  = $detailReservation;
+                $data['patient']  = $patient;
                 $this->load->view('mr/medical_record_detail_view', $data);
             }else{
                 $this->load->view('template/error');

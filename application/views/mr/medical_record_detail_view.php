@@ -84,7 +84,9 @@
         <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $header->doctorName;?></span>
     </div>
     <div class="w3-col m6 w3-right-align">
-        <button class="w3-btn w3-teal">Kembali ke List</button>
+        <a href="<?php echo site_url('MedicalRecord/getMedicalRecordList/'.$detailReservation.'/'.$patient); ?>">
+            <button class="w3-btn w3-teal">Kembali ke List</button>
+        </a>
     </div>
 </div>
 
@@ -502,9 +504,11 @@
 
                     <form class="w3-container" id="visit-form">
                         <p>
-                        <div class="w3-row-padding">
-                            <?php echo $detail->visitType;?>
-                        </div>
+                            <ul class="w3-ul w3-ul-list w3-border">
+                                <li class="w3-padding-8">
+                                    <?php echo $detail->visitType;?>
+                                </li>
+                            </ul>
                         </p>
                         <br/>
                     </form>
@@ -520,9 +524,11 @@
 
                     <form class="w3-container" id="treatment-form">
                         <p>
-                        <div class="w3-row-padding">
-                            <?php echo $detail->treatment;?>
-                        </div>
+                            <ul class="w3-ul w3-ul-list w3-border">
+                                <li class="w3-padding-8">
+                                    <?php echo $detail->treatment;?>
+                                </li>
+                            </ul>
                         </p>
                         <br/>
                     </form>
@@ -538,7 +544,11 @@
 
                     <form class="w3-container">
                         <p>
-                            <?php echo $detail->statusDiagnose;?>
+                            <ul class="w3-ul w3-ul-list w3-border">
+                                <li class="w3-padding-8">
+                                    <?php echo $detail->statusDiagnose;?>
+                                </li>
+                            </ul>
                         </p>
                         <br/>
                     </form>

@@ -29,10 +29,12 @@
 		}
 
         function checkOtpByPatientDoctor($doctorID, $patientID){
+            $datetime = date('Y-m-d H:i:s', time());
             $this->db->select('*');
             $this->db->from('tbl_cyberits_t_user_otp a');
             $this->db->where('a.patientID',$patientID);
             $this->db->where('a.doctorID',$doctorID);
+            $this->db->where('a.expireTime >',$datetime);
 
             $query = $this->db->get();
             if($query->num_rows()>0){
