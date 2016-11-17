@@ -7,7 +7,8 @@ class LoginMobile extends CI_Controller{
         $msg="";
         $userID = "";
         $username = "";
-        $patientName = "";
+        $role = "";
+        $name = "";
 
 		$this->load->model('login_model');
         $email = $this->security->xss_clean($this->input->post('email'));
@@ -20,19 +21,40 @@ class LoginMobile extends CI_Controller{
 
 			$userID = $user->userID;
 			$username = $user->userName;
-			$patientname = $user->patientName;
-            $status = 'success';
-            $msg = "Proses Login Berhasil";
+			$role = $user->userRole;
+			if($role == "patient"){
+				$detail = $this->login_model->getDetailPatientData($userID);
+				$name = $detail->patientName;
+				$status = 'success';
+            	$msg = "Proses Login Berhasil";
+			}
+			else if($role == "doctor"){
+				$detail = $this->login_model->getDetailDoctorData($userID);
+				$name = $detail->doctorName;	
+				$status = 'success';
+            	$msg = "Proses Login Berhasil";
+			}
+			else{
+				$userID = 0;
+				$username = "";
+				$role="";
+				$patientName = "";
+            	$status = 'error';
+            	$msg = "Role username tidak cocok ";
+			}
+			//$patientname = $user->patientName;
+            
 		}
 		else // incorrect username or password
 		{
 			$userID = 0;
 			$username = "";
+			$role="";
 			$patientName = "";
             $status = 'error';
             $msg = "Username atau Password kurang tepat ";
 		}
-        echo json_encode(array('userID' => $userID , 'username' => $username, 'patientName' => $patientname ,'status' => $status, 'msg' => $msg));
+        echo json_encode(array('userID' => $userID, 'username' => $username,'role' => $role, 'name' => $name,'status' => $status, 'msg' => $msg));
 	}
 }
 ?>

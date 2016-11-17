@@ -13,17 +13,35 @@ class Login_model extends CI_Model {
 	}
 
 	public function validateByEmail($email, $password)
-	{
-		$this->db->select('*'); 
+	{       
+	        $this->db->select('*'); 
 		$this->db->from('tbl_cyberits_m_users u');
-		$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
+		//$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
 		$this->db->where('email', $email);
 		$this->db->where('Password', md5($password));
 		$query = $this->db->get();
 		
 		return $query->row();
 		
-	}	
+	}
+
+	public function getDetailPatientData($userID){
+		$this->db->select('*'); 
+		$this->db->from('tbl_cyberits_m_patients p');
+		$this->db->where('userID', $userID);
+		$query = $this->db->get();
+		
+		return $query->row();
+	}
+
+	public function getDetailDoctorData($userID){
+		$this->db->select('*'); 
+		$this->db->from('tbl_cyberits_m_doctors d');
+		$this->db->where('userID', $userID);
+		$query = $this->db->get();
+		
+		return $query->row();	
+	}
 	
 	public function create_member()
 	{
