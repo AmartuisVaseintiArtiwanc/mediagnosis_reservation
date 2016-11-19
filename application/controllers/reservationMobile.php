@@ -14,6 +14,8 @@
 		    $this->load->model("DReservation_model");
             $this->load->model("Patient_model");
             $this->load->model('test_model',"test_model");
+            $this->load->model('Clinic_model');
+            $this->load->model('Place_model');
 		}
 
 		function doReserve(){
@@ -134,6 +136,76 @@
 			}
 
 		}
+
+        function getClinicDetail(){
+            $status="";
+            $data="";
+            $datetime = date('Y-m-d H:i:s', time());
+            $userID = $this->input->post("userID");
+            $placeID = $this->input->post("placeID");
+
+            $clinic = $this->Clinic_model->getClinicByPlaceID($placeID);
+            if(isset($clinic)){
+                $status="success";
+                $data=$clinic;
+            }else{
+                // Check Clinic Suggestion
+                $place = $this->Place_model->getPlaceByID($placeID);
+                if(isset($place)){
+                    // Adding Counter
+                    $data=array(
+                        'counter'=>$place->counter+1,
+                        "lastUpdated"=>$datetime,
+                        "lastUpdatedBy"=>$userID
+                    );
+                    $query = $this->Place_model->updatePlace($data,$placeID);
+
+                    $data=$place;
+                    $status="suggestion";
+                }else{
+                    $status="empty";
+                }
+            }
+            echo json_encode(array('status' => $status, 'data' => $data));
+        }
+
+        function saveClinicSuggestion(){
+            $status="";
+            $msg="";
+            $datetime = date('Y-m-d H:i:s', time());
+            $userID = $this->input->post("userID");
+            $placeID = $this->input->post("placeID");
+            $placeName = $this->input->post("placeName");
+            $placeAddress = $this->input->post("placeAddress");
+            $latitude = $this->input->post("latitude");
+            $longitude = $this->input->post("longitude");
+            $phone="";
+			
+            if($this->input->post('placePhoneNumber')){
+                $phone = $this->input->post("placePhoneNumber");
+            }
+			
+			if($this->input->post('userID') && $this->input->post('placeID') ){
+				// SAVE New Suggestion Place
+				$data=array(
+					'placeID'=>$placeID,
+					'placeName'=>$placeName,
+					'placeAddress'=>$placeAddress,
+					'latitude'=>$latitude,
+					'longitude'=>$longitude,
+					'placePhone'=>$phone,
+					'counter'=>1,
+					'isActive'=>1,
+					'created'=>$datetime,
+					"createdBy" => $userID,
+					"lastUpdated"=>$datetime,
+					"lastUpdatedBy"=>$userID
+				);
+				$query = $this->Place_model->createPlace($data);
+			}
+            
+            echo json_encode(array('status' => $status, 'msg' => $msg));
+        }
 
         function checkTodayReservationByUserID(){
             $userID = $this->input->post("userID");
