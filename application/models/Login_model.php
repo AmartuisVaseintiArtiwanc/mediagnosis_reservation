@@ -43,18 +43,41 @@ class Login_model extends CI_Model {
 		return $query->row();	
 	}
 	
-	public function create_member()
+	public function insertUser($data)
 	{
 		
-		$new_member_insert_data = array(
-			'first_name' => $this->input->post('first_name'),
-			'last_name' => $this->input->post('last_name'),
-			'email_address' => $this->input->post('email_address'),			
-			'username' => $this->input->post('username'),
-			'password' => md5($this->input->post('password'))						
-		);
+		$this->db->insert('tbl_cyberits_m_users', $data);
+		return $this->db->insert_id();
 		
-		$insert = $this->db->insert('membership', $new_member_insert_data);
-		return $insert;
+	}
+
+	public function checkUsernameExists($username){
+
+			$this->db->select('*');
+	        $this->db->from('tbl_cyberits_m_users');
+	        $this->db->where('isActive', 1);
+	        $this->db->where('userName', $username);
+	        $query = $this->db->get();
+
+	        if($query->num_rows()>0){
+	            return 1; // allready exist
+	        }else{
+	            return 0; //blom ada
+	        }
+	}
+
+	public function checkEmailExists($email){
+
+			$this->db->select('*');
+	        $this->db->from('tbl_cyberits_m_users');
+	        $this->db->where('isActive', 1);
+	        $this->db->where('email', $email);
+	        $query = $this->db->get();
+	        
+	        if($query->num_rows()>0){
+	            return 1; // allready exist
+	        }else{
+	            return 0; //blom ada
+	        }
 	}
 }
