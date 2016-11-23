@@ -134,8 +134,32 @@
 			}else{
 				echo json_encode("empty");
 			}
-
 		}
+
+        function getClinicBpjsDetail(){
+            $userID = $this->security->xss_clean($this->input->post("userID"));
+            $data = "";
+
+            $patient_data = $this->Patient_model->getPatientByUserID($userID);
+            if(isset($patient_data) && isset($patient_data->clinicID)){
+                // GET Clinic Detail
+                $clinic = $this->Clinic_model->getClinicByUserID_Mobile($patient_data->clinicID);
+
+                if(isset($clinic)){
+                    $status="success";
+                    $msg="Success";
+                    $data = $clinic;
+                }else{
+                    $status="error";
+                    $msg="Maaf Anda belum terdaftar di BPJS kami !";
+                }
+            }else{
+                $status="error";
+                $msg="Maaf terjadi kesalahan silahkan coba beberapa saat lagi !";
+            }
+
+            echo json_encode(array('status' => $status, 'msg' => $msg, 'data' => $data));
+        }
 
         function getClinicDetail(){
             $status="";

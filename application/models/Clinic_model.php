@@ -113,6 +113,15 @@ class Clinic_Model extends CI_Model {
         return $query->row();
     }
 
+    function getClinicByUserID_Mobile($id){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_clinics a');
+        $this->db->where('a.clinicID',$id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+
     function createClinic($data){
         $this->db->insert('tbl_cyberits_m_clinics',$data);	
 		$result=$this->db->affected_rows();
