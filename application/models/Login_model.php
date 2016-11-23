@@ -51,6 +51,14 @@ class Login_model extends CI_Model {
 		
 	}
 
+	public function insertPatient($data)
+	{
+		
+		$this->db->insert('tbl_cyberits_m_patients', $data);
+		return $this->db->insert_id();
+		
+	}	
+
 	public function checkUsernameExists($username){
 
 			$this->db->select('*');

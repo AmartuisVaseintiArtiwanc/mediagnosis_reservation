@@ -22,6 +22,7 @@
 			$userName = $this->input->post('username');
 			$password = $this->input->post('password');
 			$email = $this->input->post('email');
+			$name = $this->input->post('name');
 
 			$isExistsUsername = $this->Login_model->checkUsernameExists($userName);
 			$isExistsEmail = $this->Login_model->checkEmailExists($email);
@@ -55,12 +56,32 @@
 	                // Failed to save Data to DB
 	                $this->db->trans_rollback();
 	                $status = 'error';
-					$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi";
+					$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
 	            }
 	            else{
-	            	$this->db->trans_commit();
-        			$status = 'success';
-					$msg = "Proses Registrasi berhasil";
+	            	$data_patient = array(
+						'userID' => $query,
+						'patientName' => $name,
+						'isActive'=> 1,
+						'created' => $datetime,
+						'createdBy' => $query,
+						'lastUpdated' => $datetime,
+						'lastUpdatedBy' => $query
+					);
+
+					$query2 = $this->Login_model->insertPatient($data_patient);
+					if ($this->db->trans_status() === FALSE) {
+		                // Failed to save Data to DB
+		                $this->db->trans_rollback();
+		                $status = 'error';
+						$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
+		            }
+		            else{
+		            	$this->db->trans_commit();
+        				$status = 'success';
+						$msg = "Proses Registrasi berhasil";	
+		            }
+	            	
 	            }
 			}
 
