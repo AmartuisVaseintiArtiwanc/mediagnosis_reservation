@@ -66,7 +66,8 @@
 						'created' => $datetime,
 						'createdBy' => $query,
 						'lastUpdated' => $datetime,
-						'lastUpdatedBy' => $query
+						'lastUpdatedBy' => $query,
+						'clinicID' => 1 // asumsi semntara masih di klinik omega
 					);
 
 					$query2 = $this->Login_model->insertPatient($data_patient);
