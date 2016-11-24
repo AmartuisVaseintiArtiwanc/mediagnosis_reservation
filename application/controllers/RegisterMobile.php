@@ -19,6 +19,8 @@
 
 			$status = "";
 			$msg="";
+			$ID = 0;
+			
 			$userName = $this->input->post('username');
 			$password = $this->input->post('password');
 			$email = $this->input->post('email');
@@ -30,10 +32,12 @@
 			if($isExistsUsername == true){
 				$status = "error";
 				$msg="Maaf, username sudah terpakai";
+				$ID = 0;
 			}
 			else if($isExistsEmail == true){
 				$status = "error";
 				$msg="Maaf, email sudah terpakai";
+				$ID = 0;
 			}
 			else{
 				$data_patient = array(
@@ -81,12 +85,13 @@
 		            	$this->db->trans_commit();
         				$status = 'success';
 						$msg = "Proses Registrasi berhasil";	
+						$ID = $query;
 		            }
 	            	
 	            }
 			}
 
-			echo json_encode(array('status' => $status, 'msg' => $msg));
+			echo json_encode(array('status' => $status, 'msg' => $msg, 'ID' => $ID));
 		}
 		
 		public function createPatientByGoogle(){
@@ -94,6 +99,7 @@
 
 			$status = "";
 			$msg="";
+			$ID=0;
 			$email = $this->input->post('email');
 			$name = $this->input->post('name');
 
@@ -102,6 +108,7 @@
 			if($isExistsEmail == true){
 				$status = "error";
 				$msg="Maaf, email sudah terpakai";
+				$ID=0;
 			}
 			else{
 				$data_patient = array(
@@ -147,12 +154,13 @@
 		            	$this->db->trans_commit();
         				$status = 'success';
 						$msg = "Proses Registrasi berhasil";	
+						$ID = $query;
 		            }
 	            	
 	            }
 			}
 
-			echo json_encode(array('status' => $status, 'msg' => $msg));
+			echo json_encode(array('status' => $status, 'msg' => $msg, 'ID' => $ID));
 		}
 		
 		public function checkEmailAlreadyExists(){
