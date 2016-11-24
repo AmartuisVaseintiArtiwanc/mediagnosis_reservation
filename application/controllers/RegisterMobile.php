@@ -88,5 +88,87 @@
 
 			echo json_encode(array('status' => $status, 'msg' => $msg));
 		}
+		
+		public function createPatientByGoogle(){
+			$datetime = date('Y-m-d H:i:s', time());
+
+			$status = "";
+			$msg="";
+			$email = $this->input->post('email');
+			$name = $this->input->post('name');
+
+			$isExistsEmail = $this->Login_model->checkEmailExists($email);
+
+			if($isExistsEmail == true){
+				$status = "error";
+				$msg="Maaf, email sudah terpakai";
+			}
+			else{
+				$data_patient = array(
+						'email' => $email,
+						'userRole' => 'patient',
+						'isGoogle' => 1,
+						'isActive'=> 1,
+						'created' => $datetime,
+						'createdBy' => $email,
+						'lastUpdated' => $datetime,
+						'lastUpdatedBy' => $email
+					);
+
+				$this->db->trans_begin();
+				$query = $this->Login_model->insertUser($data_patient);
+
+				if ($this->db->trans_status() === FALSE) {
+	                // Failed to save Data to DB
+	                $this->db->trans_rollback();
+	                $status = 'error';
+					$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
+	            }
+	            else{
+	            	$data_patient = array(
+						'userID' => $query,
+						'patientName' => $name,
+						'isActive'=> 1,
+						'created' => $datetime,
+						'createdBy' => $query,
+						'lastUpdated' => $datetime,
+						'lastUpdatedBy' => $query,
+						'clinicID' => 1 // asumsi semntara masih di klinik omega
+					);
+
+					$query2 = $this->Login_model->insertPatient($data_patient);
+					if ($this->db->trans_status() === FALSE) {
+		                // Failed to save Data to DB
+		                $this->db->trans_rollback();
+		                $status = 'error';
+						$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
+		            }
+		            else{
+		            	$this->db->trans_commit();
+        				$status = 'success';
+						$msg = "Proses Registrasi berhasil";	
+		            }
+	            	
+	            }
+			}
+
+			echo json_encode(array('status' => $status, 'msg' => $msg));
+		}
+		
+		public function checkEmailAlreadyExists(){
+			$email = $this->input->post("email");
+
+			$result = $this->Login_model->checkEmailExists($email);
+			
+			if($result == 1){
+				$user = $this->Login_model->getIDByEmail($email);
+				$ID = $user->userID;
+			}
+			else{
+				$ID = 0;
+			}
+
+			echo json_encode(array("result" => $result, "ID" => $ID));	
+		}
 	}
 ?>

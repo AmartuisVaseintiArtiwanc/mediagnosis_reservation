@@ -88,4 +88,15 @@ class Login_model extends CI_Model {
 	            return 0; //blom ada
 	        }
 	}
+
+	public function getIDByEmail($email){
+
+			$this->db->select('*');
+	        $this->db->from('tbl_cyberits_m_users');
+	        $this->db->where('isActive', 1);
+	        $this->db->where('email', $email);
+	        $query = $this->db->get();
+	        
+	        return $query->row();
+	}
 }
