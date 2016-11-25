@@ -14,5 +14,13 @@
 
 	    	echo json_encode(array('data' => $topics));
 	    }
+
+	    function expertList($topicID){
+	    	$userID = $this->input->post("userID");
+	    	
+	    	$experts = $this->topic_model->getExpertList($topicID);
+
+	    	echo json_encode(array('data' => $experts));	
+	    }
 	}
 ?>
