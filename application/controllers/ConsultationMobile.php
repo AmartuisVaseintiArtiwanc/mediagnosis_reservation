@@ -12,7 +12,7 @@
 	    	$userID = $this->input->post("userID");
 	    	$topics = $this->topic_model->getTopicList();
 
-	    	echo json_encode($topics);
+	    	echo json_encode(array('data' => $topics));
 	    }
 	}
 ?>
