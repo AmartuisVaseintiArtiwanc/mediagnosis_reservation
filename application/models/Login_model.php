@@ -14,7 +14,7 @@ class Login_model extends CI_Model {
 
 	public function validateByEmail($email, $password)
 	{       
-	        $this->db->select('*'); 
+        $this->db->select('*');
 		$this->db->from('tbl_cyberits_m_users u');
 		//$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
 		$this->db->where('email', $email);
@@ -24,6 +24,16 @@ class Login_model extends CI_Model {
 		return $query->row();
 		
 	}
+
+    public function getUserRoleByUserID($userID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users u');
+        //$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
+        $this->db->where('userID', $userID);
+        $this->db->where('isActive', 1);
+        $query = $this->db->get();
+        return $query->row();
+    }
 
 	public function getDetailPatientData($userID){
 		$this->db->select('*'); 
