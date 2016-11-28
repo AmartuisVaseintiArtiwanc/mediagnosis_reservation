@@ -36,4 +36,12 @@ class Patient_model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    function getPatientList(){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive',1);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 }
