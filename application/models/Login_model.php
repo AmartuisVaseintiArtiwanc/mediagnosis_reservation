@@ -55,7 +55,6 @@ class Login_model extends CI_Model {
 	
 	public function insertUser($data)
 	{
-		
 		$this->db->insert('tbl_cyberits_m_users', $data);
 		return $this->db->insert_id();
 		
@@ -63,50 +62,83 @@ class Login_model extends CI_Model {
 
 	public function insertPatient($data)
 	{
-		
 		$this->db->insert('tbl_cyberits_m_patients', $data);
 		return $this->db->insert_id();
 		
 	}	
 
 	public function checkUsernameExists($username){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users');
+        $this->db->where('isActive', 1);
+        $this->db->where('userName', $username);
+        $query = $this->db->get();
 
-			$this->db->select('*');
-	        $this->db->from('tbl_cyberits_m_users');
-	        $this->db->where('isActive', 1);
-	        $this->db->where('userName', $username);
-	        $query = $this->db->get();
-
-	        if($query->num_rows()>0){
-	            return 1; // allready exist
-	        }else{
-	            return 0; //blom ada
-	        }
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
 	}
 
 	public function checkEmailExists($email){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users');
+        $this->db->where('isActive', 1);
+        $this->db->where('email', $email);
+        $query = $this->db->get();
 
-			$this->db->select('*');
-	        $this->db->from('tbl_cyberits_m_users');
-	        $this->db->where('isActive', 1);
-	        $this->db->where('email', $email);
-	        $query = $this->db->get();
-	        
-	        if($query->num_rows()>0){
-	            return 1; // allready exist
-	        }else{
-	            return 0; //blom ada
-	        }
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
 	}
+
+    public function checkUpdatedUsernameExists($userID,$username){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users');
+        $this->db->where('isActive', 1);
+        $this->db->where('userName', $username);
+        $this->db->where('userID !=', $userID);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
+
+    public function checkUpdatedEmailExists($userID, $email){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users');
+        $this->db->where('isActive', 1);
+        $this->db->where('email', $email);
+        $this->db->where('userID !=', $userID);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
 
 	public function getIDByEmail($email){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users');
+        $this->db->where('isActive', 1);
+        $this->db->where('email', $email);
+        $query = $this->db->get();
 
-			$this->db->select('*');
-	        $this->db->from('tbl_cyberits_m_users');
-	        $this->db->where('isActive', 1);
-	        $this->db->where('email', $email);
-	        $query = $this->db->get();
-	        
-	        return $query->row();
+        return $query->row();
 	}
+
+    function updatePatient($id,$data){
+        $this->db->where('userID',$id);
+        $this->db->update('tbl_cyberits_m_patients',$data);
+        $result=$this->db->affected_rows();
+        return $result;
+    }
 }
