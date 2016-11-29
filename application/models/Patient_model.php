@@ -44,4 +44,13 @@ class Patient_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    function getPatientIDByUserID($userID){
+        $this->db->select('patientID');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive',1);
+        $this->db->where("userID", $userID);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }

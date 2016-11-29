@@ -201,4 +201,13 @@ class Doctor_Model extends CI_Model {
     	$this->db->where('doctorID',$id);
         $this->db->delete('tbl_cyberits_m_doctors');
 	}
+
+    function getDoctorIDByUserID($userID){
+        $this->db->select('doctorID');
+        $this->db->from('tbl_cyberits_m_doctors');
+        $this->db->where('isActive',1);
+        $this->db->where("userID", $userID);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
