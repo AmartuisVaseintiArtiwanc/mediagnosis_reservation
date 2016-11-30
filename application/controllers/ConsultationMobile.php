@@ -90,6 +90,7 @@
 
 	    function updateRecentChat(){
 	    	$userID = $this->input->post("userID");
+	    	$sRoomID = $this->input->post("sRoomID");
 	    	$recentChat = $this->input->post("recentChat");
 
     		$datetime = date('Y-m-d H:i:s', time());
@@ -100,7 +101,7 @@
 	        );
 
 	        $this->db->trans_begin();
-	        $query = $this->sroom_model->updateRoom($data);
+	        $query = $this->sroom_model->updateRoom($recent_chat_data, $sRoomID);
 
 	        if ($this->db->trans_status() === FALSE) {
 	            // Failed to save Data to DB
@@ -115,6 +116,15 @@
 	        }
 
 	     	echo json_encode(array("status" => $status, "msg" => $msg));
+	    }
+
+	    function recentExpertList($userID){
+	    	$patients = $this->patient_model->getPatientIDByUserID($userID);
+	    	$patientID = $patients->patientID;
+
+	    	$experts = $this->sroom_model->getUserListByPatientID($patientID);
+
+	    	echo json_encode(array('data' => $experts));		
 	    }
 	}
 ?>
