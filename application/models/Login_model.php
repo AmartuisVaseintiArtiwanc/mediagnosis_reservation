@@ -12,6 +12,20 @@ class Login_model extends CI_Model {
 		
 	}
 
+    public function checkPassowrdByUserID($userID, $password)
+    {
+        $this->db->where('$userID', $userID);
+        $this->db->where('Password', md5($password));
+        $query = $this->db->get('tbl_cyberits_m_users');
+
+        if($query->num_rows()>0){
+            return 1; // password valid
+        }else{
+            return 0; //password tidak valid
+        }
+
+    }
+
 	public function validateByEmail($email, $password)
 	{       
         $this->db->select('*');
@@ -134,6 +148,13 @@ class Login_model extends CI_Model {
 
         return $query->row();
 	}
+
+    function updateUser($id,$data){
+        $this->db->where('userID',$id);
+        $this->db->update('tbl_cyberits_m_users',$data);
+        $result=$this->db->affected_rows();
+        return $result;
+    }
 
     function updatePatient($id,$data){
         $this->db->where('userID',$id);
