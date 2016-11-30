@@ -26,9 +26,10 @@ class ProfileMobile extends CI_Controller{
             $role = $check_role->userRole;
             if($role == "patient"){
                 // Get Patient Data
-                $data = $this->getPatientData($userID);
-                if($data){
+                $patient_data = $this->getPatientData($userID);
+                if($patient_data){
                     $status="success";
+                    $data = $patient_data;
                     $user = $data_user;
                 }else{
                     $data="";
@@ -36,9 +37,10 @@ class ProfileMobile extends CI_Controller{
                 }
             }else if($role == "doctor"){
                 // Get Doctor Data
-                $data = $this->getDoctorData($userID);
-                if($data){
+                $doctor_data = $this->getDoctorData($userID);
+                if($doctor_data){
                     $status="success";
+                    $data = $doctor_data;
                     $user = $data_user;
                 }else{
                     $data="";
@@ -73,7 +75,6 @@ class ProfileMobile extends CI_Controller{
     }
 
     public function saveDataAccount(){
-        $this->load->library('upload');
         $this->load->model('Login_model');
         $datetime = date('Y-m-d H:i:s', time());
 
@@ -96,6 +97,7 @@ class ProfileMobile extends CI_Controller{
                 // Check Duplicate Username
                 if($this->checkUpdatedUsername($userID,$username)){
                     // Set Data to Update
+                    $status="success";
                     $updated_data['userName'] = $username;
                 }else{
                     $err_flag=1;
@@ -107,6 +109,7 @@ class ProfileMobile extends CI_Controller{
                 // Check Duplicate Email
                 if($this->checkUpdatedEmail($userID,$email)){
                     // Set Data to Update
+                    $status="success";
                     $updated_data['email'] = $email;
                 }else{
                     $err_flag=1;
@@ -117,34 +120,53 @@ class ProfileMobile extends CI_Controller{
 
             // Check if no error flag
             if($err_flag == 0){
-                // Check Photo Profile Empty
-                if (isset($_FILES['profile_img']) && !empty($_FILES['profile_img'])) {
-                    $dir = "./user_profile";
-                    //config upload Image
-                    $config['upload_path'] = $dir;
-                    $config['allowed_types'] = 'jpg|png';
-                    $config['file_name'] = "patient_".$userID;
-                    $config['max_size'] = 1024 * 5;
-                    $config['overwrite'] = TRUE;
-                    $this->upload->initialize($config);
+                if(isset($_POST['profile_image'])){
+                    $this->updateProfilePicture();
+                    $updated_data['userImage'] = $_POST['filename'];
+                    $status="success";
+                }
+            }
 
-                    //Upload Image
-                    if (!$this->upload->do_upload('profile_img')) {
-                        $status = 'error';
-                        $msg = $this->upload->display_errors('', '');
-                    } else {
-                        // Upload Success
-                        $data = $this->upload->data();
-                        // Set Data to Update
-                        $updated_data['userImage'] = $data['file_name'];
+            $this->db->trans_begin();
+            $res = $this->Login_model->updateUser($userID,$updated_data);
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
 
-                        $status = 'success';
-                        $msg = "Profil Anda berhasil di simpan !";
-                    }
+            }else{
+                if($res==1){
+                    $this->db->trans_commit();
+                    $status = "success";
+                    $msg="Akun Anda berhasil di perbaharui..";
+                }else{
+                    $this->db->trans_rollback();
+                    $status = "error";
+                    $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
                 }
             }
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+
+    private function updateProfilePicture(){
+        //header('Content-Type: bitmap; charset=utf-8');
+        if($_SERVER['REQUEST_METHOD']=='POST'){
+
+            $dir = "./user_profile/";
+            $image = $_POST['profile_image'];
+            $filename = $_POST['filename'];
+            $binary=base64_decode($image);
+
+            $file = fopen($dir.$filename, 'wa+');
+            // Create File
+            fwrite($file, $binary);
+            fclose($file);
+
+            //mkdir("./user_profile");
+            //file_put_contents($dir.$filename, $binary);
+        }
     }
 
     public function saveDataProfile(){
@@ -170,6 +192,7 @@ class ProfileMobile extends CI_Controller{
                 $status="error";
                 $msg="Maaf terdapat input yang kosong, silahkan diperiksa kembali..";
             }else{
+                $dob = date('Y-m-d', strtotime ($dob));
                 $data=array(
                     'patientName'=>$name,
                     'ktpID'=>$ktp,
@@ -178,7 +201,6 @@ class ProfileMobile extends CI_Controller{
                     'phoneNumber'=>$phone_number,
                     'address'=>$address,
                     'dob'=>$dob,
-                    'isActive'=>1,
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$userID
                 );
@@ -217,9 +239,45 @@ class ProfileMobile extends CI_Controller{
     }
 
     public function changePasswordAccount(){
+        $datetime = date('Y-m-d H:i:s', time());
+        $status="error";
+        $msg="Error";
+
         $userID = $this->security->xss_clean($this->input->post('userID'));
         $password = $this->security->xss_clean($this->input->post('userPassword'));
 
+        $this->load->model('Login_model');
+        $valid = $this->Login_model->checkPassowrdByUserID($userID,$password);
+        if($valid){
+            $data=array(
+                'password'=>$password,
+                "lastUpdated"=>$datetime,
+                "lastUpdatedBy"=>$userID
+            );
+            $this->db->trans_begin();
+            $res = $this->Login_model->updateUser($userID,$data);
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+
+            }else{
+                if($res==1){
+                    $this->db->trans_commit();
+                    $status = "success";
+                    $msg="Password Anda berhasil di perbaharui..";
+                }else{
+                    $this->db->trans_rollback();
+                    $status = "error";
+                    $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+                }
+            }
+        }else{
+            $status = "error";
+            $msg="Maaf Password lama Anda tidak valid !";
+        }
+        echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 }
 ?>
