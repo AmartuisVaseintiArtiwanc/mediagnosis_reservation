@@ -41,5 +41,6 @@
 	        $query = $this->db->get();
 	        return $query->result_array();
 	    }
+
 	}
 ?>

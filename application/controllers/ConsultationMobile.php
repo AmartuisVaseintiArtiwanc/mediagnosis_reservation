@@ -59,6 +59,7 @@
 		        	'topicID'=>$topicID,
 		            'patientID'=>$patientID,
 		            'doctorID'=>$expertID,
+		            'recentChat'=>"* New *",
 		            'isActive'=>1,
 		            'created'=>$datetime,
 		            "createdBy" => "patient",
@@ -126,5 +127,6 @@
 
 	    	echo json_encode(array('data' => $experts));		
 	    }
+
 	}
 ?>
