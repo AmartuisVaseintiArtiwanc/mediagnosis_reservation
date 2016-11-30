@@ -25,5 +25,10 @@
 	        $query = $this->db->get();
 	        return $query->result_array();
 	    }
+
+	    function updateRoom($data){
+	    	$this->db->update('tbl_cyberits_s_room', $data);
+	        return $this->db->affected_rows();
+	    }
 	}
 ?>

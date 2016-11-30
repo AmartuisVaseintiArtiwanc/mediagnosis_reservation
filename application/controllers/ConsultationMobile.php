@@ -66,12 +66,55 @@
 					"lastUpdatedBy"=>"patient"
 		        );
 
+		        $this->db->trans_begin();
 	    		$roomID = $this->sroom_model->insertRoom($room_data);
+	    		if ($this->db->trans_status() === FALSE) {
+		            // Failed to save Data to DB
+		            $this->db->trans_rollback();
+		            $status = 'error';
+					$msg = "Maaf, Terjadi kesalahan saat melakukan konsultasi";
+		        }else{
+		        	$this->db->trans_commit();
+					$status = 'success';
+					$msg = "Proses konsultasi berhasil";
+		        }
+
 	    	}else{
 	    		$roomID = $rooms->sRoomID;
+    			$status = 'success';
+				$msg = "Proses konsultasi berhasil";
 	    	}
 
-	    	echo json_encode(array('roomID' => $roomID));		
+	    	echo json_encode(array('status' => $status, 'msg' => $msg, 'roomID' => $roomID));
+	    }
+
+	    function updateRecentChat(){
+	    	$userID = $this->input->post("userID");
+	    	$recentChat = $this->input->post("recentChat");
+
+    		$datetime = date('Y-m-d H:i:s', time());
+	        $recent_chat_data=array(
+	        	"recentChat"=> $recentChat,
+				"lastUpdated"=>$datetime,
+				"lastUpdatedBy"=>$userID
+	        );
+
+	        $this->db->trans_begin();
+	        $query = $this->sroom_model->updateRoom($data);
+
+	        if ($this->db->trans_status() === FALSE) {
+	            // Failed to save Data to DB
+	            $this->db->trans_rollback();
+	            $status = 'error';
+				$msg = "Maaf, Terjadi kesalahan saat melakukan konsultasi";
+	        }
+	        else{
+	        	$this->db->trans_commit();
+    			$status = 'success';
+				$msg = "Proses konsultasi berhasil";
+	        }
+
+	     	echo json_encode(array("status" => $status, "msg" => $msg));
 	    }
 	}
 ?>
