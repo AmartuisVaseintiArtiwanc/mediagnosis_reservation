@@ -4,7 +4,7 @@ class Login_model extends CI_Model {
 	
 	public function validate($username, $password)
 	{
-		$this->db->where('userName', $username);
+        $this->db->where('userName', $username);
 		$this->db->where('Password', md5($password));
 		$query = $this->db->get('tbl_cyberits_m_users');
 		
@@ -31,7 +31,10 @@ class Login_model extends CI_Model {
         $this->db->select('*');
 		$this->db->from('tbl_cyberits_m_users u');
 		//$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
-		$this->db->where('email', $email);
+        $this->db->group_start();
+            $this->db->where('userName', $email);
+            $this->db->or_where('email', $email);
+        $this->db->group_end();
 		$this->db->where('Password', md5($password));
 		$query = $this->db->get();
 		
@@ -118,9 +121,9 @@ class Login_model extends CI_Model {
         $query = $this->db->get();
 
         if($query->num_rows()>0){
-            return 1; // allready exist
+            return 0; // allready exist
         }else{
-            return 0; //blom ada
+            return 1; // blom ada = valid
         }
     }
 
@@ -133,9 +136,9 @@ class Login_model extends CI_Model {
         $query = $this->db->get();
 
         if($query->num_rows()>0){
-            return 1; // allready exist
+            return 0; // allready exist
         }else{
-            return 0; //blom ada
+            return 1; //blom ada = valid
         }
     }
 
