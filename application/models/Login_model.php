@@ -5,7 +5,7 @@ class Login_model extends CI_Model {
 	public function validate($username, $password)
 	{
         $this->db->where('userName', $username);
-		$this->db->where('Password', md5($password));
+		$this->db->where('Password', $password);
 		$query = $this->db->get('tbl_cyberits_m_users');
 		
 		return $query->row();
@@ -26,7 +26,7 @@ class Login_model extends CI_Model {
 
     }
 
-	public function validateByEmail($email, $password)
+	public function validateByEmail($email)
 	{       
         $this->db->select('*');
 		$this->db->from('tbl_cyberits_m_users u');
@@ -35,14 +35,14 @@ class Login_model extends CI_Model {
             $this->db->where('userName', $email);
             $this->db->or_where('email', $email);
         $this->db->group_end();
-		$this->db->where('Password', md5($password));
+		//$this->db->where('Password', md5($password));
 		$query = $this->db->get();
 		
 		return $query->row();
 		
 	}
 
-    public function getUserRoleByUserID($userID){
+    public function getUserDataByUserID($userID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_users u');
         //$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
@@ -82,7 +82,17 @@ class Login_model extends CI_Model {
 		$this->db->insert('tbl_cyberits_m_patients', $data);
 		return $this->db->insert_id();
 		
-	}	
+	}
+
+    public function getUserDataByUsername($username){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_users');
+        $this->db->where('isActive', 1);
+        $this->db->where('userName', $username);
+        $query = $this->db->get();
+        return $query->row();
+
+    }
 
 	public function checkUsernameExists($username){
         $this->db->select('*');

@@ -72,7 +72,7 @@ class Poli extends CI_Controller {
             'poliName'=>$name,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('userID'),
+            "createdBy" => $this->session->userdata('superUserID'),
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );

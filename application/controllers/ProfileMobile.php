@@ -2,6 +2,16 @@
 
 class ProfileMobile extends CI_Controller{
 
+    function __construct(){
+        parent::__construct();
+
+        $this->load->helper(array('form', 'url'));
+        $this->load->helper('date');
+
+        $this->load->library('Hash');
+        $this->load->library("Authentication");
+    }
+
     public function getUserProfile(){
         $this->load->model('Login_model');
         $userID = $this->security->xss_clean($this->input->post('userID'));
@@ -10,7 +20,7 @@ class ProfileMobile extends CI_Controller{
         $data="";
         $user="";
 
-        $check_role = $this->Login_model->getUserRoleByUserID($userID);
+        $check_role = $this->Login_model->getUserDataByUserID($userID);
         // Check Existing Account and Get User Role
         if(isset($check_role)){
             // Set User Data
@@ -244,38 +254,49 @@ class ProfileMobile extends CI_Controller{
         $msg="Error";
 
         $userID = $this->security->xss_clean($this->input->post('userID'));
-        $password = $this->security->xss_clean($this->input->post('userPassword'));
+        $oldPassword = $this->security->xss_clean($this->input->post('oldUserPassword'));
+        $newPassword = $this->security->xss_clean($this->input->post('newUserPassword'));
 
         $this->load->model('Login_model');
-        $valid = $this->Login_model->checkPassowrdByUserID($userID,$password);
-        if($valid){
-            $data=array(
-                'password'=>$password,
-                "lastUpdated"=>$datetime,
-                "lastUpdatedBy"=>$userID
-            );
-            $this->db->trans_begin();
-            $res = $this->Login_model->updateUser($userID,$data);
+        $userData = $this->Login_model->getUserDataByUserID($userID);
 
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                $status = "error";
-                $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+        // Check Existing User
+        if(isset($userData)){
+            // Check Old Password
+            if($this->hash->verifyPass($oldPassword, $userData->password)){
+                $data=array(
+                    'password'=>$this->hash->hashPass($newPassword),
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$userID
+                );
+                $this->db->trans_begin();
+                $res = $this->Login_model->updateUser($userID,$data);
 
-            }else{
-                if($res==1){
-                    $this->db->trans_commit();
-                    $status = "success";
-                    $msg="Password Anda berhasil di perbaharui..";
-                }else{
+                if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
                     $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+
+                }else{
+                    if($res==1){
+                        $this->db->trans_commit();
+                        $status = "success";
+                        $msg="Password Anda berhasil di perbaharui, Silahkan melakukan proses Login kembali ..";
+                    }else{
+                        $this->db->trans_rollback();
+                        $status = "error";
+                        $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+                    }
                 }
+            }else{
+                $status = 'error';
+                $msg = "Maaf Password Lama yang Anda masukan salah !";
             }
+
+
         }else{
             $status = "error";
-            $msg="Maaf Password lama Anda tidak valid !";
+            $msg="Maaf User Anda tidak terdaftar!";
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }

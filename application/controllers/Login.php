@@ -1,7 +1,17 @@
 <?php
 
 class Login extends CI_Controller {
-	
+
+    function __construct(){
+        parent::__construct();
+
+        $this->load->helper(array('form', 'url'));
+        $this->load->helper('date');
+
+        $this->load->library('Hash');
+        $this->load->library("Authentication");
+    }
+
 	public function index(){
 		$this->load->view('template/login');
 	}
@@ -13,26 +23,30 @@ class Login extends CI_Controller {
         $username = $this->security->xss_clean($this->input->post('username'));
         $password = $this->security->xss_clean($this->input->post('password'));
 
-		$user = $this->login_model->validate($username, $password);
-		
-		if($user != "" || $user != null) // if the user's credentials validated...
-		{
-			$data = array(
-                'userID' => $user->userID,
-				'userName' => $user->userName,
-                'superUserID' => $user->superUserID,
-                'role' => $user->userRole,
-				'is_logged_in' => true
-			);
-			$this->session->set_userdata($data);
-            $status = 'success';
-            $msg = "";
-		}
-		else // incorrect username or password
-		{
+        $userVerifier = $this->login_model->getUserDataByUsername($username);
+	    //$user = $this->login_model->validate($username, $password);
+
+        if(isset($userVerifier)){
+            if($this->hash->verifyPass($password, $userVerifier->password)){
+                $data = array(
+                    'userID' => $userVerifier->userID,
+                    'userName' => $userVerifier->userName,
+                    'superUserID' => $userVerifier->superUserID,
+                    'role' => $userVerifier->userRole,
+                    'is_logged_in' => true
+                );
+                $this->session->set_userdata($data);
+                $status = 'success';
+                $msg = "";
+            }else{
+                $status = 'error';
+                $msg = "Username or Password is Wrong ! ";
+            }
+        }else{
             $status = 'error';
             $msg = "Username or Password is Wrong ! ";
-		}
+
+        }
         echo json_encode(array('status' => $status, 'msg' => $msg));
 	}	
 	
@@ -89,7 +103,7 @@ class Login extends CI_Controller {
             $this->load->view('template/template',$data);
         }
     }
-	
+
 	public function logout()
 	{
 		$this->session->sess_destroy();

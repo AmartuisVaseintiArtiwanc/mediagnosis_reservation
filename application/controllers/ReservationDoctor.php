@@ -50,7 +50,7 @@ class ReservationDoctor extends CI_Controller {
     }
 
     /*Create Header Reservasi untuk HARI INI*/
-    function createHeaderReservation($clinicID, $poliID){
+    private function createHeaderReservation($clinicID, $poliID){
         $datetime = date('Y-m-d H:i:s', time());
         $userID = $this->session->userdata('userID');
 

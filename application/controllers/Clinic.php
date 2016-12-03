@@ -75,7 +75,7 @@ class Clinic extends CI_Controller {
             'clinicName'=>$name,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('userID'),
+            "createdBy" => $this->session->userdata('superUserID'),
 			"lastUpdated"=>$datetime,
 			"lastUpdatedBy"=>$this->session->userdata('userID')
         );

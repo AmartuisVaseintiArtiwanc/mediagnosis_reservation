@@ -98,7 +98,7 @@ class MedicalRecord extends CI_Controller {
             'dob'=>$patient_data->dob,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('userID'),
+            "createdBy" => $this->session->userdata('superUserID'),
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
@@ -111,7 +111,7 @@ class MedicalRecord extends CI_Controller {
             'tPatientProfileID'=>$save_patient_data,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('userID'),
+            "createdBy" => $this->session->userdata('superUserID'),
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
@@ -128,7 +128,7 @@ class MedicalRecord extends CI_Controller {
                 'mainConditionText'=>$main_condition,
                 'isActive'=>1,
                 'created'=>$datetime,
-                "createdBy" => $this->session->userdata('userID'),
+                "createdBy" => $this->session->userdata('superUserID'),
                 "lastUpdated"=>$datetime,
                 "lastUpdatedBy"=>$this->session->userdata('userID')
             );
@@ -145,7 +145,7 @@ class MedicalRecord extends CI_Controller {
                 'diseaseName'=>$working_diagnose,
                 'isActive'=>1,
                 'created'=>$datetime,
-                "createdBy" => $this->session->userdata('userID'),
+                "createdBy" => $this->session->userdata('superUserID'),
                 "lastUpdated"=>$datetime,
                 "lastUpdatedBy"=>$this->session->userdata('userID')
             );
@@ -170,7 +170,7 @@ class MedicalRecord extends CI_Controller {
             'statusDiagnose'=>$statusDiagnose,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('userID'),
+            "createdBy" => $this->session->userdata('superUserID'),
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
@@ -188,7 +188,7 @@ class MedicalRecord extends CI_Controller {
                         'additionalConditionText'=>$additional_condition,
                         'isActive'=>1,
                         'created'=>$datetime,
-                        "createdBy" => $this->session->userdata('userID'),
+                        "createdBy" => $this->session->userdata('superUserID'),
                         "lastUpdated"=>$datetime,
                         "lastUpdatedBy"=>$this->session->userdata('userID')
                     );
@@ -200,7 +200,7 @@ class MedicalRecord extends CI_Controller {
                     'additionalConditionID'=>$additional_condition,
                     'isActive'=>1,
                     'created'=>$datetime,
-                    "createdBy" => $this->session->userdata('userID'),
+                    "createdBy" => $this->session->userdata('superUserID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
                 );
@@ -220,7 +220,7 @@ class MedicalRecord extends CI_Controller {
                         'diseaseName'=>$support_diagnose,
                         'isActive'=>1,
                         'created'=>$datetime,
-                        "createdBy" => $this->session->userdata('userID'),
+                        "createdBy" => $this->session->userdata('superUserID'),
                         "lastUpdated"=>$datetime,
                         "lastUpdatedBy"=>$this->session->userdata('userID')
                     );
@@ -232,7 +232,7 @@ class MedicalRecord extends CI_Controller {
                     'diseaseID'=>$support_diagnose,
                     'isActive'=>1,
                     'created'=>$datetime,
-                    "createdBy" => $this->session->userdata('userID'),
+                    "createdBy" => $this->session->userdata('superUserID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
                 );
@@ -254,7 +254,7 @@ class MedicalRecord extends CI_Controller {
                         'supportExaminationColumnName'=>$support_examination_column,
                         'isActive'=>1,
                         'created'=>$datetime,
-                        "createdBy" => $this->session->userdata('userID'),
+                        "createdBy" => $this->session->userdata('superUserID'),
                         "lastUpdated"=>$datetime,
                         "lastUpdatedBy"=>$this->session->userdata('userID')
                     );
@@ -267,7 +267,7 @@ class MedicalRecord extends CI_Controller {
                     'supportExaminationValue'=>$support_examination_value,
                     'isActive'=>1,
                     'created'=>$datetime,
-                    "createdBy" => $this->session->userdata('userID'),
+                    "createdBy" => $this->session->userdata('superUserID'),
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
                 );
@@ -287,7 +287,7 @@ class MedicalRecord extends CI_Controller {
                         'medicationText' => $medication,
                         'isActive' => 1,
                         'created' => $datetime,
-                        "createdBy" => $this->session->userdata('userID'),
+                        "createdBy" => $this->session->userdata('superUserID'),
                         "lastUpdated" => $datetime,
                         "lastUpdatedBy" => $this->session->userdata('userID')
                     );
@@ -299,7 +299,7 @@ class MedicalRecord extends CI_Controller {
                     'medicationID' => $medication,
                     'isActive' => 1,
                     'created' => $datetime,
-                    "createdBy" => $this->session->userdata('userID'),
+                    "createdBy" => $this->session->userdata('superUserID'),
                     "lastUpdated" => $datetime,
                     "lastUpdatedBy" => $this->session->userdata('userID')
                 );
@@ -329,7 +329,7 @@ class MedicalRecord extends CI_Controller {
             'height'=>$height,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('userID'),
+            "createdBy" => $this->session->userdata('superUserID'),
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );

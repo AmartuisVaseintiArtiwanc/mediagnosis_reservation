@@ -43,9 +43,11 @@ class Reservation extends CI_Controller {
     }
 
     /*Create Header Reservasi untuk HARI INI*/
-    function createHeaderReservation($clinicPoliList,$clinicID){
+    private function createHeaderReservation($clinicPoliList,$clinicID){
         $datetime = date('Y-m-d H:i:s', time());
         $userID = $this->session->userdata('userID');
+        //$userID = $this->session->userdata('userID');
+
         foreach($clinicPoliList as $row){
             $poliID = $row['poliID'];
             $verifyReservation = $this->test_model->checkReservationToday($clinicID,$poliID);
