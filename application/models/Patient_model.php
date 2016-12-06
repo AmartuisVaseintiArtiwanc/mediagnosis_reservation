@@ -53,4 +53,11 @@ class Patient_model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    function updatePatient($id,$data){
+        $this->db->where('userID',$id);
+        $this->db->update('tbl_cyberits_m_patients',$data);
+        $result=$this->db->affected_rows();
+        return $result;
+    }
 }

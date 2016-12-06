@@ -168,11 +168,4 @@ class Login_model extends CI_Model {
         $result=$this->db->affected_rows();
         return $result;
     }
-
-    function updatePatient($id,$data){
-        $this->db->where('userID',$id);
-        $this->db->update('tbl_cyberits_m_patients',$data);
-        $result=$this->db->affected_rows();
-        return $result;
-    }
 }

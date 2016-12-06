@@ -185,6 +185,7 @@ class ProfileMobile extends CI_Controller{
         $msg="Error";
         $datetime = date('Y-m-d H:i:s', time());
         $this->load->model('Login_model');
+        $this->load->model('Patient_model');
 
         $userID = $this->security->xss_clean($this->input->post('userID'));
         $name = $this->security->xss_clean($this->input->post('profile_name'));
@@ -216,7 +217,7 @@ class ProfileMobile extends CI_Controller{
                 );
 
                 $this->db->trans_begin();
-                $res = $this->Login_model->updatePatient($userID,$data);
+                $res = $this->Patient_model->updatePatient($userID,$data);
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
