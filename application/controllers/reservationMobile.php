@@ -25,11 +25,15 @@
 			$userID = $this->input->post('userID');
 			$patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
-			$verifyReservation = $this->HReservation_model->checkReservationToday($clinicID, $poliID);
+			$verifyReservationOverall = $this->HReservation_model->checkReservationToday($clinicID, $poliID);
 
-			if($userID!=null){
+			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patientID);
+
+			if($resrvationAvailability != 0){
+				echo json_encode(array('status' => 'error', 'msg' => 'Maaf, anda tidak bisa melakukan reservasi lagi'));
+			}else if($userID!=null){
 				//belom ada reservasi hari itu
-				if($verifyReservation == 0){
+				if($verifyReservationOverall == 0){
 					//insert baru
 					$data_reservasi = array(
 							'clinicID' => $clinicID,
