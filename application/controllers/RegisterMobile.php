@@ -7,6 +7,7 @@
 			$this->load->helper(array('form', 'url'));
 			$this->load->helper('date');
 			$this->load->helper('html');
+            $this->load->library('Hash');
 		    $this->load->library("pagination");
 		    $this->load->library('form_validation');
 		    $this->load->library('email');
@@ -42,7 +43,7 @@
 			else{
 				$data_patient = array(
 						'userName' => $userName,
-						'password' => md5($password),
+						'password' => $this->hash->hashPass($password),
 						'email' => $email,
 						'userRole' => 'patient',
 						'isGoogle' => 0,
