@@ -288,6 +288,18 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
+    // Check Reservation Role for Admin Clinic
+    function checkReservationClinicAdminRole($detailID, $clinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics c', 'b.clinicID = c.clinicID');
+        $this->db->where("b.clinicID",$clinicID);
+        $this->db->where("a.detailReservationID",$detailID);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     // Check Medical Record OTP for Doctor
     function checkOTPMedicalRecord($detailID, $doctorID, $patientID){
         $this->db->select('*');

@@ -643,7 +643,7 @@ $(document).ready(function(){
                                 'error'
                             )
                         }
-                        alert($data);
+                        //alert($data);
                     },
                     error: function(xhr, status, error) {
                         //var err = eval("(" + xhr.responseText + ")");
@@ -699,7 +699,7 @@ $(document).ready(function(){
                             'error'
                         )
                     }
-                    alert($data);
+                    //alert($data);
                 },
                 error: function(xhr, status, error) {
                     //var err = eval("(" + xhr.responseText + ")");

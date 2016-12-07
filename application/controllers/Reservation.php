@@ -8,6 +8,8 @@ class Reservation extends CI_Controller {
         $this->load->library("pagination");
         $this->load->library("authentication");
         $this->is_logged_in();
+        $this->load->model('doctor_model',"doctor_model");
+        $this->load->model('patient_model',"patient_model");
         $this->load->model('clinic_model',"clinic_model");
         $this->load->model('poli_model',"poli_model");
         $this->load->model('sClinic_model',"sclinic_model");
@@ -168,13 +170,6 @@ class Reservation extends CI_Controller {
         $this->load->view('template/template', $data);
     }
 
-    function goToReservationReportDateList(){
-
-        $clinicID = $this->security->xss_clean($this->input->post('clinicID'));
-        $user = $this->login_model->validate($username, $password);
-        echo json_encode(array('status' => $status, 'msg' => $msg));
-    }
-
     function dataReservationClinicPoliListAjax(){
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
@@ -222,8 +217,126 @@ class Reservation extends CI_Controller {
         echo json_encode($output);
     }
 
+    function goToPhysicalExamination($detailReservation){
+        $role = $this->session->userdata('role');
+        $userID = $this->session->userdata('userID');
+        if($this->authentication->isAuthorizeAdmin($role)){
+            $clinic = $this->clinic_model->getClinicByUserID($userID);
+            if(isset($clinic)){
+                $header_data = $this->test_model->checkReservationClinicAdminRole($detailReservation,$clinic->clinicID);
+                if(isset($header_data)){
+                    $status = $header_data->status;
+                    if($status == "check"){
+                        $this->goToExamineForm($detailReservation,$header_data);
+                    }else{
+                        echo "Pasien ini tidak terdapat dalam proses reservasi ..";
+                    }
+                }else{
+                    echo "Anda tidak berhak mengakses halaman ini..";
+                }
+            }else{
+                echo "Anda tidak berhak mengakses halaman ini..";
+            }
+        }else{
+            echo "Anda tidak berhak mengakses halaman ini..";
+        }
+    }
 
-    function is_logged_in(){
+    private function goToExamineForm($detailReservation,$header_data){
+        $datetime = date('Y-m-d H:i:s', time());
+
+        $reservationData=array(
+            'status'=>"examine",
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+
+        $this->db->trans_begin();
+        // Update Reservation Status to Examine
+        $query = $this->test_model->updateReservationDetail($reservationData,$detailReservation);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg = "Cannot save to Database !";
+        } else {
+            $this->db->trans_commit();
+            $status = "success";
+            $msg = "Save data successfully !";
+        }
+
+        $doctor_data = $this->doctor_model->getDoctorByID($header_data->doctorID);
+        $patient_data = $this->patient_model->getPatientByID($header_data->patientID);
+
+        $data['header_data'] = $header_data;
+        $data['doctor_data'] = $doctor_data;
+        $data['patient_data']  = $patient_data;
+        $data['detailReservation'] = $detailReservation;
+        $this->load->view('reservation/physical_examination_view', $data);
+    }
+
+    function savePhysicalExamination(){
+
+        $datetime = date('Y-m-d H:i:s', time());
+        $data = $this->security->xss_clean($this->input->post('data'));
+        $detailID = $this->security->xss_clean($this->input->post('detail_reservation'));
+
+        // EXAMINATION / PEMERIKSAAN
+        $conscious = $data[0]['conscious'];
+        $blood_low = $data[0]['blood_low'];
+        $blood_high = $data[0]['blood_high'];
+        $pulse = $data[0]['pulse'];
+        $respiration = $data[0]['respiration'];
+        $temperature = $data[0]['temperature'];
+        $height = $data[0]['height'];
+        $weight = $data[0]['weight'];
+
+        $physical_examination_data=array(
+            'detailReservationID'=>$detailID,
+            'conscious'=>$conscious,
+            'bloodPreasureLow'=>$blood_low,
+            'bloodPreasureHigh'=>$blood_high,
+            'pulse'=>$pulse,
+            'respirationRate'=>$respiration,
+            'temperature'=>$temperature,
+            'weight'=>$weight,
+            'height'=>$height,
+            'isActive'=>1,
+            'created'=>$datetime,
+            "createdBy" => $this->session->userdata('superUserID'),
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+
+        $reservationData=array(
+            'status'=>"confirm",
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+        $this->db->trans_begin();
+        // Update Reservation Status to Confirm
+        $query = $this->test_model->updateReservationDetail($reservationData,$detailID);
+        // Save Physical Examination
+        $this->medical_record_detail_model->createMedicalRecordDetailPhysicalExamination($physical_examination_data);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg = "Cannot save to Database !";
+        } else {
+            $this->db->trans_commit();
+            $status = "success";
+            $msg = "Save data successfully !";
+        }
+
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+    private function validateSavePhysicalExamination($data){
+
+    }
+
+    private function is_logged_in(){
         $is_logged_in = $this->session->userdata('is_logged_in');
         if(!isset($is_logged_in) || $is_logged_in != true) {
             $url_login = site_url("Login");

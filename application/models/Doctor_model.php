@@ -152,6 +152,7 @@ class Doctor_Model extends CI_Model {
         return $query->row();
     }
 
+    // Get Doctor by DoctorID
     function getDoctorByID($id){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_doctors a');
@@ -161,6 +162,7 @@ class Doctor_Model extends CI_Model {
         return $query->row();
     }
 
+    // Get Doctor by UserID
     function getDoctorByUserID($userID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_doctors a');
@@ -168,7 +170,6 @@ class Doctor_Model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
-
 
     function getClinicPoliDoctorByUserID($id){
         $this->db->select('*');

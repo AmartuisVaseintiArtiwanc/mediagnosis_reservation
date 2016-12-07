@@ -328,11 +328,11 @@
                             <label class="w3-label">Tekanan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m2">
-                                    <input class="w3-input" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text">
+                                    <input class="w3-input input-number" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m1 w3-center"><span class="w3-xlarge">/</span></div>
                                 <div class="w3-col m2">
-                                    <input class="w3-input" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text">
+                                    <input class="w3-input input-number" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m3">
                                     <label class="w3-padding">mmHg</label>
@@ -343,7 +343,7 @@
                             <label class="w3-label">Tekanan Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="respiration-input" type="text" data-label="#respiration-err-msg">
+                                    <input class="w3-input input-number" id="respiration-input" type="text" data-label="#respiration-err-msg">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">x/minutes</label>
@@ -354,7 +354,7 @@
                             <label class="w3-label">Denyut Nadi</label> <span class="w3-tag w3-red" id="pulse-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="pulse-input" data-label="#pulse-err-msg" type="text">
+                                    <input class="w3-input input-number" id="pulse-input" data-label="#pulse-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">x/minutes</label>
@@ -365,7 +365,7 @@
                             <label class="w3-label">Suhu Tubuh</label> <span class="w3-tag w3-red" id="temperature-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="temperature-input" data-label="#temperature-err-msg" type="text">
+                                    <input class="w3-input input-number" id="temperature-input" data-label="#temperature-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">&deg Celcius</label>
@@ -376,7 +376,7 @@
                             <label class="w3-label">Tinggi Badan</label> <span class="w3-tag w3-red" id="height-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="height-input" data-label="#height-err-msg" type="text">
+                                    <input class="w3-input input-number" id="height-input" data-label="#height-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">cm</label>
@@ -387,7 +387,7 @@
                             <label class="w3-label">Berat Badan</label> <span class="w3-tag w3-red" id="weight-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input" id="weight-input" data-label="#weight-err-msg" type="text">
+                                    <input class="w3-input input-number" id="weight-input" data-label="#weight-err-msg" type="text">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">Kg</label>
@@ -657,6 +657,23 @@
 </script>
 <script>
     $(function(){
+        $(".input-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                    // Allow: Ctrl+A, Command+A
+                (e.keyCode === 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                    // Allow: home, end, left, right, down, up
+                (e.keyCode >= 35 && e.keyCode <= 40)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+
         //DIGITAL ANALOG
         function dateTime(){
             var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];

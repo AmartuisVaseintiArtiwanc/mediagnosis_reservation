@@ -247,7 +247,7 @@
                             $detailID = data.output['detailID'];
                             $("#detail-reservation-value").val($detailID);
                             //SET COUNTER QUEUE
-                            $("#current-queue-info").attr("data-queue",1);
+                            //$("#current-queue-info").attr("data-queue",1);
 
                             //HIDE LOADING SCREEN
                             $(".loading-screen-queue").hide();
@@ -263,9 +263,9 @@
                 });
             }
         }
-        setInterval(getCurrentQueue, 1000);
+        setInterval(getCurrentQueue, 10000);
 
-        setInterval(startMedicalRecord, 1000);
+        setInterval(startMedicalRecord, 3000);
         function startMedicalRecord(){
             var $base_url = "<?php echo site_url();?>/";
             var $currQueue = $("#current-queue-info").attr("data-queue");

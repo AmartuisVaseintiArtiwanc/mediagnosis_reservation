@@ -35,5 +35,13 @@
             else
                 {return false;}
         }
+
+        public function isAuthorizeAdminMediagnosis($currentUserLevel)
+        {
+            if($currentUserLevel == 'mediagnosis_admin' )
+            {return true;}
+            else
+            {return false;}
+        }
     }
 ?>

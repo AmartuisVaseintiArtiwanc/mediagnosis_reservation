@@ -166,7 +166,7 @@
             <!-- /.box-body -->
             <div class="hide">
                 <audio id="loading-beep">
-                    <source src="../assets/custom/audio.mp3" type="audio/mp3"/>
+                    <source src="<?php echo base_url();?>/assets/custom/audio.mp3" type="audio/mp3"/>
                 </audio>
 
             </div>
@@ -240,7 +240,7 @@
             getNextQueueList();
         }
 
-        setInterval(loopGetCurrentQuery, 2000);
+        setInterval(loopGetCurrentQuery, 3000);
 
         function renderQueueBox(q_number,poli_name, doctor_name, patient_name, poli){
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
@@ -270,29 +270,54 @@
         $(".btn-reservation-confirmation").click(function(){
             var $value = $(this).attr("data-value");
             var $poli = $(this).attr("data-poli");
-            var $title = "Confirmation";
+
             var $msg = "";
-            var detailID = $("#detail-reservation-value-"+$poli).val();
-            var $base_url = "<?php echo site_url();?>/";
+            var $detailID = $("#detail-reservation-value-"+$poli).val();
 
             if($value=="confirm"){
                 $msg="Pasien Ada ?";
                 $data = {
-                    status : "confirm",
-                    detailID : detailID
+                    status : "examine",
+                    detailID : $detailID
                 };
+                confirmReservation($msg, $detailID, $poli);
             }else if($value=="reject"){
                 $msg="Pasien Tidak Ada ?";
                 $data = {
                     status : "late",
-                    detailID : detailID
+                    detailID : $detailID
                 };
+                rejectReservation($msg, $data, $poli);
             }
+        });
 
+        //REJECT ANTRIAN SEKARANG
+        function confirmReservation($msg, $detailID, $poli){
+            var $title = "Konfirmasi";
+            var $base_url = "<?php echo site_url();?>/";
+            alertify.confirm($msg,
+                function(){
+                    alert($poli);
+                    //SET COUNTER QUEUE
+                    $("#current-queue-box-"+$poli).attr("data-queue",0);
+                    //HIDE LOADING SCREEN
+                    $("#loading-screen-queue-"+$poli).hide();
+
+                    //REMOVE BOX
+                    $("#current-queue-box-"+$poli).children(".small-box").html("");
+                    $("#button-confirm-queue-"+$poli).hide();
+                    window.open($base_url+"Reservation/goToPhysicalExamination/"+$detailID);
+                }
+            ).setHeader($title);
+        }
+
+        function rejectReservation($msg, $data, $poli){
+            var $title = "Konfirmasi";
+            var $base_url = "<?php echo site_url();?>/";
             alertify.confirm($msg,
                 function(){
                     $.ajax({
-                        url: $base_url+"reservation/saveCurrentQueue",
+                        url: $base_url+"Reservation/saveCurrentQueue",
                         data: $data,
                         type: "POST",
                         dataType: 'json',
@@ -328,7 +353,7 @@
                     });
                 }
             ).setHeader($title);
-        });
+        }
 
         function getNextQueueList(){
             var $clinic = $("#clinic-header-value").val();
