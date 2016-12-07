@@ -292,8 +292,10 @@ class Test_model extends CI_Model{
     function checkReservationClinicAdminRole($detailID, $clinicID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_m_doctors dc', 'dc.doctorID = a.doctorID');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_clinics c', 'b.clinicID = c.clinicID');
+        $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = b.poliID');
         $this->db->where("b.clinicID",$clinicID);
         $this->db->where("a.detailReservationID",$detailID);
         $query = $this->db->get();

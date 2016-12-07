@@ -260,17 +260,21 @@
 <script src="<?php echo base_url();?>assets/custom/validate_master.js"></script>
 <script>
     $(function(){
+        $base_url = "<?php echo site_url();?>";
 
         $("#btn-save-examine").click(function(e){
-            window.close();
-            /*
             if(validateInput()){
                 saveData();
             }
-            */
         });
 
         $("#btn-cancel-examine").click(function(e){
+            var $detailID = $("#detail-reservation").val();
+            $data = {
+                status : "late",
+                detailID : $detailID
+            };
+
             swal({
                 title: 'Apakah Anda yakin untuk Membatalkan pemeriksaan ini?',
                 text: "Data yang di simpan tidak bisa diganti lagi",
@@ -281,45 +285,46 @@
                 confirmButtonText: 'Ya, Batalkan!'
             }).then(function() {
                  $.ajax({
-                     url: $base_url+"/MedicalRecord/saveMedicalRecordData",
-                     data: data_post,
+                     url: $base_url+"/Reservation/saveCurrentQueue",
+                     data: $data    ,
                      type: "POST",
                      dataType: 'json',
                      beforeSend:function(){
-                     $("#load_screen").show();
-                 },
-                 success:function(data){
-                     if(data.status != 'error'){
-                         swal({
-                             title: data.msg,
-                             text: 'Halaman ini akan di arahkan ke halaman selanjutnya...',
-                             type: 'success',
-                             allowOutsideClick: false,
-                             showConfirmButton:false
-                         });
-                     window.setTimeout(function () {
-                        location.href =  $base_url+"/ReservationDoctor";
-                     }, 2000);
+                         $("#load_screen").show();
+                     },
+                     success:function(data){
+                         if(data.status != 'error'){
+                             swal({
+                                 title: data.msg,
+                                 text: 'Halaman ini akan di arahkan ke halaman selanjutnya...',
+                                 type: 'success',
+                                 allowOutsideClick: false,
+                                 showConfirmButton:false
+                             });
+                         // Close This Tab
+                         window.setTimeout(function () {
+                             window.onbeforeunload = null;
+                             window.close();
+                         }, 2000);
 
-                     }else{
+                         }else{
+                             swal(
+                                 data.msg,
+                                 '',
+                                 'error'
+                             );
+                         }
+                     },
+                     error: function(xhr, status, error) {
+                         //var err = eval("(" + xhr.responseText + ")");
+                         $("#load_screen").hide();
                          swal(
-                             data.msg,
+                             "Server Error ! Silahkan coba beberapa saat lagi..",
                              '',
                              'error'
                          );
                      }
-                 },
-                 error: function(xhr, status, error) {
-                     //var err = eval("(" + xhr.responseText + ")");
-                     $("#load_screen").hide();
-                     swal(
-                         "Server Error ! Silahkan coba beberapa saat lagi..",
-                         '',
-                         'error'
-                     );
-                 }
-
-            });
+                });
             });
         });
 
@@ -361,9 +366,8 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya, Simpan Data!'
             }).then(function() {
-
                 $.ajax({
-                    url: $base_url + "/MedicalRecord/saveMedicalRecordData",
+                    url: $base_url + "/Reservation/savePhysicalExamination",
                     data: data_post,
                     type: "POST",
                     dataType: 'json',
@@ -379,8 +383,10 @@
                                 allowOutsideClick: false,
                                 showConfirmButton: false
                             })
+                            // Close This Tab
                             window.setTimeout(function () {
-                                //location.href =  $base_url+"/ReservationDoctor";
+                                window.onbeforeunload = null;
+                                window.close();
                             }, 2000);
 
                         } else {
@@ -492,24 +498,18 @@
             }
         });
 
-        $("a").not('#lnkLogOut').click(function () {
-            window.onbeforeunload = null;
-        });
-        $(".btn").click(function () {
-            window.onbeforeunload = null;
-        });
+        window.onbeforeunload = function (event) {
+            var message = 'Apakah Anda yakin untuk \'Keluar \' dari halaman ini ?.';
+            if (typeof event == 'undefined') {
+                event = window.event;
+            }
+            if (event) {
+                event.returnValue = message;
+            }
+            return message;
+        };
     });
 
-    window.onbeforeunload = function (event) {
-        var message = 'Important: Please click on \'Save\' button to leave this page.';
-        if (typeof event == 'undefined') {
-            event = window.event;
-        }
-        if (event) {
-            event.returnValue = message;
-        }
-        return message;
-    };
 </script>
 </body>
 </html>

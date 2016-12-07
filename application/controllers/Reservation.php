@@ -226,7 +226,7 @@ class Reservation extends CI_Controller {
                 $header_data = $this->test_model->checkReservationClinicAdminRole($detailReservation,$clinic->clinicID);
                 if(isset($header_data)){
                     $status = $header_data->status;
-                    if($status == "check"){
+                    if($status == "check" || $status == "examine" ){
                         $this->goToExamineForm($detailReservation,$header_data);
                     }else{
                         echo "Pasien ini tidak terdapat dalam proses reservasi ..";

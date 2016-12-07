@@ -297,7 +297,6 @@
             var $base_url = "<?php echo site_url();?>/";
             alertify.confirm($msg,
                 function(){
-                    alert($poli);
                     //SET COUNTER QUEUE
                     $("#current-queue-box-"+$poli).attr("data-queue",0);
                     //HIDE LOADING SCREEN
