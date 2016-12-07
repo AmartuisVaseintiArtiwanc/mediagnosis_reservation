@@ -24,5 +24,23 @@
 	            return 0; //blom ada
 	        }
 	    }
+
+	     // Check Reservation Apakah sudah selesai dari panel admin satau belom
+
+		function checkReservationAfterExamine($detailID){
+
+		    $this->db->select('*');
+		    $this->db->from('tbl_cyberits_t_detail_reservation a');
+		    $this->db->where("a.detailReservationID",$detailID);
+		    $this->db->where("a.status !=",'waiting');
+		    $this->db->where("a.status !=",'check');
+		    $query = $this->db->get();
+		    if($query->num_rows() == 0){
+		        return 0; // allready taken by other doctor
+		    }else{
+		        return 1; // available
+		    }
+		}
+
 	}
 ?>

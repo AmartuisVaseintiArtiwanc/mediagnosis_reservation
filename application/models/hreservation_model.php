@@ -54,5 +54,16 @@
 	            return FALSE;
 	    }
 
+	    function getSumPatientToday(){
+	    	$date = date('Y-m-d', time());
+
+			$this->db->select('SUM(totalQueue) as sumQueue');
+	        $this->db->from('tbl_cyberits_t_header_reservation');
+	        $this->db->like('created',$date);
+	        $this->db->where('isActive', 1);
+	        $query = $this->db->get();
+	        
+	        return $query->row();	
+	    }
 	}
 ?>

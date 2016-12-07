@@ -1,4 +1,3 @@
-/*reservationmobile*/
 <?php  
 	class ReservationMobile extends CI_Controller{
 		function __construct(){
@@ -309,7 +308,7 @@
             $userID =  $this->session->userdata('userID');
             $clinic = $this->clinic_model->getClinicByUserID($userID);
 
-            //$clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinic->clinicID);
+            $clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinic->clinicID);
 
 	        // CREATE & CHECK RESERVATION CLINIC EACH POLI
 	        //$this->createHeaderReservation($clinicPoliList,$clinicID );
@@ -322,6 +321,27 @@
 	        $this->load->view('reservation/reservation_patient_view', $data);
 	        
         }
+
+        function checkReservationAfterExamine(){
+			$detailID = $this->input->post("detailID");
+
+        	$result = $this->DReservation_model->checkReservationAfterExamine($detailID);
+
+        	if($result){
+        		$status = "success";
+        	}
+        	else{
+        		$status = "error";
+        	}
+
+        	echo json_encode(array('status' => $status));
+        }
+
+        function getSumPatientToday(){
+        	$sum = $this->HReservation_model->getSumPatientToday();
+
+        	echo json_encode(array('sum' => $sum->sumQueue));
+        }	
 
 	}
 ?>

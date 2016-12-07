@@ -128,7 +128,7 @@
 <!-- Main content -->
 <section class="content">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-10">
             <h2 class="page-header">
                 <i class="fa fa-hospital-o"></i> <?php echo $reversation_clinic_data->clinicName;?> - <?php echo date("l, j F Y");?>
                 <?php if($this->session->userdata('role')=="super_admin"){?>
@@ -140,6 +140,9 @@
                 <?php } ?>
                 <input type="hidden" value="<?php echo $reversation_clinic_data->clinicID;?>" id="clinic-header-value">
             </h2>
+        </div>
+        <div class="col-xs-2">
+            <h4 class="page-header">Patient Counter : <span id="sum-patient">0</span></h4>
         </div>
         <!-- /.col -->
     </div>
@@ -153,7 +156,7 @@
                     <div class="box-body">
                         <div class="box box-primary">
                             <div class="box-body box-profile current-queue-box" id="current-queue-box-<?php echo $row['poliID'];?>" data-queue="0">
-                                <input type="hidden" id="detail-reservation-value-<?php echo $row['poliID'];?>" value="0" />
+                                <input type="hidden" id="detail-reservation-value-<?php echo $row['poliID'];?>" class="current-queue-check" value="0" />
                                 <div id="current-queue-info-<?php echo $row['poliID'];?>" data-queue-number="" data-queue-poli="" data-queue-doctor=""></div>
 
                                 <div class="overlay loading-screen-queue" id="loading-screen-queue-<?php echo $row['poliID'];?>">
@@ -240,11 +243,14 @@
         function loopGetCurrentQuery(){
             $.each($poliList, function( index, value ) {
                 getCurrentQueueEachPoli(value);
+                checkCurrentQueue(value);
+                
             });
+            getSumPatientToday();
 
         }
 
-        setInterval(loopGetCurrentQuery, 2000);
+        setInterval(loopGetCurrentQuery, 10000);
 
         function renderQueueBox(q_number,poli_name, doctor_name, patient_name, poli){
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
@@ -266,6 +272,58 @@
         function alertSound(){
             var audio = $("#loading-beep")[0];
             audio.play();
+        }
+
+
+        function checkCurrentQueue(poli){
+            var $base_url = "<?php echo site_url();?>/";
+            var $currQueue = $("#current-queue-box-"+poli).attr("data-queue");
+            var $clinic = $("#clinic-header-value").val();
+            var $detailReservation = $("#current-queue-box-"+poli).children("input.current-queue-check");
+            if($currQueue == 1 && $detailReservation.val() != 0) {
+                $.ajax({
+                    url: $base_url+"reservationMobile/checkReservationAfterExamine",
+                    data: {detailID : $detailReservation.val()},
+                    type: "POST",
+                    dataType: 'json',
+                    cache:false,
+                    success:function(data){
+                        if(data.status != "error"){
+                            //SET COUNTER QUEUE
+                            $("#current-queue-box-"+poli).attr("data-queue",0);
+
+                            //REMOVE BOX
+                            $("#current-queue-box-"+poli).children(".small-box").html("");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        //var err = eval("(" + xhr.responseText + ")");
+                        //alertify.error(xhr.responseText);
+                        //HIDE LOADING SCREEN
+                        
+                    }
+                });
+            }
+        }
+
+        function getSumPatientToday(){
+            var $base_url = "<?php echo site_url();?>/";
+            $.ajax({
+                    url: $base_url+"reservationMobile/getSumPatientToday",
+                    type: "GET",
+                    dataType: 'json',
+                    cache:false,
+                    success:function(data){
+                        
+                        $("#sum-patient").html(data.sum);
+                    },
+                    error: function(xhr, status, error) {
+                        //var err = eval("(" + xhr.responseText + ")");
+                        //alertify.error(xhr.responseText);
+                        //HIDE LOADING SCREEN
+                        
+                    }
+                });
         }
 
     });
