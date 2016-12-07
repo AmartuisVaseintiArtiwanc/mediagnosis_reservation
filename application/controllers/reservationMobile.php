@@ -1,3 +1,4 @@
+/*reservationmobile*/
 <?php  
 	class ReservationMobile extends CI_Controller{
 		function __construct(){
@@ -298,5 +299,29 @@
             }
             echo json_encode(array('status' => $status, 'msg' => $msg));
         }
+
+        function getReservationList(){
+        	$role = $this->session->userdata('role');
+
+        	$this->load->model('clinic_model',"clinic_model");
+        	$this->load->model('sClinic_model',"sclinic_model");
+
+            $userID =  $this->session->userdata('userID');
+            $clinic = $this->clinic_model->getClinicByUserID($userID);
+
+            //$clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinic->clinicID);
+
+	        // CREATE & CHECK RESERVATION CLINIC EACH POLI
+	        //$this->createHeaderReservation($clinicPoliList,$clinicID );
+
+	        $data['reversation_clinic_data']  = $this->test_model->getHeaderReservationData($clinic->clinicID);
+	        $data['reservation_latest_queue'] = $this->test_model->getReservationNextQueue($clinic->clinicID);
+	        $data['poli_list']  = $this->sclinic_model->getClinicListByID($clinic->clinicID);
+
+	        
+	        $this->load->view('reservation/reservation_patient_view', $data);
+	        
+        }
+
 	}
 ?>
