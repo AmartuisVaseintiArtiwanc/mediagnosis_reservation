@@ -299,49 +299,6 @@
             echo json_encode(array('status' => $status, 'msg' => $msg));
         }
 
-        function getReservationList(){
-        	$role = $this->session->userdata('role');
-
-        	$this->load->model('clinic_model',"clinic_model");
-        	$this->load->model('sClinic_model',"sclinic_model");
-
-            $userID =  $this->session->userdata('userID');
-            $clinic = $this->clinic_model->getClinicByUserID($userID);
-
-            $clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinic->clinicID);
-
-	        // CREATE & CHECK RESERVATION CLINIC EACH POLI
-	        //$this->createHeaderReservation($clinicPoliList,$clinicID );
-
-	        $data['reversation_clinic_data']  = $this->test_model->getHeaderReservationData($clinic->clinicID);
-	        $data['reservation_latest_queue'] = $this->test_model->getReservationNextQueue($clinic->clinicID);
-	        $data['poli_list']  = $this->sclinic_model->getClinicListByID($clinic->clinicID);
-
-	        
-	        $this->load->view('reservation/reservation_patient_view', $data);
-	        
-        }
-
-        function checkReservationAfterExamine(){
-			$detailID = $this->input->post("detailID");
-
-        	$result = $this->DReservation_model->checkReservationAfterExamine($detailID);
-
-        	if($result){
-        		$status = "success";
-        	}
-        	else{
-        		$status = "error";
-        	}
-
-        	echo json_encode(array('status' => $status));
-        }
-
-        function getSumPatientToday(){
-        	$sum = $this->HReservation_model->getSumPatientToday();
-
-        	echo json_encode(array('sum' => $sum->sumQueue));
-        }	
 
 	}
 ?>

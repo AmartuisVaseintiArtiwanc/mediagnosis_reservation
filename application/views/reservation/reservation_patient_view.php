@@ -282,7 +282,7 @@
             var $detailReservation = $("#current-queue-box-"+poli).children("input.current-queue-check");
             if($currQueue == 1 && $detailReservation.val() != 0) {
                 $.ajax({
-                    url: $base_url+"reservationMobile/checkReservationAfterExamine",
+                    url: $base_url+"reservation/checkReservationAfterExamine",
                     data: {detailID : $detailReservation.val()},
                     type: "POST",
                     dataType: 'json',
@@ -309,7 +309,7 @@
         function getSumPatientToday(){
             var $base_url = "<?php echo site_url();?>/";
             $.ajax({
-                    url: $base_url+"reservationMobile/getSumPatientToday",
+                    url: $base_url+"reservation/getSumPatientToday",
                     type: "GET",
                     dataType: 'json',
                     cache:false,

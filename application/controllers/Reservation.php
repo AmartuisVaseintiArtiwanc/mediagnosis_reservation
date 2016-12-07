@@ -14,6 +14,8 @@ class Reservation extends CI_Controller {
         $this->load->model('poli_model',"poli_model");
         $this->load->model('sClinic_model',"sclinic_model");
         $this->load->model('medical_record_detail_model',"medical_record_detail_model");
+        $this->load->model("HReservation_model");
+        $this->load->model("DReservation_model");
         $this->load->model('test_model',"test_model");
     }
 
@@ -42,6 +44,47 @@ class Reservation extends CI_Controller {
 
         $data['main_content'] = 'reservation/reservation_home_view';
         $this->load->view('template/template', $data);
+    }
+
+    function getReservationListForPatient(){
+        $role = $this->session->userdata('role');
+
+        $userID =  $this->session->userdata('userID');
+        $clinic = $this->clinic_model->getClinicByUserID($userID);
+
+        $clinicPoliList = $this->sclinic_model->getSettingDetailClinic($clinic->clinicID);
+
+        // CREATE & CHECK RESERVATION CLINIC EACH POLI
+        $this->createHeaderReservation($clinicPoliList,$clinic->clinicID );
+
+        $data['reversation_clinic_data']  = $this->test_model->getHeaderReservationData($clinic->clinicID);
+        $data['reservation_latest_queue'] = $this->test_model->getReservationNextQueue($clinic->clinicID);
+        $data['poli_list']  = $this->sclinic_model->getClinicListByID($clinic->clinicID);
+
+        
+        $this->load->view('reservation/reservation_patient_view', $data);
+        
+    }
+
+    function checkReservationAfterExamine(){
+        $detailID = $this->input->post("detailID");
+
+        $result = $this->DReservation_model->checkReservationAfterExamine($detailID);
+
+        if($result){
+            $status = "success";
+        }
+        else{
+            $status = "error";
+        }
+
+        echo json_encode(array('status' => $status));
+    }
+
+    function getSumPatientToday(){
+        $sum = $this->HReservation_model->getSumPatientToday();
+
+        echo json_encode(array('sum' => $sum->sumQueue));
     }
 
     /*Create Header Reservasi untuk HARI INI*/

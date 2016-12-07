@@ -1,4 +1,4 @@
-<html>
+<!DOCTYPE html> 
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -162,6 +162,7 @@
               <ul class="treeview-menu">
                   <li><a href="<?php echo site_url("Reservation");?>"><i class="fa fa-circle-o"></i> Today Reservation</a></li>
                   <li><a href="<?php echo site_url("Reservation/goToReservationReportClinicList");?>"><i class="fa fa-circle-o"></i> Report Reservation</a></li>
+                  <li><a href="<?php echo site_url("Reservation/getReservationListForPatient");?>" target="_blank"><i class="fa fa-circle-o"></i> Patient View</a></li>
               </ul>
           </li>
       </ul>
