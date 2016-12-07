@@ -42,6 +42,15 @@ class Medical_record_detail_model extends CI_Model {
         return $query->row();
     }
 
+    // GET PHYSICAL EXAMINATION DETAIL by Detail Reservation
+    function getPhysicalExaminationByDetailReservation($detailReservation){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_physical_examination a');
+        $this->db->where('a.detailReservationID', $detailReservation);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     // GET SUPPORT DIAGNOSE DETAIL
     function getSupportDiagnoseByID($medicalRecordID){
         $this->db->select('*');
@@ -106,15 +115,11 @@ class Medical_record_detail_model extends CI_Model {
         return $result;
     }
 
-    function updatePoli($data,$id){
-        $this->db->where('poliID',$id);
-        $this->db->update('tbl_cyberits_m_poli',$data);
+    // UPDATE PHYSICAL EXAMINATION
+    function updateMedicalRecordDetailPhysicalExamination($data,$id){
+        $this->db->where('detailReservationID',$id);
+        $this->db->update('tbl_cyberits_t_physical_examination',$data);
         $result=$this->db->affected_rows();
         return $result;
-    }
-
-    function deletePoli($id){
-        $this->db->where('poliID',$id);
-        $this->db->delete('tbl_cyberits_m_poli');
     }
 }

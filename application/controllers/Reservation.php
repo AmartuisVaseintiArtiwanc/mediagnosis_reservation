@@ -13,7 +13,7 @@ class Reservation extends CI_Controller {
         $this->load->model('clinic_model',"clinic_model");
         $this->load->model('poli_model',"poli_model");
         $this->load->model('sClinic_model',"sclinic_model");
-        $this->load->model('sSchedule_model',"sschedule_model");
+        $this->load->model('medical_record_detail_model',"medical_record_detail_model");
         $this->load->model('test_model',"test_model");
     }
 
@@ -282,14 +282,14 @@ class Reservation extends CI_Controller {
         $detailID = $this->security->xss_clean($this->input->post('detail_reservation'));
 
         // EXAMINATION / PEMERIKSAAN
-        $conscious = $data[0]['conscious'];
-        $blood_low = $data[0]['blood_low'];
-        $blood_high = $data[0]['blood_high'];
-        $pulse = $data[0]['pulse'];
-        $respiration = $data[0]['respiration'];
-        $temperature = $data[0]['temperature'];
-        $height = $data[0]['height'];
-        $weight = $data[0]['weight'];
+        $conscious = $data['conscious'];
+        $blood_low = $data['blood_low'];
+        $blood_high = $data['blood_high'];
+        $pulse = $data['pulse'];
+        $respiration = $data['respiration'];
+        $temperature = $data['temperature'];
+        $height = $data['height'];
+        $weight = $data['weight'];
 
         $physical_examination_data=array(
             'detailReservationID'=>$detailID,

@@ -274,6 +274,7 @@ class Test_model extends CI_Model{
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->where("a.doctorID",$doctorID);
         $this->db->where("a.status",'check');
+        $this->db->or_where('a.status', 'examine');
         $query = $this->db->get();
         return $query->row();
     }

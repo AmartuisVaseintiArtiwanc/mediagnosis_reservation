@@ -333,7 +333,8 @@ class MedicalRecord extends CI_Controller {
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
-        $this->medical_record_detail_model->createMedicalRecordDetailPhysicalExamination($physical_examination_data);
+        // UPDATE PHYSICAL EXAMINATION
+        $this->medical_record_detail_model->updateMedicalRecordDetailPhysicalExamination($physical_examination_data,$detail_reservation);
 
         //UPDATE RESERVATION DONE
         $data_reservation=array(

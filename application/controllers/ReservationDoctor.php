@@ -11,10 +11,9 @@ class ReservationDoctor extends CI_Controller {
         $this->load->model('clinic_model',"clinic_model");
         $this->load->model('doctor_model',"doctor_model");
         $this->load->model('poli_model',"poli_model");
-        $this->load->model('sClinic_model',"sclinic_model");
-        $this->load->model('sSchedule_model',"sschedule_model");
         $this->load->model('test_model',"test_model");
         $this->load->model('patient_model',"patient_model");
+        $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
     }
 
     function index(){
@@ -183,6 +182,7 @@ class ReservationDoctor extends CI_Controller {
         $check_medical_record = $this->test_model->getReservationDetailDoctor($detailReservation,$doctor_data->doctorID,'confirm');
 
         if(isset($check_medical_record)){
+            $data['pe_data'] = $this->medical_record_detail_model->getPhysicalExaminationByDetailReservation($detailReservation);
             $data['header_data'] = $this->test_model->getHeaderMedicalRecordByDetail($detailReservation);
             $data['doctor_data'] = $doctor_data;
             $data['patient_data']  = $this->patient_model->getPatientByID($check_medical_record->patientID);

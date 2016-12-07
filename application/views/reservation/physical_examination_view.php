@@ -355,8 +355,6 @@
                 detail_reservation : $detail_reservation
             };
 
-            alert(JSON.stringify(data_post));
-
             swal({
                 title: 'Apakah Anda yakin untuk Menyimpan data ini?',
                 text: "Data yang di simpan tidak bisa diganti lagi",

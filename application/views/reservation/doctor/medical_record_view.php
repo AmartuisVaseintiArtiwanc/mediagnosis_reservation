@@ -657,6 +657,29 @@
 </script>
 <script>
     $(function(){
+
+        setPhysicalExaminationData();
+        function setPhysicalExaminationData(){
+            var $conscious = $("#conscious-input");
+            var $blood_low = $("#blood-preasure-low-input");
+            var $blood_high = $("#blood-preasure-high-input");
+            var $pulse = $("#pulse-input");
+            var $temperature = $("#temperature-input");
+            var $respiration = $("#respiration-input");
+            var $height = $("#height-input");
+            var $weight = $("#weight-input");
+            <?php if(isset($pe_data)){?>
+                $("#conscious-input").val("<?php echo $pe_data->conscious;?>");
+                $("#blood-preasure-low-input").val("<?php echo $pe_data->bloodPreasureLow;?>");
+                $("#blood-preasure-high-input").val("<?php echo $pe_data->bloodPreasureHigh;?>");
+                $("#pulse-input").val("<?php echo $pe_data->pulse;?>");
+                $("#temperature-input").val("<?php echo $pe_data->temperature;?>");
+                $("#respiration-input").val("<?php echo $pe_data->respirationRate;?>");
+                $("#height-input").val("<?php echo $pe_data->height;?>");
+                $("#weight-input").val("<?php echo $pe_data->weight;?>");
+            <?php } ?>
+        }
+
         $(".input-number").keydown(function (e) {
             // Allow: backspace, delete, tab, escape, enter and .
             if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
