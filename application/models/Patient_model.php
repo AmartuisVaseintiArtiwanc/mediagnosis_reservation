@@ -60,4 +60,52 @@ class Patient_model extends CI_Model {
         $result=$this->db->affected_rows();
         return $result;
     }
+
+    public function checkTemporaryPatient($idNumber){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive', 1);
+        $this->db->where('isTemp', 1);
+        $this->db->where('ktpID', $idNumber);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
+
+    public function checkIDNumberExists($idNumber){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive', 1);
+        $this->db->where('isTemp', 0);
+        $this->db->where('ktpID', $idNumber);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
+
+    public function getTemporaryPatientID($idNumber){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive', 1);
+        $this->db->where('isTemp', 1);
+        $this->db->where('ktpID', $idNumber);
+        $query = $this->db->get();
+
+        return $query->row();
+    }
+
+    function updatePatientByPatientID($patientID,$data){
+        $this->db->where('patientID',$patientID);
+        $this->db->update('tbl_cyberits_m_patients',$data);
+        $result=$this->db->affected_rows();
+        return $result;
+    }    
 }

@@ -13,6 +13,7 @@
 		    $this->load->library('email');
 
 		    $this->load->model("Login_model");
+		    $this->load->model("Patient_model");
 		}
 
 		public function createPatient(){
@@ -26,9 +27,12 @@
 			$password = $this->input->post('password');
 			$email = $this->input->post('email');
 			$name = $this->input->post('name');
+			$idNumber = $this->input->post('idNumber');
 
 			$isExistsUsername = $this->Login_model->checkUsernameExists($userName);
 			$isExistsEmail = $this->Login_model->checkEmailExists($email);
+			$isExistsIDNumber = $this->Patient_model->checkIDNumberExists($idNumber);
+			$isTemp = $this->Patient_model->checkTemporaryPatient($idNumber);
 
 			if($isExistsUsername == true){
 				$status = "error";
@@ -39,6 +43,11 @@
 				$status = "error";
 				$msg="Maaf, email sudah terpakai";
 				$ID = 0;
+			}
+			else if($isExistsIDNumber == true){
+				$status = "error";
+				$msg="Maaf, No. KTP sudah terpakai";
+				$ID = 0;	
 			}
 			else{
 				$data_patient = array(
@@ -64,30 +73,56 @@
 					$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
 	            }
 	            else{
-	            	$data_patient = array(
-						'userID' => $query,
-						'patientName' => $name,
-						'isActive'=> 1,
-						'created' => $datetime,
-						'createdBy' => $query,
-						'lastUpdated' => $datetime,
-						'lastUpdatedBy' => $query,
-						'clinicID' => 1 // asumsi semntara masih di klinik omega
-					);
+	            	if($isTemp == true){
+						$tempPatient = $this->Patient_model->getTemporaryPatientID($idNumber);
+						$data_patient = array(
+							'userID' => $query,
+							'isTemp' => 0,
+							'lastUpdated' => $datetime,
+							'lastUpdatedBy' => $query
+						);
 
-					$query2 = $this->Login_model->insertPatient($data_patient);
-					if ($this->db->trans_status() === FALSE) {
-		                // Failed to save Data to DB
-		                $this->db->trans_rollback();
-		                $status = 'error';
-						$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
-		            }
-		            else{
-		            	$this->db->trans_commit();
-        				$status = 'success';
-						$msg = "Proses Registrasi berhasil";	
-						$ID = $query;
-		            }
+						$query2 = $this->Patient_model->updatePatientByPatientID($tempPatient->patientID, $data_patient);
+						if ($this->db->trans_status() === FALSE) {
+			                // Failed to save Data to DB
+			                $this->db->trans_rollback();
+			                $status = 'error';
+							$msg = "Maaf, Terjadi kesalahan saat justifikasi registrasi user offline";
+			            }
+			            else{
+			            	$this->db->trans_commit();
+	        				$status = 'success';
+							$msg = "Proses Registrasi berhasil";	
+							$ID = $query;
+			            }
+					}else{
+
+		            	$data_patient = array(
+							'userID' => $query,
+							'patientName' => $name,
+							'ktpID' => $idNumber,
+							'isActive'=> 1,
+							'created' => $datetime,
+							'createdBy' => $query,
+							'lastUpdated' => $datetime,
+							'lastUpdatedBy' => $query,
+							'clinicID' => 1 // asumsi semntara masih di klinik omega
+						);
+
+						$query2 = $this->Login_model->insertPatient($data_patient);
+						if ($this->db->trans_status() === FALSE) {
+			                // Failed to save Data to DB
+			                $this->db->trans_rollback();
+			                $status = 'error';
+							$msg = "Maaf, Terjadi kesalahan saat melakukan registrasi user";
+			            }
+			            else{
+			            	$this->db->trans_commit();
+	        				$status = 'success';
+							$msg = "Proses Registrasi berhasil";	
+							$ID = $query;
+			            }
+		        	}
 	            	
 	            }
 			}
