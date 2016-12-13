@@ -7,10 +7,14 @@ class MedicalRecord extends CI_Controller {
         $this->load->helper(array('form', 'url','security','date'));
         $this->load->library("pagination");
         $this->load->library("authentication");
+        $this->load->library("session");
         $this->is_logged_in();
         $this->load->model('Doctor_model',"doctor_model");
+        $this->load->model('Clinic_model',"clinic_model");
         $this->load->model('Patient_model',"patient_model");
+        $this->load->model('SClinic_Model',"sClinic_Model");
         $this->load->model('Test_model',"test_model");
+        $this->load->model('DReservation_model',"DReservation_model");
         $this->load->model('Main_condition_model',"main_condition_model");
         $this->load->model('Additional_condition_model',"additional_condition_model");
         $this->load->model('Diseases_model',"diseases_model");
@@ -29,10 +33,12 @@ class MedicalRecord extends CI_Controller {
             $userID =  $this->session->userdata('userID');
             $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
 
-            $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
-            $data['reversation_clinic_data']  = $headerData;
-            $data['main_content'] = 'reservation/doctor/home_view';
-            $this->load->view('template/template', $data);
+            if(isset($doctor_data)){
+                $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
+                $data['reversation_clinic_data']  = $headerData;
+                $data['main_content'] = 'reservation/doctor/home_view';
+                $this->load->view('template/template', $data);
+            }
         }
     }
 
@@ -351,6 +357,7 @@ class MedicalRecord extends CI_Controller {
         }
         else {
             $this->db->trans_commit();
+            $this->session->unset_userdata('detail_reservation');
             $status = "success";
             $msg="Medical Record has been saved successfully.";
         }
@@ -551,15 +558,183 @@ class MedicalRecord extends CI_Controller {
         //$this->output->enable_profiler(TRUE);
     }
 
-    function test(){
-        $result = $this->main_condition_model->checkMainCondition("Sakit");
-        if(isset($result->id)){
-            echo $result->id;
+    function goToHeaderMedicalRecordManual(){
+
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeAdmin($role)){
+            $userID =  $this->session->userdata('userID');
+            $clinicData = $this->clinic_model->getClinicByUserID($userID);
+
+            if(isset($clinicData)){
+                $poli_data = $this->sClinic_Model->getClinicListByID($clinicData->clinicID);
+                if(isset($poli_data)){
+                    $data['clinic_data'] = $clinicData;
+                    $data['poli_data'] = $poli_data;
+                    $data['main_content'] = 'mr/medical_record_header_add_view';
+                    $this->load->view('template/template', $data);
+                }else{
+                    $data['err_msg'] = "Maaf Pengaturan Poli pada Klinik Anda belum di atur..";
+                    $data['main_content'] = 'template/error';
+                    $this->load->view('template/template', $data);
+                }
+            }else{
+                $data['err_msg'] = "Maaf Anda tidak dapat mengakses halaman ini..";
+                $data['main_content'] = 'template/error';
+                $this->load->view('template/template', $data);
+            }
+
+        }
+    }
+
+    function saveHeaderReservationManual(){
+        $status = "error";
+        $msg="Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
+        $datetime = date('Y-m-d H:i:s', time());
+        $userID = $this->session->userdata('userID');
+
+        $clinic = $this->security->xss_clean($this->input->post('clinic'));
+        $poli = $this->security->xss_clean($this->input->post('poli'));
+        $reserveDate = $this->security->xss_clean($this->input->post('reserve_date'));
+        $reserveType = $this->security->xss_clean($this->input->post('reserve_type'));
+        $doctor = $this->security->xss_clean($this->input->post('doctor'));
+        $patient = $this->security->xss_clean($this->input->post('patient'));
+
+        if(!empty($clinic) && !empty($poli) && !empty($reserveDate) && !empty($doctor) && !empty($patient) &&!empty($reserveType) ){
+           // CREATE AND CHECK Header Reservation
+            $headerID = $this->createHeaderReservation($clinic,$poli,$reserveDate);
+            if($headerID != ""){
+                $data_reservasi = array(
+                    'reservationID' => $headerID,
+                    'noQueue' => 0,
+                    'patientID' => $patient,
+                    'doctorID' => $doctor,
+                    'status' => 'done',
+                    'reservationType' => $reserveType,
+                    'isOnline' => 0,
+                    'isActive' => 1,
+                    'created' => $reserveDate,
+                    'createdBy' => $userID,
+                    'lastUpdated' => $datetime,
+                    'lastUpdatedBy' => $userID
+                );
+
+                // Create Detail Reservation
+                $detailReservation = $this->DReservation_model->insertReservation($data_reservasi);
+                if(isset($detailReservation)){
+                    $this->session->set_userdata("detail_reservation",$detailReservation);
+                    $status = "success";
+                    $msg= "Success";
+                }
+
+            }else{
+                $status = "error";
+            }
+        }
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+    function cancelMedicalRecordManual(){
+        $status = "error";
+        $msg="Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
+
+        $role = $this->session->userdata('role');
+        $detailReservation = $clinic = $this->security->xss_clean($this->input->post('detailReservation'));
+
+        if(isset($detailReservation) && $this->authentication->isAuthorizeAdmin($role)){
+            // Delete Reservatoin Detail
+            $this->test_model->deleteReservationDetail($detailReservation);
+            $this->medical_record_detail_model->deletePhysicalExaminationByDetailReservation($detailReservation);
+            $this->session->unset_userdata('detail_reservation');
+            $msg="Success";
+            $status = "success";
+        }
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+    function goToDetailMedicalRecordManual(){
+        $userID =  $this->session->userdata('userID');
+        $detailReservation = $this->session->userdata("detail_reservation");
+        $role = $this->session->userdata('role');
+
+        if(isset($detailReservation) && $this->authentication->isAuthorizeAdmin($role)){
+            $this->cratePhysicalExaminationManual();
+            $header_data = $this->test_model->getHeaderMedicalRecordByDetail($detailReservation);
+            if(isset($header_data)){
+                $data['header_data'] = $header_data;
+                $data['patient_data']  = $this->patient_model->getPatientByID($header_data->patientID);
+                $data['reservation_data']  = $header_data;
+                $this->load->view('mr/medical_record_detail_add_view', $data);
+            }else{
+                $index = site_url("MedicalRecord/goToHeaderMedicalRecordManual");
+                redirect($index, 'refresh');
+            }
         }else{
-            echo '0';
+            $index = site_url("MedicalRecord/goToHeaderMedicalRecordManual");
+            redirect($index, 'refresh');
+        }
+    }
+
+    private function cratePhysicalExaminationManual(){
+        $detailReservation = $this->session->userdata("detail_reservation");
+        $datetime = date('Y-m-d H:i:s', time());
+
+        $physical_examination_data=array(
+            'detailReservationID'=>$detailReservation,
+            'isActive'=>1,
+            'created'=>$datetime,
+            "createdBy" => $this->session->userdata('superUserID'),
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+        // Save Physical Examination
+        $this->medical_record_detail_model->createMedicalRecordDetailPhysicalExamination($physical_examination_data);
+    }
+
+    /*Create Header Reservasi untuk HARI INI*/
+    private function createHeaderReservation($clinicID, $poliID, $reserveDate){
+        $datetime = date('Y-m-d H:i:s', time());
+        $userID = $this->session->userdata('userID');
+        $headerID = "";
+
+        $verifyReservation = $this->test_model->checkReservationByDate($clinicID,$poliID,$reserveDate);
+        if(!isset($verifyReservation)) {
+            //insert baru
+            $data_reservasi = array(
+                'clinicID' => $clinicID,
+                'poliID' => $poliID,
+                'currentQueue' => 0,
+                'totalQueue' => 0,
+                'isActive' => 1,
+                'created' => $reserveDate,
+                'createdBy' => $userID,
+                'lastUpdated' => $datetime,
+                'lastUpdatedBy' => $userID
+            );
+            $this->db->trans_begin();
+            $query = $this->test_model->insertReservation($data_reservasi);
+
+            if ($this->db->trans_status() === FALSE) {
+                // Failed to save Data to DB
+                $this->db->trans_rollback();
+            }
+            else{
+                $headerID = $query;
+                $this->db->trans_commit();
+            }
+        }else{
+            $headerID = $verifyReservation->reservationID;
         }
 
-        $this->output->enable_profiler(TRUE);
+        return $headerID;
+    }
+
+    function test(){
+        $test = $this->session->userdata("detail_reservation");
+        if(!isset($test)){
+            echo "asd" ;
+        }else{
+            echo "111" ;
+        }
     }
 
     function is_logged_in(){

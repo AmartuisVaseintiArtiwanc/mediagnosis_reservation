@@ -158,6 +158,7 @@ class Doctor_Model extends CI_Model {
         $this->db->from('tbl_cyberits_m_doctors a');
         $this->db->where('doctorID',$id);
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.isActive',1);
         $query = $this->db->get();
         return $query->row();
     }
@@ -167,6 +168,7 @@ class Doctor_Model extends CI_Model {
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_doctors a');
         $this->db->where('userID',$userID);
+        $this->db->where('a.isActive',1);
         $query = $this->db->get();
         return $query->row();
     }

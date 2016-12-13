@@ -92,6 +92,7 @@ class Clinic_Model extends CI_Model {
         $this->db->from('tbl_cyberits_m_clinics a');
         $this->db->where('clinicID',$id);
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.isActive',1);
         $query = $this->db->get();
         return $query->row();
     }
@@ -101,6 +102,7 @@ class Clinic_Model extends CI_Model {
         $this->db->from('tbl_cyberits_m_clinics a');
         $this->db->where('userID',$id);
         $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.isActive',1);
         $query = $this->db->get();
         return $query->row();
     }

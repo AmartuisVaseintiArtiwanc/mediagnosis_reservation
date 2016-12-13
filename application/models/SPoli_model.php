@@ -22,6 +22,14 @@ class SPoli_Model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    function getPatientLookupData($clinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients a');
+        $this->db->where('a.clinicID',$clinicID);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 	
     function createSettingPoli($data){
         $this->db->insert('tbl_cyberits_s_poli',$data);

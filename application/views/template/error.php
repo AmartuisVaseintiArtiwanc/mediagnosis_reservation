@@ -1,3 +1,3 @@
 <h1>
-    ANDA TIDAK BERHAK MENGAKSES HALAMAN INI
+    <?php echo $err_msg;?>
 </h1>

@@ -122,4 +122,10 @@ class Medical_record_detail_model extends CI_Model {
         $result=$this->db->affected_rows();
         return $result;
     }
+
+    // DELETE PHYSICAL EXAMINATION BY DETAIL RESERVATION
+    function deletePhysicalExaminationByDetailReservation($id){
+        $this->db->where('detailReservationID',$id);
+        $this->db->delete('tbl_cyberits_t_physical_examination');
+    }
 }

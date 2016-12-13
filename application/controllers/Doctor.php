@@ -6,8 +6,10 @@ class Doctor extends CI_Controller {
         parent::__construct();
         $this->load->helper(array('form', 'url','security','date'));
         $this->load->library("pagination");
+        $this->load->library("authentication");
         $this->is_logged_in();
-        $this->load->model('doctor_model',"doctor_model");
+        $this->load->model('Doctor_model',"doctor_model");
+        $this->load->model('SPoli_model',"spoli_model");
     }
     
 	function index(){
@@ -159,6 +161,23 @@ class Doctor extends CI_Controller {
         }else{
             return false;
         }
+    }
+
+    function getLookupDoctorList(){
+        $status = 'error';
+        $msg = "Maaf Data Dokter kosong, silahkan cek menu Setting Poli Anda ..";
+
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeAdmin($role)){
+            $id = $this->security->xss_clean($this->input->post('sClinic'));
+            $query = $this->spoli_model->getSettingDetailPoli($id);
+            if(isset($query) && count($query)!=0){
+                $status = 'success';
+                $msg = "Success";
+            }
+        }
+
+        echo json_encode(array('data' => $query, 'status' => $status, 'msg' => $msg));
     }
 
     function deleteDoctor(){
