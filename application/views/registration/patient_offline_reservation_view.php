@@ -341,7 +341,7 @@
                 }
 
                 $.ajax({
-                    url: $base_url+"Register/doReservePatientOffline",
+                    url: $base_url+"Reservation/doReservePatientOffline",
                     data: $data,
                     type: "POST",
                     dataType: 'json',
@@ -355,7 +355,7 @@
                               type:'success',
                               confirmButtonText:'OK'
                             }).then(function(){
-                                location.href = "<?php echo site_url('Register/reserveOfflinePatient');?>";
+                                location.href = "<?php echo site_url('Reservation/reserveOfflinePatient');?>";
                             })
                             //alertify.success("success");
                         }else{

@@ -173,6 +173,7 @@
               </a>
               <ul class="treeview-menu">
                   <li><a href="<?php echo site_url("Register/registerOfflinePatient");?>"><i class="fa fa-circle-o"></i>Manual Registration</a></li>
+                  <li><a href="<?php echo site_url("Reservation/reserveOfflinePatient");?>"><i class="fa fa-circle-o"></i>Manual Reservation</a></li>
               </ul>
           </li>
       </ul>
