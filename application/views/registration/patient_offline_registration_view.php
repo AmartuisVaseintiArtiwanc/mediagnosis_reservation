@@ -47,6 +47,7 @@
                     <th style = "text-align:left;">Patient Name</th>
                     <th style = "text-align:center;">No. KTP</th>
                     <th style = "text-align:center;">No. BPJS</th>
+					<th style = "text-align:center;">MRIS Number</th>
                     <th style = "text-align:center;">isActive</th>
                 </tr>
                 </thead>
@@ -83,15 +84,16 @@
             },
             columns: [
                 { data: 0,"width": "10%" },
-                { data: 2, "width": "40%"},
+                { data: 2, "width": "30%"},
                 { data: 3, "width": "20%"},
                 { data: 4, "width": "20%"},
-                { data: 5, "width": "10%"}
+				{ data: 5, "width": "10%"},
+                { data: 6, "width": "10%"}
             ],
             //Set column definition initialisation properties.
             "columnDefs": [
                 {
-                    "targets": [4], //thrid column
+                    "targets": [5], //thrid column
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
 

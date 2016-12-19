@@ -2,7 +2,7 @@
 
 class Patient_model extends CI_Model {
 
-    var $column_order = array('patientID','patientName', 'ktpID', 'bpjsID','isActive', 'created',null); //set column field database for datatable orderable
+    var $column_order = array('patientID','patientName', 'ktpID', 'bpjsID','isActive', 'mrisNumber','created',null); //set column field database for datatable orderable
     var $column_search = array('patientName', 'ktpID', 'bpjsID'); //set column field database for datatable searchable just firstname ,
 
     function getPatientByID($id){
@@ -182,6 +182,27 @@ class Patient_model extends CI_Model {
         $this->db->where('a.clinicID', $clinicID);
         return $this->db->count_all_results();
     }
-
+	
+	public function check_mris_number($mrisNum){
+		$this->db->select("*");
+		$this->db->from("tbl_cyberits_m_patients a");
+		$this->db->where('a.mrisNumber', $mrisNum);
+		$query = $this->db->get();
+		
+		if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+	}
+	
+	public function get_last_mris_number(){
+		$this->db->select("MAX(mrisNumber) as lastMrisNumber");
+		$this->db->from("tbl_cyberits_m_patients a");
+		//$this->db->where('a.isTemp', 0);
+		$query = $this->db->get();
+		
+		return $query->row();
+	}
     
 }

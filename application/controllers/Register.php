@@ -37,7 +37,7 @@
 	            $orderDir =  $_POST['order']['0']['dir'];
 	        }
 	        else {
-	            $orderByColumnIndex = 5;
+	            $orderByColumnIndex = 6;
 	            $orderDir = "DESC";
 	        }
 
@@ -57,6 +57,7 @@
 	            $row[] = $item['patientName'];
 	            $row[] = $item['ktpID'];
 	            $row[] = $item['bpjsID'];
+				$row[] = $item['mrisNumber'];
 	            $row[] = $item['isActive'];
 	            $row[] = $item['lastUpdated'];
 	            $data[] = $row;
@@ -102,6 +103,7 @@
 		        	"ktpID"=>$ktpID,
 		        	"bpjsID"=>$bpjsID,
 		            "gender"=>$gender,
+					"mrisNumber"=>$this->generateMrisNumber(),
 		            "participantStatus"=>$participantStatus,
 		            "participantType"=>$participantType,
 		            "isTemp"=>1,
@@ -131,6 +133,53 @@
 
 	        echo json_encode(array('status' => $status, 'msg' => $msg));
 	        //echo print_r($data);
+		}
+		
+		private function generateMrisNumber(){
+			//$max = $this->patient_model->get_last_mris_number();
+			
+			$flag = 0;
+			$newMrisNumber = 0;
+			
+			while($flag==0){
+				if($newMrisNumber > 100000000){
+					$newMrisNumberString="".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 10000000){
+					$newMrisNumberString="0".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 1000000){
+					$newMrisNumberString="00".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 100000){
+					$newMrisNumberString="000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 10000){
+					$newMrisNumberString="0000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 1000){
+					$newMrisNumberString="00000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 100){
+					$newMrisNumberString="000000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 10){
+					$newMrisNumberString="0000000".$newMrisNumber."";
+				}
+				else{
+					$newMrisNumberString="00000000".$newMrisNumber."";
+				}
+				
+				$check = $this->patient_model->check_mris_number($newMrisNumber);
+				if($check != 1){
+					$flag++;
+				}else{
+					$newMrisNumber++;
+				}
+			}
+			
+			return $newMrisNumberString;
+			
 		}
 
 		function is_logged_in(){

@@ -101,6 +101,7 @@
 							'userID' => $query,
 							'patientName' => $name,
 							'ktpID' => $idNumber,
+							'mrisNumber'=> $this->generateMrisNumber(),
 							'isActive'=> 1,
 							'created' => $datetime,
 							'createdBy' => $query,
@@ -171,6 +172,7 @@
 	            	$data_patient = array(
 						'userID' => $query,
 						'patientName' => $name,
+						'mrisNumber'=> $this->generateMrisNumber(),
 						'isActive'=> 1,
 						'created' => $datetime,
 						'createdBy' => $query,
@@ -214,5 +216,53 @@
 
 			echo json_encode(array("result" => $result, "ID" => $ID));	
 		}
+		
+		private function generateMrisNumber(){
+			//$max = $this->patient_model->get_last_mris_number();
+			
+			$flag = 0;
+			$newMrisNumber = 0;
+			
+			while($flag==0){
+				if($newMrisNumber > 100000000){
+					$newMrisNumberString="".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 10000000){
+					$newMrisNumberString="0".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 1000000){
+					$newMrisNumberString="00".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 100000){
+					$newMrisNumberString="000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 10000){
+					$newMrisNumberString="0000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 1000){
+					$newMrisNumberString="00000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 100){
+					$newMrisNumberString="000000".$newMrisNumber."";
+				}
+				else if($newMrisNumber > 10){
+					$newMrisNumberString="0000000".$newMrisNumber."";
+				}
+				else{
+					$newMrisNumberString="00000000".$newMrisNumber."";
+				}
+				
+				$check = $this->Patient_model->check_mris_number($newMrisNumber);
+				if($check != 1){
+					$flag++;
+				}else{
+					$newMrisNumber++;
+				}
+			}
+			
+			return $newMrisNumberString;
+			
+		}
+
 	}
 ?>
