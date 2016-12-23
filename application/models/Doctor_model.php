@@ -162,6 +162,14 @@ class Doctor_Model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
+    function getDoctorByIdWithoutIsactive($id){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_doctors a');
+        $this->db->where('doctorID',$id);
+        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $query = $this->db->get();
+        return $query->row();
+    }
 
     // Get Doctor by UserID
     function getDoctorByUserID($userID){

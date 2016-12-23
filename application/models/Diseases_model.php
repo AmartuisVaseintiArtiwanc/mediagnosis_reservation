@@ -18,6 +18,14 @@
             return $query->result_array();	
 		}
 
+        function getDiseaseByIdWithoutIsacitve($id){
+            $this->db->select('*');
+            $this->db->from('tbl_cyberits_m_diseases d');
+            $this->db->where('d.diseaseID', $id);
+            $query = $this->db->get();
+            return $query->row();
+        }
+
 		function getDiseaseSymptomp($id){
 			$this->db->select('symptompName'); 
 			$this->db->from('tbl_cyberits_s_diseasesymptomps ds');
