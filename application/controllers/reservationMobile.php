@@ -19,14 +19,24 @@
 		}
 
 		function doReserve(){
+			//$this->output->enable_profiler(true);
 			$datetime = date('Y-m-d H:i:s', time());
 			$clinicID = $this->input->post('clinicID');
 			$poliID = $this->input->post('poliID');
 			$userID = $this->input->post('userID');
 			$reserveType = $this->input->post('reserveType');
+			$reserveWhen = $this->input->post('reserveWhen');
+			if($reserveWhen == "later"){
+				$postDateString = $this->input->post('reserveDate');
+
+				$reserveDate = date('Y-m-d', strtotime($postDateString));
+			}else{
+				$reserveDate = $datetime;
+			}
+			
 			$patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
-			$verifyReservationOverall = $this->HReservation_model->checkReservationToday($clinicID, $poliID);
+			$verifyReservationOverall = $this->test_model->checkReservationToday($clinicID, $poliID, $reserveDate);
 
 			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patientID);
 
@@ -34,7 +44,7 @@
 				echo json_encode(array('status' => 'error', 'msg' => 'Maaf, anda tidak bisa melakukan reservasi lagi'));
 			}else if($userID!=null){
 				//belom ada reservasi hari itu
-				if($verifyReservationOverall == 0){
+				if(isset($verifyReservationOverall)){
 					//insert baru
 					$data_reservasi = array(
 							'clinicID' => $clinicID,
@@ -42,9 +52,9 @@
 							'currentQueue' => 0,
 							'totalQueue' => 1,
 							'isActive' => 1,
-							'created' => $datetime,
+							'created' => $reserveDate,
 							'createdBy' => $userID,
-							'lastUpdated' => $datetime,
+							'lastUpdated' => $reserveDate,
 							'lastUpdatedBy' => $userID
 						);
 
@@ -55,7 +65,7 @@
 		                // Failed to save Data to DB
 		                $this->db->trans_rollback();
 		                $status = 'error';
-						$msg = "Maaf, Terjadi kesalahan saat melakukan reservasi";
+						$msg = "Maaf, Terjadi kesalahan saat melakukan reservasi 1";
 		            }
 		            else{
 		            	$data_reservasi = array(
@@ -78,7 +88,7 @@
 			                // Failed to save Data to DB
 			                $this->db->trans_rollback();
 			                $status = 'error';
-							$msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi";
+							$msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi 2";
 			            }
 			            else{
 			            	$this->db->trans_commit();
@@ -94,7 +104,7 @@
 
 					$data_reservasi = array(
 							'totalQueue' => $existingReservation->totalQueue + 1,
-							'lastUpdated' => $datetime,
+							'lastUpdated' => $reserveDate,
 							'lastUpdatedBy' => $userID
 						);
 
@@ -105,7 +115,7 @@
 		                // Failed to save Data to DB
 		                $this->db->trans_rollback();
 		                $status = 'error';
-						$msg = "Maaf, Terjadi kesalahan saat melakukan reservasi";
+						$msg = "Maaf, Terjadi kesalahan saat melakukan reservasi 3";
 		            }
 		            else{
 		            	$data_reservasi = array(
@@ -128,7 +138,7 @@
 			                // Failed to save Data to DB
 			                $this->db->trans_rollback();
 			                $status = 'error';
-							$msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi";
+							$msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi 4";
 			            }
 			            else{
 			            	$this->db->trans_commit();
@@ -139,7 +149,7 @@
 		            }
 
 				}
-				echo json_encode(array('status' => $status, 'msg' => $msg));
+				echo json_encode(array('status' => $status, 'msg' => $msg, 'telolet' => $reserveDate));
 			}else{
 				echo json_encode("empty");
 			}
@@ -303,7 +313,5 @@
             }
             echo json_encode(array('status' => $status, 'msg' => $msg));
         }
-
-
 	}
 ?>
