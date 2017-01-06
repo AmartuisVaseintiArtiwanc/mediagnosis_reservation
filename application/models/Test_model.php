@@ -157,9 +157,22 @@ class Test_model extends CI_Model{
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
-        $this->db->like('a.patientID',$patientID);
+        $this->db->where('a.patientID',$patientID);
         $this->db->like('a.created',$date);
         $this->db->where('a.status',"waiting");
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    // Get Current Reservation Queue for User/Patient by PatientID AND DetailReservationID
+    function getPatientCurrentQueueByReservation($detailID,$patientID){
+        $date = date('Y-m-d', time());
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->where('a.patientID',$patientID);
+        $this->db->where('a.detailReservationID',$detailID);
+
         $query = $this->db->get();
         return $query->row();
     }
@@ -169,7 +182,7 @@ class Test_model extends CI_Model{
         $date = date('Y-m-d', time());
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_header_reservation a');
-        $this->db->like('a.clinicID',$clinicID);
+        $this->db->where('a.clinicID',$clinicID);
         $this->db->like('a.created',$date);
         $query = $this->db->get();
         return $query->row();
@@ -361,6 +374,19 @@ class Test_model extends CI_Model{
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->where("a.detailReservationID",$detailID);
         $this->db->where("a.status",$status);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function getRatingReservationByPatient($patientID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->join('tbl_cyberits_m_doctors dc', 'dc.doctorID = a.doctorID');
+        $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics c', 'b.clinicID = c.clinicID');
+        $this->db->where("a.patientID",$patientID);
+        $this->db->where("a.status","done");
+        $this->db->where("a.isRating","0");
         $query = $this->db->get();
         return $query->row();
     }
