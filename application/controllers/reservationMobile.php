@@ -36,7 +36,7 @@
 			
 			$patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
-			$verifyReservationOverall = $this->test_model->checkReservationToday($clinicID, $poliID, $reserveDate);
+			$verifyReservationOverall = $this->test_model->checkReservationByDate($clinicID, $poliID, $reserveDate);
 
 			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patientID);
 
