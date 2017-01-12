@@ -26,6 +26,7 @@
 			$userID = $this->input->post('userID');
 			$reserveType = $this->input->post('reserveType');
 			$reserveWhen = $this->input->post('reserveWhen');
+			$token = $this->input->post('token');
 			if($reserveWhen == "later"){
 				$postDateString = $this->input->post('reserveDate');
 
