@@ -277,10 +277,11 @@
             echo json_encode(array('isQueue' => $isQueue, 'currentQueue' => $currQueue,'totalQueue'=>$totalQueue,'yourQueue'=>$yourQueue,'detailReservationID'=>$detailID));
         }
 
-        function checkTodayReservationByClinicID(){
+        function checkTodayReservationClinicPoli(){
             $clinicID = $this->input->post("clinicID");
+			$poliID = $this->input->post("poliID");
 
-            $reservation = $this->test_model->getClinicCurrentQueue($clinicID );
+            $reservation = $this->test_model->getClinicCurrentQueue($clinicID,$poliID);
 
             $currQueue="";
             $totalQueue="";

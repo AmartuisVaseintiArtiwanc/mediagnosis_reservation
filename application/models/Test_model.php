@@ -178,11 +178,12 @@ class Test_model extends CI_Model{
     }
 
     // Get Current Reservation Queue on This Clinic by ClinicID
-    function getClinicCurrentQueue($clinicID){
+    function getClinicCurrentQueue($clinicID,$poliID){
         $date = date('Y-m-d', time());
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_header_reservation a');
         $this->db->where('a.clinicID',$clinicID);
+        $this->db->where('a.poliID',$poliID);
         $this->db->like('a.created',$date);
         $query = $this->db->get();
         return $query->row();
