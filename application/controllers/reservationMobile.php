@@ -75,6 +75,7 @@
 							'patientID' => $patientID,
 							'status' => 'waiting',
 							'reservationType' => $reserveType,
+							'token' => $token,
 							'isOnline' => 1,
 							'isActive' => 1,
 							'created' => $datetime,
@@ -127,6 +128,7 @@
 							'patientID' => $patientID,
 							'status' => 'waiting',
 							'reservationType' => $reserveType,
+							'token' => $token,
 							'isOnline' => 1,
 							'isActive' => 1,
 							'created' => $datetime,
@@ -154,7 +156,7 @@
 		            }
 
 				}
-				echo json_encode(array('status' => $status, 'msg' => $msg, 'telolet' => $reserveDate));
+				echo json_encode(array('status' => $status, 'msg' => $msg));
 			}else{
 				echo json_encode("empty");
 			}
