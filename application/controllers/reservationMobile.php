@@ -407,6 +407,10 @@
                 $this->db->trans_commit();
                 $status = "success";
                 $msg = "Reservasi berhasil di batalkan !";
+				
+				$token_wrapper = $this->test_model->getReservationDetailByID($detailReservationID);
+				$token = $token_wrapper->token;
+				$this->sendNotification("Reservasi dibatalkan","Anda berhasil membatalkan reservasi anda!",$token);
             }
             echo json_encode(array('status' => $status, 'msg' => $msg));
         }
