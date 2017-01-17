@@ -359,6 +359,17 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
+	function getNextThreeQueue($currQueue){
+		$date = date('Y-m-d', time());
+		
+		$this->db->select('*');
+        $this->db->from('tbl_cyberits_t_detail_reservation a');
+        $this->db->where('noQueue',$currQueue+3);
+		$this->db->like('created',$date);
+        $query = $this->db->get();
+        return $query->row();
+	}
+	
 	// Get Detail Reservation by detailReservationID
     function getReservationDetailByID($detailID){
         $this->db->select('*');

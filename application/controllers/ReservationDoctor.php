@@ -112,7 +112,7 @@ class ReservationDoctor extends CI_Controller {
         $output = "";
         $status = "error";
         if(isset($data)){
-            if($data->status == "late"){
+            if($data->status == "late" || $data->status == "reject"){
                 $status = "late";
                 $output = "Maaf pasien tidak datang, silahkan ambil pasien selanjutnya ...";
             }else if($data->status == "confirm"){
@@ -167,6 +167,8 @@ class ReservationDoctor extends CI_Controller {
 					$token_wrapper = $this->test_model->getReservationDetailByID($detailID);
 					$token = $token_wrapper->token;
 					$this->sendNotification("No. ".$token_wrapper->noQueue." sedang dipanggil","Silahkan ke ruang dokter ".$doctor->doctorName,$token);
+					
+					$this->countdownThreeNotificationReminder($detail_data->noQueue);
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
@@ -198,6 +200,13 @@ class ReservationDoctor extends CI_Controller {
             redirect($index, 'refresh');
         }
     }
+	
+	function countdownThreeNotificationReminder($currQueue){
+		$token_wrapper = $this->test_model->getNextThreeQueue($currQueue);
+		if(isset($token_wrapper->token)){
+			$this->sendNotification("Pengingat antrian","Antrian anda 3 nomor lagi dipanggil",$token_wrapper->token);
+		}
+	}
 	
 	function sendNotification($title, $message, $token){
 		$path = 'https://fcm.googleapis.com/fcm/send';
