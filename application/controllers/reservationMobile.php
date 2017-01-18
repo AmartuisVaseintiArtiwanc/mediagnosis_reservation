@@ -20,7 +20,7 @@
 
 		function doReserve(){
 			//$this->output->enable_profiler(true);
-			$datetime = date('Y-m-d H:i:s', time());
+			$today = date('Y-m-d H:i:s', time());
 			$clinicID = $this->input->post('clinicID');
 			$poliID = $this->input->post('poliID');
 			$userID = $this->input->post('userID');
@@ -32,7 +32,7 @@
 
 				$reserveDate = date('Y-m-d', strtotime($postDateString));
 			}else{
-				$reserveDate = $datetime;
+				$reserveDate = $today;
 			}
 			
 			$patient_data = $this->Patient_model->getPatientByUserID($userID);
@@ -44,123 +44,133 @@
 			if($resrvationAvailability != 0){
 				echo json_encode(array('status' => 'error', 'msg' => 'Maaf, anda tidak bisa melakukan reservasi lagi'));
 			}else if($userID!=null){
-				//belom ada reservasi hari itu
-				if(isset($verifyReservationOverall)){
-					//insert baru
-					$data_reservasi = array(
-							'clinicID' => $clinicID,
-							'poliID' => $poliID,
-							'currentQueue' => 0,
-							'totalQueue' => 1,
-							'isActive' => 1,
-							'created' => $reserveDate,
-							'createdBy' => $userID,
-							'lastUpdated' => $reserveDate,
-							'lastUpdatedBy' => $userID
-						);
-
-					$this->db->trans_begin();
-					$query = $this->HReservation_model->insertReservation($data_reservasi);
-
-					if ($this->db->trans_status() === FALSE) {
-		                // Failed to save Data to DB
-		                $this->db->trans_rollback();
-		                $status = 'error';
-						$msg = "Maaf, Terjadi kesalahan saat melakukan reservasi 1";
-		            }
-		            else{
-		            	$data_reservasi = array(
-							'reservationID' => $query,
-							'noQueue' => 1,
-							'patientID' => $patientID,
-							'status' => 'waiting',
-							'reservationType' => $reserveType,
-							'token' => $token,
-							'isOnline' => 1,
-							'isActive' => 1,
-							'created' => $datetime,
-							'createdBy' => $userID,
-							'lastUpdated' => $datetime,
-							'lastUpdatedBy' => $userID
-						);
-
-		            	$query2 = $this->DReservation_model->insertReservation($data_reservasi);
-
-		            	if ($this->db->trans_status() === FALSE) {
-			                // Failed to save Data to DB
-			                $this->db->trans_rollback();
-			                $status = 'error';
-							$msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi 2";
-			            }
-			            else{
-			            	$this->db->trans_commit();
-	            			$status = 'success';
-							$msg = "Proses Reservasi berhasil";
-							
-							$this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
-			            }
-		            }
+				if(!isset($verifyReservationOverall)){
+                    //belom ada reservasi hari itu
+                    $this->newHeaderReservation($clinicID, $poliID, $reserveType, $reserveDate, $userID, $patientID, $token);
 				}
 				else{
-					//update tambah satu total 
-
-					$existingReservation = $this->HReservation_model->getReservationTodayID($clinicID, $poliID);
-
-					$data_reservasi = array(
-							'totalQueue' => $existingReservation->totalQueue + 1,
-							'lastUpdated' => $reserveDate,
-							'lastUpdatedBy' => $userID
-						);
-
-					$this->db->trans_begin();
-					$query = $this->HReservation_model->updateReservation($data_reservasi, $clinicID, $poliID);
-
-					if ($this->db->trans_status() === FALSE) {
-		                // Failed to save Data to DB
-		                $this->db->trans_rollback();
-		                $status = 'error';
-						$msg = "Maaf, Terjadi kesalahan saat melakukan reservasi 3";
-		            }
-		            else{
-		            	$data_reservasi = array(
-							'reservationID' => $existingReservation->reservationID,
-							'noQueue' => $existingReservation->totalQueue + 1,
-							'patientID' => $patientID,
-							'status' => 'waiting',
-							'reservationType' => $reserveType,
-							'token' => $token,
-							'isOnline' => 1,
-							'isActive' => 1,
-							'created' => $datetime,
-							'createdBy' => $userID,
-							'lastUpdated' => $datetime,
-							'lastUpdatedBy' => $userID
-						);
-
-						$query2 = $this->DReservation_model->insertReservation($data_reservasi);
-
-		            	if ($this->db->trans_status() === FALSE) {
-			                // Failed to save Data to DB
-			                $this->db->trans_rollback();
-			                $status = 'error';
-							$msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi 4";
-			            }
-			            else{
-			            	$this->db->trans_commit();
-	            			$status = 'success';
-							$msg = "Proses Reservasi berhasil";
-							
-							$this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
-			            }
-
-		            }
-
+					//update tambah satu total
+                    $this->existHeaderReservation($clinicID, $poliID, $reserveType, $reserveDate, $userID, $patientID, $token);
 				}
-				echo json_encode(array('status' => $status, 'msg' => $msg));
 			}else{
 				echo json_encode("empty");
 			}
 		}
+
+        private function newHeaderReservation($clinicID, $poliID, $reserveType, $reserveDate, $userID, $patientID, $token ){
+            $datetime = date('Y-m-d H:i:s', time());
+            //insert baru
+            $data_reservasi = array(
+                'clinicID' => $clinicID,
+                'poliID' => $poliID,
+                'currentQueue' => 0,
+                'totalQueue' => 1,
+                'isActive' => 1,
+                'created' => $reserveDate,
+                'createdBy' => $userID,
+                'lastUpdated' => $reserveDate,
+                'lastUpdatedBy' => $userID
+            );
+
+            $this->db->trans_begin();
+            $query = $this->HReservation_model->insertReservation($data_reservasi);
+
+            if ($this->db->trans_status() === FALSE) {
+                // Failed to save Data to DB
+                $this->db->trans_rollback();
+                $status = 'error';
+                $msg = "Maaf, Terjadi kesalahan saat melakukan reservasi 1";
+            }
+            else{
+                $data_reservasi = array(
+                    'reservationID' => $query,
+                    'noQueue' => 1,
+                    'patientID' => $patientID,
+                    'status' => 'waiting',
+                    'reservationType' => $reserveType,
+                    'token' => $token,
+                    'isOnline' => 1,
+                    'isActive' => 1,
+                    'created' => $datetime,
+                    'createdBy' => $userID,
+                    'lastUpdated' => $datetime,
+                    'lastUpdatedBy' => $userID
+                );
+
+                $query2 = $this->DReservation_model->insertReservation($data_reservasi);
+
+                if ($this->db->trans_status() === FALSE) {
+                    // Failed to save Data to DB
+                    $this->db->trans_rollback();
+                    $status = 'error';
+                    $msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi 2";
+                }
+                else{
+                    $this->db->trans_commit();
+                    $status = 'success';
+                    $msg = "Proses Reservasi berhasil";
+
+                    $this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
+                }
+            }
+            echo json_encode(array('status' => $status, 'msg' => $msg));
+        }
+
+        private function existHeaderReservation($clinicID, $poliID, $reserveType, $reserveDate, $userID, $patientID, $token){
+            $datetime = date('Y-m-d H:i:s', time());
+            $existingReservation = $this->HReservation_model->getReservationTodayID($clinicID, $poliID);
+
+            $data_reservasi = array(
+                'totalQueue' => $existingReservation->totalQueue + 1,
+                'lastUpdated' => $reserveDate,
+                'lastUpdatedBy' => $userID
+            );
+
+            $this->db->trans_begin();
+            $query = $this->HReservation_model->updateReservation($data_reservasi, $clinicID, $poliID);
+
+            if ($this->db->trans_status() === FALSE) {
+                // Failed to save Data to DB
+                $this->db->trans_rollback();
+                $status = 'error';
+                $msg = "Maaf, Terjadi kesalahan saat melakukan reservasi 3";
+            }
+            else{
+                $data_reservasi = array(
+                    'reservationID' => $existingReservation->reservationID,
+                    'noQueue' => $existingReservation->totalQueue + 1,
+                    'patientID' => $patientID,
+                    'status' => 'waiting',
+                    'reservationType' => $reserveType,
+                    'token' => $token,
+                    'isOnline' => 1,
+                    'isActive' => 1,
+                    'created' => $datetime,
+                    'createdBy' => $userID,
+                    'lastUpdated' => $datetime,
+                    'lastUpdatedBy' => $userID
+                );
+
+                $query2 = $this->DReservation_model->insertReservation($data_reservasi);
+
+                if ($this->db->trans_status() === FALSE) {
+                    // Failed to save Data to DB
+                    $this->db->trans_rollback();
+                    $status = 'error';
+                    $msg = "Mohon Maaf,Terjadi kesalahan saat melakukan reservasi 4";
+                }
+                else{
+                    $this->db->trans_commit();
+                    $status = 'success';
+                    $msg = "Proses Reservasi berhasil";
+
+                    $this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
+                }
+
+            }
+            echo json_encode(array('status' => $status, 'msg' => $msg));
+
+        }
 
         function getClinicBpjsDetail(){
             $userID = $this->security->xss_clean($this->input->post("userID"));

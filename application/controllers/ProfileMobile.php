@@ -7,7 +7,7 @@ class ProfileMobile extends CI_Controller{
 
         $this->load->helper(array('form', 'url'));
         $this->load->helper('date');
-
+        $this->load->model('Patient_model',"patient_model");
         $this->load->library('Hash');
         $this->load->library("Authentication");
     }
@@ -212,6 +212,7 @@ class ProfileMobile extends CI_Controller{
                     'phoneNumber'=>$phone_number,
                     'address'=>$address,
                     'dob'=>$dob,
+                    'isComplete'=>1,
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$userID
                 );
@@ -298,6 +299,20 @@ class ProfileMobile extends CI_Controller{
         }else{
             $status = "error";
             $msg="Maaf User Anda tidak terdaftar!";
+        }
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+    public function checkProfileIsComplete(){
+        $userID = $this->security->xss_clean($this->input->post('userID'));
+        $status="error";
+        $msg="";
+
+        $check = $this->patient_model->getPatientByUserID($userID);
+        if(isset($check)){
+            if($check->isComplete == 1){
+                $status="success";
+            }
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
