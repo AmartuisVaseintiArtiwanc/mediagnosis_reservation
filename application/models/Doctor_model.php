@@ -207,6 +207,13 @@ class Doctor_Model extends CI_Model {
 		$result=$this->db->affected_rows();
 		return $result;
 	}
+	
+	function updateDoctorByUserID($data,$id){
+		$this->db->where('userID',$id);
+		$this->db->update('tbl_cyberits_m_doctors',$data);
+		$result=$this->db->affected_rows();
+		return $result;
+	}
     
     function deleteDoctor($id){
     	$this->db->where('doctorID',$id);

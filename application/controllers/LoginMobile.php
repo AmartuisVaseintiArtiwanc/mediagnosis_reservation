@@ -67,5 +67,69 @@ class LoginMobile extends CI_Controller{
 		}
         echo json_encode(array('userID' => $userID, 'username' => $username,'role' => $role, 'name' => $name,'status' => $status, 'msg' => $msg));
 	}
+	
+	public function updateToken(){
+		$this->load->model('Doctor_model');
+		$this->load->model('Patient_model');
+		
+		$token = $this->input->post("token");
+		$role = $this->input->post("role");
+		$userID = $this->input->post("userID");
+		
+		$datetime = date('Y-m-d H:i:s', time());
+		
+		$data_token = array(
+			"token" => $token,
+			"lastUpdated" => $datetime,
+			"lastUpdatedBy" => $userID
+		);
+		
+		if($role == "patient"){
+			//update token tabel pasien dengan id user tertentu
+			$this->db->trans_begin();
+			$res = $this->Patient_model->updatePatient($userID,$data_token);
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				$status = "error";
+				$msg="Maaf terjadi kesalahan token !";
+			}
+			else{
+				if($res==1){
+					$this->db->trans_commit();
+					$status = "success";
+					$msg="Proses reroll token berhasil";
+				}else{
+					$this->db->trans_rollback();
+					$status = "error";
+					$msg="Maaf terjadi kesalahan token !";
+				}
+			}
+				
+		}else if($role == "doctor"){
+			//update token tabel dokter dengan id user tertentu
+			$this->db->trans_begin();
+			$res = $this->Doctor_model->updateDoctorByUserID($data_token,$userID);
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				$status = "error";
+				$msg="Maaf terjadi kesalahan token !";
+			}
+			else{
+				if($res==1){
+					$this->db->trans_commit();
+					$status = "success";
+					$msg="Proses reroll token berhasil";
+				}else{
+					$this->db->trans_rollback();
+					$status = "error";
+					$msg="Maaf terjadi kesalahan token !";
+				}
+			}
+		}else{
+			$status = "error";
+			$msg="Maaf terjadi kesalahan token !";
+		}
+		echo json_encode(array('status' => $status, 'msg' => $msg));
+	}
 }
 ?>
