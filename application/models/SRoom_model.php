@@ -41,6 +41,16 @@
 	        $query = $this->db->get();
 	        return $query->result_array();
 	    }
+		
+		function getTokenBySRoomID($sRoomID){
+			$this->db->select('md.token AS doctorToken, mp.token AS patientToken, sRoomID, md.userID AS doctorUserID, mp.userID AS patientUserID ,patientName, doctorName');
+	        $this->db->from('tbl_cyberits_s_room sr');
+	        $this->db->join('tbl_cyberits_m_doctors md', 'md.doctorID = sr.doctorID');
+	        $this->db->join('tbl_cyberits_m_patients mp', 'mp.patientID = sr.patientID');
+	        $this->db->where('sr.sRoomID',$sRoomID);
+	        $query = $this->db->get();
+	        return $query->row();
+		}
 
 	}
 ?>
