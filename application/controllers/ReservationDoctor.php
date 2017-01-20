@@ -164,7 +164,7 @@ class ReservationDoctor extends CI_Controller {
                     $msg = "Save data successfully !";
 					
 					
-					$token_wrapper = $this->test_model->getReservationDetailByID($detailID);
+					$token_wrapper = $this->test_model->getTokenByReservationID($detailID);
 					$token = $token_wrapper->token;
 					$this->sendNotification("No. ".$token_wrapper->noQueue." sedang dipanggil","Silahkan ke ruang dokter ".$doctor->doctorName,$token);
 					
@@ -202,7 +202,7 @@ class ReservationDoctor extends CI_Controller {
     }
 	
 	function countdownThreeNotificationReminder($currQueue){
-		$token_wrapper = $this->test_model->getNextThreeQueue($currQueue);
+		$token_wrapper = $this->test_model->getTokenForNextThreeQueue($currQueue);
 		if(isset($token_wrapper->token)){
 			$this->sendNotification("Pengingat antrian","Antrian anda 3 nomor lagi dipanggil",$token_wrapper->token);
 		}

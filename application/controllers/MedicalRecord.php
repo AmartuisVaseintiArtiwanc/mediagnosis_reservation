@@ -361,9 +361,9 @@ class MedicalRecord extends CI_Controller {
             $status = "success";
             $msg="Medical Record has been saved successfully.";
 			
-			$token_wrapper = $this->test_model->getReservationDetailByID($detail_reservation);
+			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
-			$this->sendNotification("Harap review kunjungan hari ini","Kunjungan nada tleh selesai",$token);
+			$this->sendNotification("Harap review kunjungan hari ini","Kunjungan anda tleh selesai",$token);
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
@@ -391,7 +391,7 @@ class MedicalRecord extends CI_Controller {
             $status = "success";
             $msg="Medical Record has been saved successfully.";
 			
-			$token_wrapper = $this->test_model->getReservationDetailByID($detail_reservation);
+			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
 			$this->sendNotification("Reservasi anda terlewatkan","Maaf, reservasi anda terlewatkan",$token);
         }

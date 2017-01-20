@@ -186,7 +186,7 @@ class Reservation extends CI_Controller {
                 $msg = "Save data successfully !";
 				
 				if($status_rev == "late"){
-					$token_wrapper = $this->test_model->getReservationDetailByID($detailID);
+					$token_wrapper = $this->test_model->getTokenByReservationID($detailID);
 					$token = $token_wrapper->token;
 					$this->sendNotification("Reservasi anda terlewatkan","Maaf, reservasi anda terlewatkan",$token);
 				}

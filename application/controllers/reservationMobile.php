@@ -88,7 +88,6 @@
                     'patientID' => $patientID,
                     'status' => 'waiting',
                     'reservationType' => $reserveType,
-                    'token' => $token,
                     'isOnline' => 1,
                     'isActive' => 1,
                     'created' => $datetime,
@@ -142,7 +141,6 @@
                     'patientID' => $patientID,
                     'status' => 'waiting',
                     'reservationType' => $reserveType,
-                    'token' => $token,
                     'isOnline' => 1,
                     'isActive' => 1,
                     'created' => $datetime,
@@ -418,7 +416,7 @@
                 $status = "success";
                 $msg = "Reservasi berhasil di batalkan !";
 				
-				$token_wrapper = $this->test_model->getReservationDetailByID($detailReservationID);
+				$token_wrapper = $this->test_model->getTokenByReservationID($detailReservationID);
 				$token = $token_wrapper->token;
 				$this->sendNotification("Reservasi dibatalkan","Anda berhasil membatalkan reservasi anda!",$token);
             }
