@@ -6,6 +6,7 @@ class Login_model extends CI_Model {
 	{
         $this->db->where('userName', $username);
 		$this->db->where('Password', $password);
+        $this->db->where('userRole !=', 'mediagnosis_admin');
 		$query = $this->db->get('tbl_cyberits_m_users');
 		
 		return $query->row();

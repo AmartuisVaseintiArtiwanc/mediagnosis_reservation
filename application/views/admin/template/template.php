@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -122,7 +122,7 @@
         <li><a href="<?php echo site_url("Welcome");?>"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 
           <!--SUPER ADMIN  MASTER-->
-          <?php if($this->session->userdata('role')=="super_admin"){?>
+          <?php if($this->session->userdata('role')=="mediagnosis_admin"){?>
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-database"></i>
@@ -130,16 +130,18 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                  <li><a href="<?php echo site_url("Clinic");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
+                  <!--
+                  <li><a href="<?php echo site_url("ClinicAdmin");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
                   <li><a href="<?php echo site_url("Poli");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
-                  <li><a href="<?php echo site_url("Doctor");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>
-                  <li><a href="<?php echo site_url("Disease");?>"><i class="fa fa-circle-o"></i> Disease</a></li>
+                  <li><a href="<?php echo site_url("Doctor");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>-->
+                  <li><a href="<?php echo site_url("Disease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
+                  <li><a href="<?php echo site_url("Symptomp");?>"><i class="fa fa-circle-o"></i> Gejala</a></li>
               </ul>
             </li>
           <?php } ?>
 
         <!--SETTING-->
-        <?php if($this->session->userdata('role')=="super_admin" || $this->session->userdata('role')=="admin" ){?>
+        <?php if($this->session->userdata('role')=="mediagnosis_admin"){?>
             <li class="treeview">
               <a href="#">
                 <i class="fa fa-gear"></i>
@@ -147,53 +149,15 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
+                  <!--
                   <li><a href="<?php echo site_url("SClinic");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
                   <li><a href="<?php echo site_url("SPoli");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
-                  <li><a href="<?php echo site_url("SettingSchedule");?>"><i class="fa fa-circle-o"></i> Schedule</a></li>
+                  <li><a href="<?php echo site_url("SettingSchedule");?>"><i class="fa fa-circle-o"></i> Schedule</a></li>-->
+                  <li><a href="<?php echo site_url("SDisease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
               </ul>
             </li>
         <?php } ?>
-          <li class="treeview">
-              <a href="#">
-                  <i class="fa fa-calendar"></i>
-                  <span>Reservation</span>
-                  <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                  <li><a href="<?php echo site_url("Reservation");?>"><i class="fa fa-circle-o"></i> Today Reservation</a></li>
-                  <li><a href="<?php echo site_url("Reservation/goToReservationReportClinicList");?>"><i class="fa fa-circle-o"></i> Report Reservation</a></li>
-                  <li><a href="<?php echo site_url("Reservation/getReservationListForPatient");?>" target="_blank"><i class="fa fa-circle-o"></i> Patient View</a></li>
-              </ul>
-          </li>
-          <li class="treeview">
-              <a href="#">
-                  <i class="fa fa-edit"></i>
-                  <span>Manual</span>
-                  <i class="fa fa-angle-left pull-right"></i>
-              </a>
-              <ul class="treeview-menu">
-                  <li><a href="<?php echo site_url("Register/registerOfflinePatient");?>"><i class="fa fa-circle-o"></i>Manual Registration</a></li>
-                  <li><a href="<?php echo site_url("Reservation/reserveOfflinePatient");?>"><i class="fa fa-circle-o"></i>Manual Reservation</a></li>
-              </ul>
-          </li>
-          <?php if($this->session->userdata('role')=="super_admin" || $this->session->userdata('role')=="admin" ){?>
-              <li class="treeview">
-                  <a href="#">
-                      <i class="fa fa-bar-chart"></i>
-                      <span>Laporan</span>
-                      <i class="fa fa-angle-left pull-right"></i>
-                  </a>
-                  <ul class="treeview-menu">
-                      <li><a href="<?php echo site_url("Report/reportVisitType");?>"><i class="fa fa-circle-o"></i>Laporan Kunjungan Sehat/Sakit</a></li>
-                      <li><a href="<?php echo site_url("Report/reportClinicPoliVisit");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan per Poli</a></li>
-                      <li><a href="<?php echo site_url("Report/reportDoctorVisit");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan per Dokter</a></li>
-                      <li><a href="<?php echo site_url("Report/reportPatientType");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan Umum/BPJS</a></li>
-                      <li><a href="<?php echo site_url("Report/reportDiseaseVisit");?>"><i class="fa fa-circle-o"></i>Laporan Penyakit</a></li>
-                      <li><a href="<?php echo site_url("Report/reportDoctorRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Dokter</a></li>
-                      <li><a href="<?php echo site_url("Report/reportClinicPoliRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Klinik</a></li>
-                  </ul>
-              </li>
-          <?php } ?>
+
       </ul>
     </section>
     <!-- /.sidebar -->
