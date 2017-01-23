@@ -55,6 +55,20 @@ class Report_model extends CI_Model {
         return $execute->result_array();
     }
 
+    function getReportDoctorRating($userID, $startDate, $endDate){
+
+        $sql = "call sp_doctor_rating(?,?,?)";
+        $execute = $this->db->query($sql, array($userID,$startDate,$endDate));
+        return $execute->result_array();
+    }
+
+    function getReportClinicRating($userID, $startDate, $endDate){
+
+        $sql = "call sp_clinic_rating(?,?,?)";
+        $execute = $this->db->query($sql, array($userID,$startDate,$endDate));
+        return $execute->result_array();
+    }
+
     function getReportClinicVisitTypeDetail($startDate, $endDate, $clinic){
         $this->db->select('a.clinicID, a.poliID, pl.poliName, b.patientID, b.doctorID, b.created as reserveDate, b.reservationID,
         b.detailReservationID, b.reservationType, c.medicalRecordID, d.visitType, d.treatment, d.statusDiagnose,

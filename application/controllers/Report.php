@@ -129,7 +129,6 @@ class Report extends CI_Controller {
             $this->goToErrorPage();
         }
     }
-
     // DETAIL REPORT Kunjungan Per Klinik
     function reportClinicPoliVisitDetail($clinicID,$poliID,$from,$to){
         $role = $this->session->userdata('role');
@@ -210,7 +209,6 @@ class Report extends CI_Controller {
             $this->goToErrorPage();
         }
     }
-
     // DETAIL REPORT Kunjungan Per Dokter
     function reportDoctorVisitDetail($doctorID,$from,$to){
         $role = $this->session->userdata('role');
@@ -289,7 +287,6 @@ class Report extends CI_Controller {
             $this->goToErrorPage();
         }
     }
-
     // DETAIL REPORT Kunjungan Per Penyakit
     function reportDiseaseVisitDetail($diseaseID,$from,$to){
         $role = $this->session->userdata('role');
@@ -368,7 +365,6 @@ class Report extends CI_Controller {
             $this->goToErrorPage();
         }
     }
-
     // DETAIL REPORT Kunjungan BPJS/UMUM
     function reportPatientTypeDetail($clinicID,$from,$to){
         $role = $this->session->userdata('role');
@@ -406,6 +402,81 @@ class Report extends CI_Controller {
             }else{
                 $this->goToErrorPage();
             }
+        }else{
+            $this->goToErrorPage();
+        }
+    }
+
+
+    // REPORT Rating per Doctor
+    function reportDoctorRating(){
+        $role = $this->session->userdata('role');
+        $userID = $this->session->userdata('superUserID');
+        $today = date('Y-m-d', time());
+
+        //$this->output->enable_profiler(true);
+        if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $startDate = "";
+            $endDate = "";
+            $startDatePost = $this->security->xss_clean($this->input->get("from"));
+            $endDatePost = $this->security->xss_clean($this->input->get("to"));
+
+            if(empty($startDatePost) || empty($endDatePost)){
+                $startDatePost = $today;
+                $endDatePost = $today;
+
+                $startDate = $today;
+                $endDate =  strtotime ( '1 day' , strtotime ( $today ) );
+            }else{
+                $startDate = date ( 'Y-m-d' , strtotime ( $startDatePost ) );
+                //END DATE + 1
+                $endDate = strtotime ( '1 day' , strtotime ( $endDatePost ) ) ;
+                $endDate = date ( 'Y-m-d' , $endDate );
+            }
+
+            $report_list = $this->report_model->getReportDoctorRating($userID, $startDate, $endDate);
+            $data['start_date'] = $startDatePost;
+            $data['end_date'] = $endDatePost;
+            $data['report_data']  = $report_list;
+            $data['main_content'] = 'report/report_doctor_rating_view';
+            $this->load->view('template/template', $data);
+        }else{
+            $this->goToErrorPage();
+        }
+    }
+
+    // REPORT Rating per Clinic - Poli
+    function reportClinicPoliRating(){
+        $role = $this->session->userdata('role');
+        $userID = $this->session->userdata('superUserID');
+        $today = date('Y-m-d', time());
+
+        //$this->output->enable_profiler(true);
+        if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $startDate = "";
+            $endDate = "";
+            $startDatePost = $this->security->xss_clean($this->input->get("from"));
+            $endDatePost = $this->security->xss_clean($this->input->get("to"));
+
+            if(empty($startDatePost) || empty($endDatePost)){
+                $startDatePost = $today;
+                $endDatePost = $today;
+
+                $startDate = $today;
+                $endDate =  strtotime ( '1 day' , strtotime ( $today ) );
+            }else{
+                $startDate = date ( 'Y-m-d' , strtotime ( $startDatePost ) );
+                //END DATE + 1
+                $endDate = strtotime ( '1 day' , strtotime ( $endDatePost ) ) ;
+                $endDate = date ( 'Y-m-d' , $endDate );
+            }
+
+            $report_list = $this->report_model->getReportClinicRating($userID, $startDate, $endDate);
+            $data['start_date'] = $startDatePost;
+            $data['end_date'] = $endDatePost;
+            $data['report_data']  = $report_list;
+            $data['main_content'] = 'report/report_clinic_poli_rating_view';
+            $this->load->view('template/template', $data);
         }else{
             $this->goToErrorPage();
         }
