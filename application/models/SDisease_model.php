@@ -18,7 +18,7 @@ class SDisease_Model extends CI_Model {
 		return $result;
     }
     
-   	function updateSettingDisease($diseaseID,$symptompID){
+   	function updateSettingDisease($diseaseID,$symptompID,$data){
 		$this->db->where('diseaseID',$diseaseID);
 		$this->db->where('symptompID',$symptompID);
 		$this->db->update('tbl_cyberits_s_diseasesymptomps',$data);

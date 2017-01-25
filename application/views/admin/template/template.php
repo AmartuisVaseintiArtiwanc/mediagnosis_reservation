@@ -219,6 +219,8 @@
 <!-- AdminLTE App -->
 <script src="<?php echo base_url();?>assets/dist/js/app.min.js"></script>
 
+<script src="<?php echo base_url();?>assets/plugins/bootstrap-editable/js/bootstrap-editable.min.js" type="text/javascript"></script>
+
 <!-- Alertify -->
 <script src="<?php echo base_url();?>assets/plugins/alertify/alertify.min.js"></script>
 <!-- Sweet Alert -->

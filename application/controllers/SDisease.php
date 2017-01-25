@@ -92,11 +92,12 @@ class SDisease extends CI_Controller {
 				$detail_setting = array(
 					'diseaseID'=>$diseaseID,
 					'symptompID'=>$row['symptompID'],
-					'weight'=>$row['weight'],					
-					"created"=>$datetime,
-					"createdBy" => "sample",
+					'weight'=>$row['weight'],
+                    "isActive"=>1,
+                    "created"=>$datetime,
+					"createdBy" => $this->session->userdata('userID'),
 					"lastUpdated"=>$datetime,
-					"lastUpdatedBy"=>"sample"
+					"lastUpdatedBy"=>$this->session->userdata('userID')
 				);
 
 				$addDetil = $this->sdisease_model->createSettingDisease($detail_setting);			
@@ -106,9 +107,22 @@ class SDisease extends CI_Controller {
 		//DELETE DATA
 		if(isset($data[2])){
 			foreach($data[2] as $row){			
-				$deteleDetil = $this->sdisease_model->deleteSettingDisease($diseaseID,$row['symptompID']);			
+				$deteleDetail = $this->sdisease_model->deleteSettingDisease($diseaseID,$row['symptompID']);
 			}
 		}
+
+        if(isset($data[3])){
+            foreach($data[3] as $row){
+                $detail_setting = array(
+                    'diseaseID'=>$diseaseID,
+                    'symptompID'=>$row['symptompID'],
+                    'weight'=>$row['weight'],
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$this->session->userdata('userID')
+                );
+                $editDetail = $this->sdisease_model->updateSettingDisease($diseaseID,$row['symptompID'],$detail_setting);
+            }
+        }
 		
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();

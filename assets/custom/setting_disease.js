@@ -6,6 +6,7 @@
 	var $symptomp_data_temp = [];
 
     $(document).ready(function() {
+        $.fn.editable.defaults.mode = 'inline';
         // Select symptomp to Detail List
         // Add button on list view on Lookup
         $('#dataTables-symptomp tbody').on('click', 'button.add-symptomp-btn', function () {
@@ -45,25 +46,26 @@
 			if(flag == "" && flag2==""){
 				return true;
 			}else{
-				alert("Symptomp already exist !");
+				alert("Gejala ini sudah terdapat dalam setting !");
 				return false;
 			}
 		}
 
         function createItemDetail(index){
             if (typeof symptompLookupData[index] !== 'undefined' && symptompLookupData[index] !== null) {
-                var tr = $("<tr>", {id: "item-" + count_index, class: "item-detail", "data-value": symptompLookupData[index][1]});
+                var tr = $("<tr>", {id: "item-" + count_index, class: "item-detail tr-new","data-weight":"1","data-value": symptompLookupData[index][1]});
                 // Symptomp Name
                 var td1 = $("<td>", {class: "symptomp-item", "data-value": "0"}).text(symptompLookupData[index][2]);
 
                 // Weight,
                 var td2 = $("<td>", {class: "weight-item", "data-value": "0"});
 				var a2 = $("<a>", {
-                    class: "qty-item-input",
-                    "data-value": "0",
-                    "data-type": "text",                   
+                    class: "weight-item-input",
+                    "data-value": "1",
+                    "data-type": "text",
                     "data-pk": count_index
                 });
+                a2.text("1");
                 a2.appendTo(td2);
                
                 //Option
@@ -89,7 +91,6 @@
 							break;
 						}
 					}
-					
                     tr_element.remove();
                 });
 
@@ -107,14 +108,14 @@
 				$symptomp_data_temp.push(data_new);				
             }
 
-            // Set Editable Component
-            $('.qty-item-input').editable({
-                //step: 'any', // <-- added this line
-                title : '0',
+            // Set Editable Weight
+            $('.weight-item-input').editable({
+                title : '1',
                 display: function(value) {
-                    var satuan = $(this).attr("data-satuan");
-                    $(this).attr("data-value",value);
-                    $(this).text(value+" "+satuan);
+                    // set Total-discount
+                    var $tr = $(this).closest("tr");
+                    $tr.attr("data-weight",value);
+                    $(this).text(value);
                 },
                 validate: function(value) {
                     var regex = /^\d+(?:\.+\d*)?$/;
@@ -157,7 +158,7 @@
             // element == this            
 			$(this).css("border","none");
 			var symptomp = $(this).attr("data-value");
-			var weight = 1;		
+			var weight = $(this).attr("data-weight");
 
 			var detailData = {
 				symptompID : symptomp,
@@ -170,7 +171,7 @@
         });
         if(err != 0){
             detailItemSymptomp=[];
-            alertify.alert("Detail Penjualan must be filled");
+            alertify.alert("Gejala Penyakit tidak boleh kosong !");
             return false;
         }else{
             //alert(err+" sukses "+check_detail+JSON.stringify(detailItemSymptomp));

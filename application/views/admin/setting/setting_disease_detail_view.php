@@ -13,8 +13,16 @@
     .float-right{
         float: right;
     }
+    .tr-edit td{
+        color:#2196F3;
+        font-weight: bold;
+    }
     .tr-cancel td{
         color:#d2322d;
+        font-weight: bold;
+    }
+    .tr-new td{
+        color:#4CAF50;
         font-weight: bold;
     }
     .required{
@@ -101,9 +109,9 @@
 
                 <tbody id="detail-content">
                 <?php foreach($data_setting_detail as $row){?>
-                    <tr class="old-item" data-id="<?php echo $row['symptompID'];?>" data-status="clear">
-                        <td class="symptomp-name"><?php echo $row['symptompName'];?></td>
-                        <td class="weight"><?php echo $row['weight'];?></td>                       
+                    <tr class="old-item" data-id="<?php echo $row['symptompID'];?>" data-weight="" data-edit="0" data-status="clear">
+                        <td class="symptomp-name-td"><?php echo $row['symptompName'];?></td>
+                        <td class="symptomp-weight-td""><a href="#" class="symptomp-weight" data-value="<?php echo $row['weight'];?>" data-old-value="<?php echo $row['weight'];?>"><?php echo $row['weight'];?></a></td>
                         <td class="td-center">
                             <button class="btn btn-danger del-old-item-btn" type="button">
                                 <span class="glyphicon glyphicon-ban-circle"></span>
@@ -119,7 +127,6 @@
 </section><!-- div container -->
 
 <script src="<?php echo base_url();?>assets/plugins/jquery.maskMoney.js" type="text/javascript"></script>
-<script src="<?php echo base_url();?>assets/plugins/bootstrap-editable/js/bootstrap-editable.min.js" type="text/javascript"></script>
 <script src="<?php echo base_url();?>assets/custom/setting_disease.js" type="text/javascript"></script>
 
 <script type="text/javascript">
@@ -142,21 +149,36 @@
 							
 				// Deleted Symptomp
 				var deleted_data_setting = [];
+                // Edit Symptomp
+                var edited_data_setting = [];
+
 				$( "tr.old-item" ).each(function( index, element ) {					
-					var symptomp = $(this).attr("data-id");		
-					var $status =  $(this).attr("data-status");
-					if($status == "delete"){
+					var symptomp = $(this).attr("data-id");
+                    var $status =  $(this).attr("data-status");
+                    var $isEdit =  $(this).attr("data-edit");
+
+					if($status=="delete"){
 						var detailData = {						
 							symptompID : symptomp						
 						};
 						deleted_data_setting.push(detailData);	
-					}									 
+					}
+
+                    if($status=="clear" && $isEdit==1){
+                        var $weight =  $(this).attr("data-weight");
+                        var detailData = {
+                            symptompID : symptomp,
+                            weight : $weight
+                        };
+                        edited_data_setting.push(detailData);
+                    }
 				});
 				
                 var data_setting = new Array();
                 data_setting.push(header_data_setting);
 				data_setting.push(detailItemSymptomp);
 				data_setting.push(deleted_data_setting);
+                data_setting.push(edited_data_setting);
 
                 var data_post = {
                     data :data_setting
@@ -188,16 +210,45 @@
         $('.del-old-item-btn').click(function() {
             var $tr = $(this).closest("tr");
 			var $status = $tr.attr("data-status");
+            var $isEdit = $tr.attr("data-edit");
 			
 			if($status == "delete"){
 				$tr.removeClass('tr-cancel');
 				$tr.attr("data-status","clear");
-				//alert($status);
+                if($isEdit==1){
+                    $tr.addClass('tr-edit');
+                }
 			}else{
 				$tr.addClass('tr-cancel');
 				$tr.attr("data-status","delete");
 				//alert($status);
 			}           
+        });
+
+        $('.symptomp-weight').editable({
+            type: 'text',
+            display: function(value) {
+                // set Total-discount
+                var $tr = $(this).closest("tr");
+
+                var $old_data = $(this).attr("data-old-value");
+                if($old_data == value){
+                    $tr.removeClass('tr-edit');
+                    $tr.attr("data-edit","0");
+                }else{
+                    $tr.addClass("tr-edit");
+                    $(this).attr("data-value",value);
+                    $tr.attr("data-weight",value);
+                    $tr.attr("data-edit","1");
+                }
+                $(this).text(value);
+            },
+            validate: function(value) {
+                var regex = /^\d+(?:\.+\d*)?$/;
+                if(! regex.test(value)) {
+                    return 'numbers only!';
+                }
+            }
         });
     });
 </script>
