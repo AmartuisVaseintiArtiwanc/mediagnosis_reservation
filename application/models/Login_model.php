@@ -91,7 +91,6 @@ class Login_model extends CI_Model {
 	public function checkUsernameExists($username){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_users');
-        $this->db->where('isActive', 1);
         $this->db->where('userName', $username);
         $query = $this->db->get();
 
@@ -105,7 +104,6 @@ class Login_model extends CI_Model {
 	public function checkEmailExists($email){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_users');
-        $this->db->where('isActive', 1);
         $this->db->where('email', $email);
         $query = $this->db->get();
 
@@ -119,7 +117,6 @@ class Login_model extends CI_Model {
     public function checkUpdatedUsernameExists($userID,$username){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_users');
-        $this->db->where('isActive', 1);
         $this->db->where('userName', $username);
         $this->db->where('userID !=', $userID);
         $query = $this->db->get();
@@ -134,7 +131,6 @@ class Login_model extends CI_Model {
     public function checkUpdatedEmailExists($userID, $email){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_users');
-        $this->db->where('isActive', 1);
         $this->db->where('email', $email);
         $this->db->where('userID !=', $userID);
         $query = $this->db->get();

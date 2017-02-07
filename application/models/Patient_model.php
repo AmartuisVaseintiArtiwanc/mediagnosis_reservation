@@ -92,7 +92,23 @@ class Patient_model extends CI_Model {
         }else{
             return 0; //blom ada
         }
-    }    
+    }
+
+    public function checkBPJSIDExistsBYPatientID($bpjsID, $patientID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive', 1);
+        $this->db->where('isTemp', 0);
+        $this->db->where('bpjsID', $bpjsID);
+        $this->db->where('patientID !=', $patientID);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
 
     public function checkIDNumberExists($idNumber){
         $this->db->select('*');
@@ -100,6 +116,22 @@ class Patient_model extends CI_Model {
         $this->db->where('isActive', 1);
         $this->db->where('isTemp', 0);
         $this->db->where('ktpID', $idNumber);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
+
+    public function checkIDNumberExistsByPatientID($idNumber, $patientID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients');
+        $this->db->where('isActive', 1);
+        $this->db->where('isTemp', 0);
+        $this->db->where('ktpID', $idNumber);
+        $this->db->where('patientID !=', $patientID);
         $query = $this->db->get();
 
         if($query->num_rows()>0){
@@ -118,6 +150,12 @@ class Patient_model extends CI_Model {
         $query = $this->db->get();
 
         return $query->row();
+    }
+
+    public function insertPatient($data){
+        $this->db->insert('tbl_cyberits_m_patients', $data);
+        return $this->db->insert_id();
+
     }
 
     function updatePatientByPatientID($patientID,$data){

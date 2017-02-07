@@ -156,7 +156,22 @@
                   <li><a href="<?php echo site_url("SDisease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
               </ul>
             </li>
+
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-gear"></i>
+                    <span>Register</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                  <li><a href="<?php echo site_url("RegisterAdmin/goToAddAdminForm");?>"><i class="fa fa-circle-o"></i> Admin</a></li>
+                  <li><a href="<?php echo site_url("RegisterAdmin/goToAddClinicForm");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
+                    <li><a href="<?php echo site_url("RegisterAdmin/goToAddDoctorForm");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>
+                </ul>
+            </li>
         <?php } ?>
+
+
 
       </ul>
     </section>

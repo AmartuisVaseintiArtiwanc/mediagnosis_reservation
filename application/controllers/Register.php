@@ -59,6 +59,9 @@
 	            $row[] = $item['bpjsID'];
 				$row[] = $item['mrisNumber'];
 	            $row[] = $item['isActive'];
+                $row[] = $item['gender'];
+                $row[] = $item['participantStatus'];
+                $row[] = $item['participantType'];
 	            $row[] = $item['lastUpdated'];
 	            $data[] = $row;
 	        }
@@ -116,7 +119,7 @@
 		        );	
 
 		        $this->db->trans_begin();
-		        $query = $this->Login_model->insertPatient($data);
+		        $query = $this->patient_model->insertPatient($data);
 
 		        if ($this->db->trans_status() === FALSE) {
 	                // Failed to save Data to DB
@@ -134,6 +137,61 @@
 	        echo json_encode(array('status' => $status, 'msg' => $msg));
 	        //echo print_r($data);
 		}
+
+        function doUpdatePatientOffline(){
+            $status = "";
+            $msg="";
+
+            $userID = 33;
+            $patientID = $this->security->xss_clean($this->input->post('patientID'));
+            $patientName = $this->security->xss_clean($this->input->post('patientName'));
+            $ktpID = $this->security->xss_clean($this->input->post('ktpID'));
+            $bpjsID = $this->security->xss_clean($this->input->post('bpjsID'));
+            $gender = $this->security->xss_clean($this->input->post('gender'));
+            $participantStatus = $this->security->xss_clean($this->input->post('participantStatus'));
+            $participantType = $this->security->xss_clean($this->input->post('participantType'));
+
+            $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsBYPatientID($bpjsID, $patientID);
+            $checkUniqueKTP = $this->patient_model->checkIDNumberExistsByPatientID($ktpID, $patientID);
+
+            if($checkUniqueKTP == 1){
+                $status = "error";
+                $msg="Maaf, No. KTP sudah terpakai";
+            }else if($checkUniqueBPJS == 1){
+                $status = "error";
+                $msg="Maaf, No. BPJS sudah terpakai";
+            }else{
+                $datetime = date('Y-m-d H:i:s', time());
+                $data=array(
+                    "patientName"=>$patientName,
+                    "ktpID"=>$ktpID,
+                    "bpjsID"=>$bpjsID,
+                    "gender"=>$gender,
+                    "participantStatus"=>$participantStatus,
+                    "participantType"=>$participantType,
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$this->session->userdata('userID')
+                );
+
+                $this->db->trans_begin();
+                $query = $this->patient_model->updatePatientByPatientID($patientID,$data);
+
+                if ($this->db->trans_status() === FALSE) {
+                    // Failed to save Data to DB
+                    $this->db->trans_rollback();
+                    $status = 'error';
+                    $msg = "Maaf, Terjadi kesalahan saat registrasi pasien";
+                }
+                else{
+                    $this->db->trans_commit();
+                    $status = 'success';
+                    $msg = "Proses Edit data berhasil";
+                }
+            }
+
+            echo json_encode(array('status' => $status, 'msg' => $msg));
+            //echo print_r($data);
+        }
 		
 		private function generateMrisNumber(){
 			//$max = $this->patient_model->get_last_mris_number();

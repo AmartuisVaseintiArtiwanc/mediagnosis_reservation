@@ -48,7 +48,7 @@
                     <th style = "text-align:center;">No. KTP</th>
                     <th style = "text-align:center;">No. BPJS</th>
 					<th style = "text-align:center;">MRIS Number</th>
-                    <th style = "text-align:center;">isActive</th>
+                    <th style = "text-align:center;">Option</th>
                 </tr>
                 </thead>
 
@@ -81,6 +81,14 @@
             },
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
                 $(nRow).attr('id', aData[1]);
+                $(nRow).attr('data-patient-name', aData[2]);
+                $(nRow).attr('data-ktp', aData[3]);
+                $(nRow).attr('data-bpjs', aData[4]);
+                $(nRow).attr('data-mris', aData[5]);
+                $(nRow).attr('data-gender', aData[7]);
+                $(nRow).attr('data-participant-status', aData[8]);
+                $(nRow).attr('data-participant-type', aData[9]);
+
             },
             columns: [
                 { data: 0,"width": "10%" },
@@ -88,22 +96,20 @@
                 { data: 3, "width": "20%"},
                 { data: 4, "width": "20%"},
 				{ data: 5, "width": "10%"},
-                { data: 6, "width": "10%"}
+                { data: 7, "width": "10%"}
             ],
             //Set column definition initialisation properties.
             "columnDefs": [
                 {
-                    "targets": [5], //thrid column
+                    "targets": [ -1 ], //last column
+                    "orderable": false,//set not orderable
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
+                        var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
+                            "data-toggle":"modal","data-target":"#patient-modal-edit","data-value": rowData[1]});
+                        $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
-                        var $active = $("<span>", { class:"badge bg-green status-label","data-status":1}).html("ACTIVE");
-                        var $no_active = $("<span>", { class:"badge bg-red status-label","data-status":0}).html("NO ACTIVE");
-                        if(cellData==1){
-                            $(td).html($active);
-                        }else if(cellData==0){
-                            $(td).html($no_active)
-                        }
+                        $(td).html($btn_edit);
                     }
                 }
             ],
@@ -138,6 +144,31 @@
             $('#err-master-name-add').text("");
             $('#master-name-add').focus();
         })
+
+        //Edit open Modal
+        $( "#dataTables-list tbody" ).on( "click", "button.edit-btn", function() {
+            $('#patient-form-edit')[0].reset();
+            $('#patient-form-edit .cd-error-message').text("");
+
+            var patient_id =  $(this).attr("data-value");
+            var $tr =  $(this).closest("tr");
+            var $patient_name =  $($tr).attr("data-patient-name");
+            var $ktp =  $($tr).attr("data-ktp");
+            var $bpjs =  $($tr).attr("data-bpjs");
+            var $mris =  $($tr).attr("data-mris");
+            var $gender =  $($tr).attr("data-gender");
+            var $participant_status =  $($tr).attr("data-participant-status");
+            var $participant_type =  $($tr).attr("data-participant-type");
+
+            $('#patient-id-edit').val(patient_id);
+            $('#patient-name-edit').val($patient_name);
+            $('#no-ktp-edit').val($ktp);
+            $('#no-bpjs-edit').val($bpjs);
+            $('#gender-edit').val($gender);
+            $('#participant-status-edit').val($participant_status);
+            $('#participant-type-edit').val($participant_type);
+
+        });
 
     });
 </script>

@@ -10,7 +10,7 @@ class SDisease extends CI_Controller {
         //$this->is_logged_in();
         $this->load->model('Diseases_model',"disease_model");
 		$this->load->model('Symptomps_model',"symptomp_model");
-		$this->load->model('Sdisease_model',"sdisease_model");
+		$this->load->model('SDisease_model',"sdisease_model");
     }
     
 	function index(){
