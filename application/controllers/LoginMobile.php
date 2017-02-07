@@ -98,6 +98,8 @@ class LoginMobile extends CI_Controller{
 					$this->db->trans_commit();
 					$status = "success";
 					$msg="Proses reroll token berhasil";
+					
+					$this->updateIsOnline(1, $userID);
 				}else{
 					$this->db->trans_rollback();
 					$status = "error";
@@ -119,6 +121,8 @@ class LoginMobile extends CI_Controller{
 					$this->db->trans_commit();
 					$status = "success";
 					$msg="Proses reroll token berhasil";
+					
+					$this->updateIsOnline(1, $userID);
 				}else{
 					$this->db->trans_rollback();
 					$status = "error";
@@ -130,6 +134,29 @@ class LoginMobile extends CI_Controller{
 			$msg="Maaf terjadi kesalahan token !";
 		}
 		echo json_encode(array('status' => $status, 'msg' => $msg));
+	}
+	
+	public function updateIsOnline($isOnline, $userID){
+		$this->load->model('Login_model');
+		$data_online = array(
+			"isOnline" => $isOnline
+		);
+		
+		$this->db->trans_begin();
+		$res = $this->Login_model->updateUser($userID,$data_online);
+		
+		if ($this->db->trans_status() === FALSE) {
+			$this->db->trans_rollback();
+		}
+		else{
+			if($res==1){
+				$this->db->trans_commit();
+
+			}else{
+				$this->db->trans_rollback();
+			}
+		}
+		
 	}
 }
 ?>
