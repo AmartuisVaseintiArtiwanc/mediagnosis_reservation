@@ -17,9 +17,10 @@
 	    }
 
 	    function getUserListByDoctorID($expertID){
-	    	$this->db->select('mp.patientID, , mp.patientName, mt.topicID, mt.topicName, sr.RecentChat');
+	    	$this->db->select('mp.patientID, , mp.patientName, mt.topicID, mt.topicName, sr.RecentChat, mu.isOnline');
 	        $this->db->from('tbl_cyberits_s_room sr');
 	        $this->db->join('tbl_cyberits_m_patients mp', 'mp.patientID = sr.patientID');
+			$this->db->join('tbl_cyberits_m_users mu', 'mu.userID = mp.userID');
 	        $this->db->join('tbl_cyberits_m_topics mt', 'mt.topicID = sr.topicID');
 	        $this->db->where('sr.doctorID',$expertID);
 	        $query = $this->db->get();
