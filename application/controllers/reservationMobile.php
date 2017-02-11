@@ -216,9 +216,32 @@
                         "lastUpdated"=>$datetime,
                         "lastUpdatedBy"=>$userID
                     );
+
+                    //Update Counter
                     $query = $this->Place_model->updatePlace($data,$placeID);
 
                     $data=$place;
+                    $status="suggestion";
+                }else{
+                    $status="empty";
+                }
+            }
+            echo json_encode(array('status' => $status, 'data' => $data));
+        }
+
+        function getLocationDetail(){
+            $status="";
+            $data="";
+            $placeID = $this->input->post("placeID");
+
+            $clinic = $this->Clinic_model->getClinicByPlaceID($placeID);
+            if(isset($clinic)){
+                $status="success";
+                $data=$clinic;
+            }else{
+                // Check Clinic Suggestion
+                $place = $this->Place_model->getPlaceByID($placeID);
+                if(isset($place)){
                     $status="suggestion";
                 }else{
                     $status="empty";
