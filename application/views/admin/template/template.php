@@ -169,6 +169,16 @@
                     <li><a href="<?php echo site_url("RegisterAdmin/goToAddDoctorForm");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>
                 </ul>
             </li>
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-gear"></i>
+                    <span>Trasction</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="<?php echo site_url("Rating/ratingUpdate");?>"><i class="fa fa-circle-o"></i> Update Rating</a></li>
+                </ul>
+            </li>
         <?php } ?>
 
 

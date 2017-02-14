@@ -174,23 +174,42 @@ class Report_model extends CI_Model {
         return $query->result_array();
     }
 
-    function getPoliByName($name, $isEdit, $old_data){
-        $this->db->select('*');
-        $this->db->from('tbl_cyberits_m_poli a');
-        $this->db->where('poliName',$name);
-        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
-        if($isEdit){
-            $this->db->where('poliName != ', $old_data);
+    function getAdminReportClinicVisit($clinicID, $startDate, $endDate){
+
+        $this->db->select('a.clinicID, a.poliID, (SUM(b.ratingClinic)/COUNT(b.detailReservationID)) as rating');
+        $this->db->from('tbl_cyberits_t_header_reservation a');
+        $this->db->join('tbl_cyberits_t_detail_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->where('b.status','done');
+        $this->db->where('b.isRating','1');
+        $this->db->where('a.clinicID',$clinicID);
+
+        if(!empty($startDate)){
+            $this->db->where('a.created >=',$startDate);
         }
+        if(!empty($endDate)){
+            $this->db->where('a.created <=',$endDate);
+        }
+        $this->db->group_by('a.clinicID');
         $query = $this->db->get();
         return $query->row();
     }
 
-    function getPoliByID($id){
-        $this->db->select('*');
-        $this->db->from('tbl_cyberits_m_poli a');
-        $this->db->where('poliID',$id);
-        //$this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+    function getAdminReportDoctorVisit($doctorID, $startDate, $endDate){
+
+        $this->db->select('b.doctorID, (SUM(b.ratingDoctor)/COUNT(b.detailReservationID)) as rating');
+        $this->db->from('tbl_cyberits_t_header_reservation a');
+        $this->db->join('tbl_cyberits_t_detail_reservation b', 'a.reservationID = b.reservationID');
+        $this->db->where('b.status','done');
+        $this->db->where('b.isRating','1');
+        $this->db->where('b.doctorID',$doctorID);
+
+        if(!empty($startDate)){
+            $this->db->where('a.created >=',$startDate);
+        }
+        if(!empty($endDate)){
+            $this->db->where('a.created <=',$endDate);
+        }
+        $this->db->group_by('b.doctorID');
         $query = $this->db->get();
         return $query->row();
     }
