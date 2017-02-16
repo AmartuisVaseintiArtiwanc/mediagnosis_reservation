@@ -240,6 +240,55 @@ class ProfileMobile extends CI_Controller{
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
+	
+	public function saveDataProfileDoctor(){
+        $err_flag=0;
+        $status="error";
+        $msg="Error";
+        $datetime = date('Y-m-d H:i:s', time());
+        $this->load->model('Login_model');
+        $this->load->model('Doctor_model');
+
+        $userID = $this->security->xss_clean($this->input->post('userID'));
+        $name = $this->security->xss_clean($this->input->post('profile_name'));
+
+        if(!empty($userID)){
+            // Check Kosong
+            if(empty($name)){
+                $err_flag = 1;
+                $status="error";
+                $msg="Maaf terdapat input yang kosong, silahkan diperiksa kembali..";
+            }else{
+                $dob = date('Y-m-d', strtotime ($dob));
+                $data=array(
+                    'doctorName'=>$name,
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$userID
+                );
+
+                $this->db->trans_begin();
+                $res = $this->Doctor_model->updateDoctorByUserID($data,$userID);
+                if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    $status = "error";
+                    $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+
+                }else{
+                    if($res==1){
+                        $this->db->trans_commit();
+                        $status = "success";
+                        $msg="Profil Anda berhasil di perbaharui..";
+                    }else{
+                        $this->db->trans_rollback();
+                        $status = "error";
+                        $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+                    }
+                }
+            }
+        }
+
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
 
     private function checkUpdatedUsername($userID, $username){
         $valid = $this->Login_model->checkUpdatedUsernameExists($userID,$username);
