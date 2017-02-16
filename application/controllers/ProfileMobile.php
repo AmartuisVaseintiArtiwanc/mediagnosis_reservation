@@ -259,7 +259,6 @@ class ProfileMobile extends CI_Controller{
                 $status="error";
                 $msg="Maaf terdapat input yang kosong, silahkan diperiksa kembali..";
             }else{
-                $dob = date('Y-m-d', strtotime ($dob));
                 $data=array(
                     'doctorName'=>$name,
                     "lastUpdated"=>$datetime,
