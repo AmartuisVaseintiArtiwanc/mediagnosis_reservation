@@ -12,12 +12,12 @@ class Symptomp extends CI_Controller {
     }
     
 	function index(){
-        $this->is_logged_in_admin();
         $data['main_content'] = 'admin/master/symptomp_list_view';
         $this->load->view('admin/template/template', $data);
 	}
 
     function dataSymptompListAjax(){
+        $this->is_logged_in_admin();
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
         $limit = $_POST['length'];
@@ -62,12 +62,9 @@ class Symptomp extends CI_Controller {
         echo json_encode($output);
     }
     
-    function getSymptompData($start=1){
-        $data = $this->Symptomp_Model->getSymptompList(null,null);
-        //$this->output->set_content_type('application/json')->set_output(json_encode($data));
-        
-        print_r(json_encode($data));
-        exit();
+    function getSymptompData(){
+        $data = $this->Symptomp_Model->getSymptompList();
+        echo json_encode($data);
     }	
 	
 	function createSymptomp(){
