@@ -55,6 +55,9 @@
                     <button type="button" class="btn btn-primary btn-xl" id="btn-start-diagnose">
                         <span class="glyphicon glyphicon-plus"></span>&nbsp Mulai Diagnosa
                     </button>
+                    <button type="button" class="btn btn-default btn-xl" id="btn-clear-diagnose">
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp Bersikan Gejala
+                    </button>
                 </div>
             </div>
             </p>
@@ -82,6 +85,7 @@
     </div>
 </section>
 <?php $this->load->view('admin/modal/modal_symptomp_diagnose_view')?>
+<?php $this->load->view('admin/modal/modal_result_diagnose_view')?>
 
 <script>
     $(function() {
@@ -90,6 +94,7 @@
         var $table_list_symptomp="";
         var $modal_table_symptomp="";
 
+        // SET Symptomp Data
         getData();
         function getData(){
             // Quickly and simply clear a table
@@ -103,7 +108,7 @@
                 dataType: 'json',
                 cache:false,
                 success:function(data){
-                    renderAdminData(data);
+                    renderCheckedSymptomp(data);
                 },
                 error: function(xhr, status, error) {
                     //var err = eval("(" + xhr.responseText + ")");
@@ -113,7 +118,8 @@
             });
         }
 
-        function renderAdminData($data){
+        // Render Symtomp List
+        function renderCheckedSymptomp($data){
             //alert(JSON.stringify($data));
             $table_list_symptomp = $('#dataTables-diagnose').DataTable( {
                 "aaData": $data,
@@ -140,12 +146,6 @@
                         "orderable": false,//set not orderable
                         "className": "dt-center",
                         "createdCell": function (td, cellData, rowData, row, col) {
-                            /*
-                            var $btn_add = $("<button>", { class:"btn btn-primary btn-xs add-admin-btn","type": "button",
-                                "data-value": cellData, "data-name": rowData.symptompName });
-                            $btn_add.append("<span class='glyphicon glyphicon-plus'></span>&nbsp PILIH");
-                            $(td).html($btn_add);
-                            */
                             var $div = $("<div>",{class : "checkbox icheck"});
                             var $label = $("<label>");
                             var $checkbox = $("<input>", { "name":"id[]","type": "checkbox",
@@ -160,7 +160,7 @@
             } );
         }
 
-        // Handle click on checkbox to set state of "Select all" control
+        // Update Display And Set Data when Checked Symptomp
         $('#dataTables-diagnose tbody').on('click', 'input[type="checkbox"]', function(){
             var $row = $(this).closest('tr');
             var $symptomp_id = $(this).val();
@@ -183,17 +183,20 @@
             }
         });
 
+        // Open Modal Checked Symptomp
         $("#btn-open-modal-symptomp").click(function(){
             renderSelectedSymptomp($selected);
             $('#symptomp-diagnose-modal').modal("show");
         });
 
+        // Remove unchecked symtomp from Array
         function removeSymptomp($value){
             $selected = $selected.filter(function(el) {
                 return el.symptompID !== $value;
             });
         }
 
+        // Render Selected Symptomp
         function renderSelectedSymptomp($data){
             $modal_table_symptomp = $('#dataTables-symptomp').DataTable( {
                 "aaData": $data,
@@ -227,6 +230,7 @@
             } );
         }
 
+        // Button Remove Symptomp on Modal
         $('#dataTables-symptomp tbody').on('click', 'button.remove-symptomp-btn', function () {
             var $tr = $(this).closest("tr");
             var $id =  $(this).attr("data-value");
@@ -247,6 +251,7 @@
             removeSymptomp($id);
         });
 
+        // Update Count Symptomp Display
         function updateCountSymptomp($value){
             var $count_symptomp_container = $("#span-count-symptomp");
             var $count_symptomp_value = $count_symptomp_container.attr("data-count");
@@ -256,9 +261,119 @@
             $count_symptomp_container.html($count_symptomp_value);
         }
 
+        // Destroy DataTables on Selected Symptomp Modal
         $('#symptomp-diagnose-modal').on('hidden.bs.modal', function () {
             //$('#dataTables-symptomp').html("");
             $('#dataTables-symptomp').dataTable().fnDestroy();
-        })
+        });
+
+        // Open Diagnose Result
+        $('#btn-start-diagnose').click(function () {
+            if($selected.length > 0){
+                $('#diagnose-result-modal').modal("show");
+                getDiagnoseResult();
+            }else{
+                alertify.error("Gejala belum dipilih !");
+            }
+
+        });
+
+        // Get Data Diagnose Result
+        function getDiagnoseResult(){
+            // Quickly and simply clear a table
+            $('#dataTables-diagnose-result').dataTable().fnClearTable();
+            // Restore the table to it's original state in the DOM by removing all of DataTables enhancements, alterations to the DOM structure of the table and event listeners
+            $('#dataTables-diagnose-result').dataTable().fnDestroy();
+
+            // Set Symptomp List
+            var $data = [];
+            $.each( $selected, function( i, val ) {
+                $data.push(val.symptompID);
+            });
+            var $symptomp_data = {
+                data : $data
+            }
+
+            $.ajax({
+                url: $base_url+"Diagnose/getDiagnoseResult",
+                type: "POST",
+                dataType: 'json',
+                data: $symptomp_data,
+                cache:false,
+                beforeSend:function(){
+                    //SHOW LOADING SCREEN
+                    $(".loading-modal").show();
+                },
+                success:function(data){
+                    if (data) {
+                        renderDiagnoseResult(data);
+                        window.setTimeout(function() {
+                            $(".loading-modal").hide();
+                        }, 1000);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    //var err = eval("(" + xhr.responseText + ")");
+                    //alertify.error(xhr.responseText);
+                    alertify.error("Cannot response server !");
+                }
+            });
+        }
+
+        // Render Modal Diagnose Result
+        function renderDiagnoseResult($data){
+            $('#dataTables-diagnose-result').DataTable( {
+                "aaData": $data,
+                "lengthChange": false,
+                "pageLength": 10,
+                "autoWidth": false,
+                deferRender: true,
+                "aoColumns": [
+                    { "mDataProp": "Percentage"},
+                ],
+                "order": [[ 0, "desc" ]],
+                "columnDefs": [
+                    {
+                        "targets": [ 0 ],
+                        "createdCell": function (td, cellData, rowData, row, col) {
+                            var $result_percantage = Math.round(parseFloat(rowData.Percentage));
+
+                            var $div = $("<div>", { class:"progress-group"});
+                            var $name = $("<span>", { class:"progress-text"}).html(rowData.diseaseName);
+                            var $percentage = $("<span>", { class:"progress-number"}).html($result_percantage+"%");
+
+                            var $progress_box = $("<div>", { class:"progress sm"});
+                            var $progress_bar = $("<div>", { class:"progress-bar progress-bar-green"}).css("width",$result_percantage+"%");
+
+                            $progress_bar.appendTo($progress_box);
+                            $name.appendTo($div);
+                            $percentage.appendTo($div);
+                            $progress_box.appendTo($div);
+                            $(td).html($div);
+                        }
+                    },
+                ]
+            } );
+        }
+
+        // Destroy DataTables on Diagnose Result Modal
+        $('#diagnose-result-modal').on('hidden.bs.modal', function () {
+            $('#dataTables-diagnose-result').dataTable().fnDestroy();
+        });
+
+        // Button Clear All Selected Symptomp
+        $("#btn-clear-diagnose").click(function(){
+            // Update count display
+            var $count_symptomp_value = $("#span-count-symptomp").attr("data-count");
+            updateCountSymptomp(-$count_symptomp_value);
+
+            // Update checked display
+            $('input:checkbox').prop('checked', false);
+            $('#dataTables-diagnose').find("tr").removeClass('selected');
+
+            // Clear Selected Symptomp Array
+            $selected = [];
+        });
+
     });
 </script>

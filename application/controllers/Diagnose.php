@@ -21,6 +21,16 @@ class Diagnose extends CI_Controller {
         echo json_encode($data);
     }
 
+    function getDiagnoseResult()
+    {
+        $data = $this->input->post('data');
+
+        $this->load->model('Diseases_model');
+        $diagnoseResult = $this->Diseases_model->getDiagnosisResult($data);
+
+        echo json_encode($diagnoseResult);
+        //$this->output->enable_profiler(true);
+    }
 
     function is_logged_in_admin(){
         $is_logged_in = $this->session->userdata('is_logged_in');

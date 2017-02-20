@@ -243,6 +243,7 @@
                 $place = $this->Place_model->getPlaceByID($placeID);
                 if(isset($place)){
                     $status="suggestion";
+                    $data=$place;
                 }else{
                     $status="empty";
                 }

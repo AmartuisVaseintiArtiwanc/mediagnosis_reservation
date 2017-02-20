@@ -159,7 +159,7 @@
 
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-gear"></i>
+                    <i class="fa fa-sign-in"></i>
                     <span>Register</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
@@ -179,7 +179,7 @@
                     <li><a href="<?php echo site_url("Rating/ratingUpdate");?>"><i class="fa fa-circle-o"></i> Update Rating</a></li>
                 </ul>
             </li>
-            <li><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-dashboard"></i> <span>Diagnosa</span></a></li>
+            <li><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-stethoscope"></i> <span>Diagnosa</span></a></li>
         <?php } ?>
 
       </ul>
