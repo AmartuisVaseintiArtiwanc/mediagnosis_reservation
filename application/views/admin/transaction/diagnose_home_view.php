@@ -49,6 +49,15 @@
         </div>
 
         <div class="box-body">
+            <p>
+            <div class="row">
+                <div class="col-lg-8">
+                    <button type="button" class="btn btn-primary btn-xl" id="btn-start-diagnose">
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Mulai Diagnosa
+                    </button>
+                </div>
+            </div>
+            </p>
             <table  class="table table-bordered table-striped table-hover tbl-master" id="dataTables-diagnose">
                 <thead>
                 <tr>

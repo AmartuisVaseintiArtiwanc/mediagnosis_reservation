@@ -110,7 +110,7 @@
 							'clinicID' => 1 // asumsi semntara masih di klinik omega
 						);
 
-						$query2 = $this->Login_model->insertPatient($data_patient);
+						$query2 = $this->Patient_model->insertPatient($data_patient);
 						if ($this->db->trans_status() === FALSE) {
 			                // Failed to save Data to DB
 			                $this->db->trans_rollback();
@@ -181,7 +181,7 @@
 						'clinicID' => 1 // asumsi semntara masih di klinik omega
 					);
 
-					$query2 = $this->Login_model->insertPatient($data_patient);
+					$query2 = $this->Patient_model->insertPatient($data_patient);
 					if ($this->db->trans_status() === FALSE) {
 		                // Failed to save Data to DB
 		                $this->db->trans_rollback();
