@@ -20,13 +20,15 @@
 
 		function doReserve(){
 			//$this->output->enable_profiler(true);
-			$today = date('Y-m-d H:i:s', time());
+			$today = date('Y-m-d', time());
 			$clinicID = $this->input->post('clinicID');
 			$poliID = $this->input->post('poliID');
 			$userID = $this->input->post('userID');
 			$reserveType = $this->input->post('reserveType');
 			$reserveWhen = $this->input->post('reserveWhen');
 			$token = $this->input->post('token');
+
+            // Check type Reservation, today or later
 			if($reserveWhen == "later"){
 				$postDateString = $this->input->post('reserveDate');
 
@@ -37,10 +39,13 @@
 			
 			$patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
-			$verifyReservationOverall = $this->test_model->checkReservationByDate($clinicID, $poliID, $reserveDate);
 
+            // Check Today or Reserve Date Reservation
+			$verifyReservationOverall = $this->test_model->checkReservationByDate($clinicID, $poliID, $reserveDate);
+            // Check User has been reserve on today or Not
 			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patientID);
 
+            // Check User has been reserve on today or Not
 			if($resrvationAvailability != 0){
 				echo json_encode(array('status' => 'error', 'msg' => 'Maaf, anda tidak bisa melakukan reservasi lagi'));
 			}else if($userID!=null){
@@ -68,7 +73,7 @@
                 'isActive' => 1,
                 'created' => $reserveDate,
                 'createdBy' => $userID,
-                'lastUpdated' => $reserveDate,
+                'lastUpdated' => $datetime,
                 'lastUpdatedBy' => $userID
             );
 
@@ -121,7 +126,7 @@
 
             $data_reservasi = array(
                 'totalQueue' => $existingReservation->totalQueue + 1,
-                'lastUpdated' => $reserveDate,
+                'lastUpdated' => $datetime,
                 'lastUpdatedBy' => $userID
             );
 
