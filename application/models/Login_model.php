@@ -158,4 +158,11 @@ class Login_model extends CI_Model {
         $result=$this->db->affected_rows();
         return $result;
     }
+	
+	function updateUserByEmail($data, $email){
+        $this->db->where('email',$email);
+        $this->db->update('tbl_cyberits_m_users',$data);
+        $result=$this->db->affected_rows();
+        return $result;
+    }
 }

@@ -158,5 +158,81 @@ class LoginMobile extends CI_Controller{
 		}
 		
 	}
+	
+	public function resetPassword(){
+        $status="error";
+        $msg="Error";
+        $datetime = date('Y-m-d H:i:s', time());
+		$this->load->model('Login_model');
+		
+		$email = $this->security->xss_clean($this->input->post('email'));
+        $random_string = $this->security->xss_clean($this->input->post('random_string'));
+		
+		if(empty($email) || empty($random_string)){
+			$status="error";
+			$msg="Maaf terdapat input yang kosong, silahkan diperiksa kembali..";
+		}
+		else{
+			$isExistsEmail = $this->Login_model->checkEmailExists($email);
+			if($isExistsEmail == 0){
+				$status="error";
+				$msg="Maaf email yang anda masukkan belum terdaftar ..";
+			}
+			else{
+				$data = array(
+					"password"=>$this->hash->hashPass($random_string),
+					"lastUpdated"=>$datetime,
+					"lastUpdatedBy"=>"the_forgotter"
+				);
+				
+				$this->db->trans_begin();
+				$res = $this->Login_model->updateUserByEmail($data,$email);
+				if ($this->db->trans_status() === FALSE) {
+                    $this->db->trans_rollback();
+                    $status = "error";
+                    $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+
+                }else{
+                    if($res==1){
+                        $this->db->trans_commit();
+                        $status = "success";
+                        $msg="Password anda berhasil tereset. Silahkan cek email anda ..";
+						
+						$this->sendEmail($email, $random_string);
+                    }else{
+                        $this->db->trans_rollback();
+                        $status = "error";
+                        $msg="Maaf password Anda tidak dapat tereset, cobalah beberapa saat lagi !";
+                    }
+                }
+			}
+		}
+		echo json_encode(array('status' => $status, 'msg' => $msg));
+	}
+	
+	public function sendEmail($email, $random_string){
+		// kirim email
+		$this->load->library('email');
+		$config = Array(
+                'protocol' => 'mail',
+                'smtp_host' => 'cyberits.co.id',
+                'smtp_port' => 25,
+                'smtp_user' => 'no-reply@cyberits.co.id',
+                'smtp_pass' => 'Pass@word1',
+                'mailtype'  => 'html',
+                'charset' => 'iso-8859-1',
+                'wordwrap' => TRUE
+            );
+		$message =  'New Password = '.$random_string;
+		$this->email->initialize($config);
+		$this->email->set_newline("\r\n");
+        $this->email->from('no-reply@cyberits.co.id', 'Feedback System'); // nanti diganti dengan email mediagnosis
+        $this->email->to($email); 
+        $this->email->subject('[MEDIGNOSIS] RESET PASSWORD');
+		$this->email->message($message);
+		if(!$this->email->send()){
+            show_error($this->email->print_debugger());
+        }
+	}
 }
 ?>
