@@ -160,57 +160,53 @@ class LoginMobile extends CI_Controller{
 	}
 	
 	public function resetPassword(){
+		$this->load->view("registration/reset_password_view");
+	}
+	
+	public function doResetPassword(){
         $status="error";
         $msg="Error";
         $datetime = date('Y-m-d H:i:s', time());
 		$this->load->model('Login_model');
 		
 		$email = $this->security->xss_clean($this->input->post('email'));
-        $random_string = $this->security->xss_clean($this->input->post('random_string'));
+        $new_password = $this->security->xss_clean($this->input->post('new_password'));
 		
-		if(empty($email) || empty($random_string)){
+		if(empty($email) || empty($new_password)){
 			$status="error";
 			$msg="Maaf terdapat input yang kosong, silahkan diperiksa kembali..";
 		}
 		else{
-			$isExistsEmail = $this->Login_model->checkEmailExists($email);
-			if($isExistsEmail == 0){
-				$status="error";
-				$msg="Maaf email yang anda masukkan belum terdaftar ..";
-			}
-			else{
-				$data = array(
-					"password"=>$this->hash->hashPass($random_string),
-					"lastUpdated"=>$datetime,
-					"lastUpdatedBy"=>"the_forgotter"
-				);
-				
-				$this->db->trans_begin();
-				$res = $this->Login_model->updateUserByEmail($data,$email);
-				if ($this->db->trans_status() === FALSE) {
-                    $this->db->trans_rollback();
-                    $status = "error";
-                    $msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+			$data = array(
+				"password"=>$this->hash->hashPass($new_password),
+				"lastUpdated"=>$datetime,
+				"lastUpdatedBy"=>"the_forgotter"
+			);
+			
+			$this->db->trans_begin();
+			$res = $this->Login_model->updateUserByEmail($data,$email);
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				$status = "error";
+				$msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
 
-                }else{
-                    if($res==1){
-                        $this->db->trans_commit();
-                        $status = "success";
-                        $msg="Password anda berhasil tereset. Silahkan cek email anda ..";
-						
-						$this->sendEmail($email, $random_string);
-                    }else{
-                        $this->db->trans_rollback();
-                        $status = "error";
-                        $msg="Maaf password Anda tidak dapat tereset, cobalah beberapa saat lagi !";
-                    }
-                }
+			}else{
+				if($res==1){
+					$this->db->trans_commit();
+					$status = "success";
+					$msg="Password anda berhasil tereset. Silahkan cek email anda ..";
+				}else{
+					$this->db->trans_rollback();
+					$status = "error";
+					$msg="Maaf password Anda tidak dapat tereset, cobalah beberapa saat lagi !";
+				}
 			}
+			
 		}
 		echo json_encode(array('status' => $status, 'msg' => $msg));
 	}
 	
-	public function sendEmail($email, $random_string){
+	/*public function sendEmail($email, $random_string){
 		// kirim email
 		$this->load->library('email');
 		$config = Array(
@@ -233,6 +229,6 @@ class LoginMobile extends CI_Controller{
 		if(!$this->email->send()){
             show_error($this->email->print_debugger());
         }
-	}
+	}*/
 }
 ?>
