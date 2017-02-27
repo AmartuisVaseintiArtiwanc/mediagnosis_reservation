@@ -132,16 +132,30 @@
 		
 		function sendNotificationToRespectiveUserInTheRoom($sRoomID, $userID, $recentChat){
 			$token_wrapper = $this->sroom_model->getTokenBySRoomID($sRoomID);
+			$click_action = 'id.co.cyberits.minimediagnosis_CHAT_TARGET_NOTIFICATION';
 			
 			if($token_wrapper->doctorUserID == $userID){
 				//$role = "doctor";
 				$token = $token_wrapper->patientToken; // dokter kirim ke pasien, butuhnya token pasien
-				$this->sendNotification("Dr.".$token_wrapper->doctorName,$recentChat, $token);	
+				$experts = $this->doctor_model->getDoctorByUserID($userID);
+				$data = array(
+					'expertID'=>$experts->doctorID,
+					'phoneNumber'=>$experts->phoneNumber,
+					'topicID'=>$token_wrapper->topicID,
+					'oppositionName'=>$token_wrapper->doctorName
+				);
+				$this->sendNotificationToSpesificActivity("Dr.".$token_wrapper->doctorName,$recentChat, $token, $click_action, $data);	
 			}
 			else{
 				//$role = "patient";
 				$token = $token_wrapper->doctorToken; // vice versa
-				$this->sendNotification($token_wrapper->patientName,$recentChat, $token);
+				$patients = $this->patient_model->getPatientIDByUserID($userID);
+				$data = array(
+					'patientID'=>$patients->patientID,
+					'topicID'=>$token_wrapper->topicID,
+					'oppositionName'=>$token_wrapper->patientName
+				);
+				$this->sendNotificationToSpesificActivity($token_wrapper->patientName,$recentChat, $token, $click_action, $data);
 			}
 		}
 		
@@ -172,6 +186,36 @@
 			$result = curl_exec($curl_session);
 			curl_close($curl_session);
 			
+		}
+		
+		function sendNotificationToSpesificActivity($title, $message, $token, $click_action, $data){
+			$path = 'https://fcm.googleapis.com/fcm/send';
+			$server_key = "AAAAa0DykfY:APA91bGVDIV31q6GpXzcbpo_Tlr_L1BkqtuVio_OwvV2Ov7zTzIXrkPaRpcgLNxZ7XEy33gX356Q9TeRstFxqQo5V-rImTvvrFEG7EvLTwecAWncZ72xQvy63Waux3Xu7Pcv07WsxTPY8t8_DbtyqohE06ZdV0RSug";
+			
+			$headers = array(
+				'Authorization:key='.$server_key,
+				'Content-Type:application/json'
+			);
+			
+			$fields = array('to'=>$token,
+							'notification'=>array('title'=>$title, 'body'=>$message, 'click_action'=>$click_action),
+							'data'=>$data
+			);
+			
+			//echo json_encode($fields);
+			$payload= json_encode($fields);
+			
+			$curl_session = curl_init();
+			curl_setopt($curl_session, CURLOPT_URL, $path);
+			curl_setopt($curl_session, CURLOPT_POST, true);
+			curl_setopt($curl_session, CURLOPT_HTTPHEADER, $headers);
+			curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl_session, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+			curl_setopt($curl_session, CURLOPT_POSTFIELDS, $payload);
+			
+			$result = curl_exec($curl_session);
+			curl_close($curl_session);
 		}
 
 	}
