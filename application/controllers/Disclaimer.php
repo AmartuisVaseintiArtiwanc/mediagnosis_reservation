@@ -11,6 +11,10 @@ class Disclaimer extends CI_Controller{
     function getDisclaimer(){
         $this->load->view("template/disclaimer");
     }
+	
+	function getPrivacy(){
+        $this->load->view("template/privacy");
+    }
 
     function getFaq(){
         $this->load->view("template/faq");

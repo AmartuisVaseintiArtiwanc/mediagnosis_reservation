@@ -69,10 +69,9 @@ class Rating extends CI_Controller{
                         "lastUpdatedRating"=>$today
                     );
                     $this->clinic_model->updateClinic($data,$clinic_id);
-
-                    $status = "success";
-                    $msg="Update Rating Clinic successfully!";
                 }
+                $status = "success";
+                $msg="Update Rating Clinic successfully!";
             }
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
