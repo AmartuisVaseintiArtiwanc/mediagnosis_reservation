@@ -16,6 +16,7 @@
             $this->load->model('test_model',"test_model");
             $this->load->model('Clinic_model');
             $this->load->model('Place_model');
+			$this->load->model('Notification_model');
 		}
 
 		function doReserve(){
@@ -115,6 +116,18 @@
                     $msg = "Proses Reservasi berhasil";
 
                     $this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
+					
+					/*$data = array(
+						'userID'=>$userID,
+						'header'=>"Proses reservasi berhasil",
+						'message'=>"Nomor antrian anda ".$data_reservasi["noQueue"],
+						'isActive'=>1,
+						'created'=>$datetime,
+						'createdBy'=>$userID,
+						'lastUpdated'=>$datetime,
+						'lastUpdatedBy'=>$userID
+					);
+					$this->Notification_model->createNotification($data);*/
                 }
             }
             echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -168,6 +181,18 @@
                     $msg = "Proses Reservasi berhasil";
 
                     $this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
+					
+					/*$data = array(
+						'userID'=>$userID,
+						'header'=>"Proses reservasi berhasil",
+						'message'=>"Nomor antrian anda ".$data_reservasi["noQueue"],
+						'isActive'=>1,
+						'created'=>$datetime,
+						'createdBy'=>$userID,
+						'lastUpdated'=>$datetime,
+						'lastUpdatedBy'=>$userID
+					);
+					$this->Notification_model->createNotification($data);*/
                 }
 
             }
@@ -448,6 +473,18 @@
 				$token_wrapper = $this->test_model->getTokenByReservationID($detailReservationID);
 				$token = $token_wrapper->token;
 				$this->sendNotification("Reservasi dibatalkan","Anda berhasil membatalkan reservasi anda!",$token);
+				
+				/*$data = array(
+					'userID'=>$userID,
+					'header'=>"Reservasi dibatalkan",
+					'message'=>"Anda berhasil membatalkan reservasi anda!",
+					'isActive'=>1,
+					'created'=>$datetime,
+					'createdBy'=>$userID,
+					'lastUpdated'=>$datetime,
+					'lastUpdatedBy'=>$userID
+				);
+				$this->Notification_model->createNotification($data);*/
             }
             echo json_encode(array('status' => $status, 'msg' => $msg));
         }
@@ -477,7 +514,7 @@
 			curl_setopt($curl_session, CURLOPT_POSTFIELDS, $payload);
 			
 			$result = curl_exec($curl_session);
-			curl_close($curl_session);
+			curl_close($curl_session
 			
 		}
 	}

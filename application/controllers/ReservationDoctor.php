@@ -13,7 +13,8 @@ class ReservationDoctor extends CI_Controller {
         $this->load->model('poli_model',"poli_model");
         $this->load->model('test_model',"test_model");
         $this->load->model('patient_model',"patient_model");
-        $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
+        $this->load->model('Medical_record_detail_model',"medical_record_detail_model");\
+		$this->load->model('Notification_model');
     }
 
     function index(){
@@ -168,6 +169,18 @@ class ReservationDoctor extends CI_Controller {
 					$token = $token_wrapper->token;
 					$this->sendNotification("No. ".$token_wrapper->noQueue." sedang dipanggil","Silahkan ke ruang dokter ".$doctor->doctorName,$token);
 					
+					$data = array(
+						'userID'=>$token_wrapper->userID,
+						'header'=>"No. ".$token_wrapper->noQueue." sedang dipanggil",
+						'message'=>"Silahkan ke ruang dokter ",
+						'isActive'=>1,
+						'created'=>$datetime,
+						'createdBy'=>$userID,
+						'lastUpdated'=>$datetime,
+						'lastUpdatedBy'=>$userID
+					);
+					$this->Notification_model->createNotification($data);
+					
 					$this->countdownThreeNotificationReminder($detail_data->noQueue);
                 } else {
                     $this->db->trans_rollback();
@@ -205,6 +218,18 @@ class ReservationDoctor extends CI_Controller {
 		$token_wrapper = $this->test_model->getTokenForNextThreeQueue($currQueue);
 		if(isset($token_wrapper->token)){
 			$this->sendNotification("Pengingat antrian","Antrian anda 3 nomor lagi dipanggil",$token_wrapper->token);
+			
+			/*$data = array(
+				'userID'=>$token_wrapper->userID,
+				'header'=>"Pengingat antrian",
+				'message'=>"Antrian anda 3 nomor lagi dipanggil",
+				'isActive'=>1,
+				'created'=>$datetime,
+				'createdBy'=>$userID,
+				'lastUpdated'=>$datetime,
+				'lastUpdatedBy'=>$userID
+			);
+			$this->Notification_model->createNotification($data);*/
 		}
 	}
 	

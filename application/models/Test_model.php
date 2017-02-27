@@ -362,7 +362,7 @@ class Test_model extends CI_Model{
 	function getTokenForNextThreeQueue($currQueue){
 		$date = date('Y-m-d', time());
 		
-		$this->db->select('c.token');
+		$this->db->select('c.token, c.userID');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
 		$this->db->join('tbl_cyberits_t_header_reservation b', 'b.reservationID = a.reservationID');
 		$this->db->join('tbl_cyberits_m_patients c', 'c.patientID = a.patientID');
@@ -383,7 +383,7 @@ class Test_model extends CI_Model{
 	
 	// Get Token by detailReservationID
 	function getTokenByReservationID($detailID){
-        $this->db->select('b.token, a.noQueue');
+        $this->db->select('b.token, a.noQueue, b.userID');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
 		$this->db->join('tbl_cyberits_m_patients b', 'b.patientID = a.patientID');
         $this->db->where("a.detailReservationID",$detailID);
