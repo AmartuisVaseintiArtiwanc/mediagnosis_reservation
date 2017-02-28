@@ -514,7 +514,7 @@
 			curl_setopt($curl_session, CURLOPT_POSTFIELDS, $payload);
 			
 			$result = curl_exec($curl_session);
-			curl_close($curl_session
+			curl_close($curl_session);
 			
 		}
 	}
