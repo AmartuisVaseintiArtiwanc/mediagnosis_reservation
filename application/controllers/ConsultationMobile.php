@@ -9,6 +9,7 @@
 	        $this->load->model('Patient_model',"patient_model");
 	        $this->load->model('Doctor_model',"doctor_model");
 	        $this->load->model('SRoom_model',"sroom_model");
+			$this->load->model('Notification_model');
 	    }
 
 	    function topicList(){
@@ -131,6 +132,7 @@
 	    }
 		
 		function sendNotificationToRespectiveUserInTheRoom($sRoomID, $userID, $recentChat){
+			$datetime = date('Y-m-d H:i:s', time());
 			$token_wrapper = $this->sroom_model->getTokenBySRoomID($sRoomID);
 			$click_action = 'id.co.cyberits.minimediagnosis_CHAT_TARGET_NOTIFICATION';
 			
@@ -144,7 +146,20 @@
 					'topicID'=>$token_wrapper->topicID,
 					'oppositionName'=>$token_wrapper->doctorName
 				);
-				$this->sendNotificationToSpesificActivity("Dr.".$token_wrapper->doctorName,$recentChat, $token, $click_action, $data);	
+				$this->sendNotificationToSpesificActivity("Dr.".$token_wrapper->doctorName,$recentChat, $token, $click_action, $data);
+				/*$data = array(
+					'userID'=>$token_wrapper->patientUserID,
+					'header'=>"Dr.".$token_wrapper->doctorName,
+					'message'=>$recentChat,
+					'clickAction'=>$click_action,
+					'extras'=>$data,
+					'isActive'=>1,
+					'created'=>$datetime,
+					'createdBy'=>$userID,
+					'lastUpdated'=>$datetime,
+					'lastUpdatedBy'=>$userID
+				);
+				$this->Notification_model->createNotification($data);*/
 			}
 			else{
 				//$role = "patient";
@@ -156,6 +171,19 @@
 					'oppositionName'=>$token_wrapper->patientName
 				);
 				$this->sendNotificationToSpesificActivity($token_wrapper->patientName,$recentChat, $token, $click_action, $data);
+				/*$data = array(
+					'userID'=>$token_wrapper->doctorUserID,
+					'header'=>$token_wrapper->patientName,
+					'message'=>$recentChat,
+					'clickAction'=>$click_action,
+					'extras'=>$data,
+					'isActive'=>1,
+					'created'=>$datetime,
+					'createdBy'=>$userID,
+					'lastUpdated'=>$datetime,
+					'lastUpdatedBy'=>$userID
+				);
+				$this->Notification_model->createNotification($data);*/
 			}
 		}
 		

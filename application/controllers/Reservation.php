@@ -18,6 +18,7 @@ class Reservation extends CI_Controller {
         $this->load->model("DReservation_model");
         $this->load->model('test_model',"test_model");
         $this->load->model("SClinic_model","sClinic_Model");
+		$this->load->model('Notification_model');
     }
 
     function index(){
@@ -189,6 +190,18 @@ class Reservation extends CI_Controller {
 					$token_wrapper = $this->test_model->getTokenByReservationID($detailID);
 					$token = $token_wrapper->token;
 					$this->sendNotification("Reservasi anda terlewatkan","Maaf, reservasi anda terlewatkan",$token);
+					
+					/*$data = array(
+						'userID'=>$userID,
+						'header'=>"Reservasi anda terlewatkan",
+						'message'=>"Maaf, reservasi anda terlewatkan",
+						'isActive'=>1,
+						'created'=>$datetime,
+						'createdBy'=>$userID,
+						'lastUpdated'=>$datetime,
+						'lastUpdatedBy'=>$userID
+					);
+					$this->Notification_model->createNotification($data);*/
 				}
             } else {
                 $this->db->trans_rollback();

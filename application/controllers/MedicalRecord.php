@@ -23,6 +23,7 @@ class MedicalRecord extends CI_Controller {
         $this->load->model('Medical_record_model',"medical_record_model");
         $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
         $this->load->model('UserOtp_model',"userOtp_model");
+		$this->load->model('Notification_model');
 
     }
 
@@ -364,6 +365,18 @@ class MedicalRecord extends CI_Controller {
 			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
 			$this->sendNotification("Harap review kunjungan hari ini","Kunjungan anda tleh selesai",$token);
+			
+			/*$data = array(
+				'userID'=>$token_wrapper->userID,
+				'header'=>"Harap review kunjungan hari ini",
+				'message'=>"Kunjungan anda tleh selesai",
+				'isActive'=>1,
+				'created'=>$datetime,
+				'createdBy'=>$userID,
+				'lastUpdated'=>$datetime,
+				'lastUpdatedBy'=>$userID
+			);
+			$this->Notification_model->createNotification($data);*/
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
@@ -394,6 +407,18 @@ class MedicalRecord extends CI_Controller {
 			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
 			$this->sendNotification("Reservasi anda terlewatkan","Maaf, reservasi anda terlewatkan",$token);
+			
+			/*$data = array(
+				'userID'=>$token_wrapper->userID,
+				'header'=>"Reservasi anda terlewatkan",
+				'message'=>"Maaf, reservasi anda terlewatkan",
+				'isActive'=>1,
+				'created'=>$datetime,
+				'createdBy'=>$userID,
+				'lastUpdated'=>$datetime,
+				'lastUpdatedBy'=>$userID
+			);
+			$this->Notification_model->createNotification($data);*/
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
