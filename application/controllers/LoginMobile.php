@@ -27,6 +27,7 @@ class LoginMobile extends CI_Controller{
                 $userID = $userVerifier->userID;
                 $username = $userVerifier->userName;
                 $role = $userVerifier->userRole;
+                $userImage = $userVerifier->userImage;
                 if($role == "patient"){
                     $detail = $this->login_model->getDetailPatientData($userID);
                     $name = $detail->patientName;
@@ -65,7 +66,8 @@ class LoginMobile extends CI_Controller{
             $status = 'error';
             $msg = "Username atau Password kurang tepat ";
 		}
-        echo json_encode(array('userID' => $userID, 'username' => $username,'role' => $role, 'name' => $name,'status' => $status, 'msg' => $msg));
+        echo json_encode(array('userID' => $userID, 'username' => $username,'role' => $role, 'name' => $name, 'image'=>$userImage,
+            'status' => $status, 'msg' => $msg));
 	}
 	
 	public function updateToken(){

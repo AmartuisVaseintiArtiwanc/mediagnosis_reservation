@@ -51,8 +51,26 @@
                     <div class="form-group">
                         <label for="master-name-edit" class="control-label cd-name">Disease Name :</label>
                         <span class="cd-error-message label label-danger" id="err-master-name-edit"></span>
-                        <input type="text" class="form-control" id="master-name-edit" name="kategori_name"
+                        <input type="text" class="form-control" id="master-name-edit"
                                placeholder="Name" data-label="#err-master-name-edit">
+                    </div>
+                    <div class="form-group">
+                        <label for="master-desc-edit" class="control-label cd-name">Description :</label>
+                        <span class="cd-error-message label label-danger" id="err-master-desc-edit"></span>
+                        <textarea class="form-control" id="master-desc-edit"
+                               placeholder="Disease Description" data-label="#err-master-desc-edit" rows="10" ></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="master-caused-edit" class="control-label cd-name">Caused :</label>
+                        <span class="cd-error-message label label-danger" id="err-master-caused-edit"></span>
+                        <textarea class="form-control" id="master-caused-edit"
+                                  placeholder="Caused" data-label="#err-master-caused-edit" rows="10" ></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="master-treatment-edit" class="control-label cd-name">Treatment :</label>
+                        <span class="cd-error-message label label-danger" id="err-master-treatment-edit"></span>
+                        <textarea class="form-control" id="master-treatment-edit"
+                                  placeholder="Treatment" data-label="#err-master-treatment-edit" rows="10" ></textarea>
                     </div>
                 </form>
             </div><!--modal body-->
@@ -118,6 +136,16 @@
                 var formData = new FormData();
                 formData.append("id", $("#master-id").val());
                 formData.append("name", $("#master-name-edit").val());
+
+                if($("#master-desc-edit").val() != ""){
+                    formData.append("desc", $("#master-desc-edit").val());
+                }
+                if($("#master-caused-edit").val() != ""){
+                    formData.append("caused", $("#master-caused-edit").val());
+                }
+                if($("#master-treatment-edit").val() != ""){
+                    formData.append("treatment", $("#master-treatment-edit").val());
+                }
 
                 $(this).saveData({
                     url: "<?php echo site_url('Disease/editDisease')?>",

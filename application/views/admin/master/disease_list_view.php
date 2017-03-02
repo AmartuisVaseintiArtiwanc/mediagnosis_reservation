@@ -96,14 +96,15 @@
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
-                            "data-toggle":"modal","data-target":"#disease-modal-edit","data-value": cellData});
+                            "data-toggle":"modal","data-target":"#disease-modal-edit","data-value": cellData,
+                            "data-desc":rowData[3],"data-caused":rowData[4],"data-treatment":rowData[5]});
                         $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
                         var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
                             "data-value": cellData});
                         $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
 
-                        var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[3],"data-last-modifed":rowData[4]});
+                        var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[6],"data-last-modifed":rowData[7]});
                         $(td).html($btn_edit).append(" ").append($btn_del).append($div_info);
                     }
                 },
@@ -149,21 +150,27 @@
             $('#disease-form-edit')[0].reset();
             $('#err-master-name-edit').text("");
 
-            var id_item =  $(this).attr("data-value");
+            var $id_item =  $(this).attr("data-value");
             var $tr =  $(this).closest("tr");
             var $td =  $(this).closest("td");
-            var text = $tr.find('td').eq(1).text();
-            var created = $td.find('div.item-info').attr("data-created");
-            var last_modified = $td.find('div.item-info').attr("data-last-modifed");
+            var $text = $tr.find('td').eq(1).text();
+            var $desc = $(this).attr("data-desc");
+            var $caused = $(this).attr("data-caused");
+            var $treatment = $(this).attr("data-treatment");
+            var $created = $td.find('div.item-info').attr("data-created");
+            var $last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
-            $('#modal-title-edit').html("Edit Kategori - <b>"+text+"</b>");
-            $('#master-name-edit').val(text);
-            $('#master-id').val(id_item);
+            $('#modal-title-edit').html("Edit Kategori - <b>"+$text+"</b>");
+            $('#master-name-edit').val($text);
+            $('#master-desc-edit').val($desc);
+            $('#master-caused-edit').val($caused);
+            $('#master-treatment-edit').val($treatment);
+            $('#master-id').val($id_item);
 
             $('#created').empty();
-            $('#created').append("Created : "+"<b>"+created+"</b>");
+            $('#created').append("Created : "+"<b>"+$created+"</b>");
             $('#last_modified').empty();
-            $('#last_modified').append("Last Modified : "+"<b>"+last_modified+"</b>");
+            $('#last_modified').append("Last Modified : "+"<b>"+$last_modified+"</b>");
 
         });
 

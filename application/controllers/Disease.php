@@ -47,6 +47,9 @@ class Disease extends CI_Controller {
             $row[] = $no;
             $row[] = $item['diseaseID'];
             $row[] = $item['diseaseName'];
+            $row[] = $item['description'];
+            $row[] = $item['cause'];
+            $row[] = $item['treatment'];
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
             $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
             $data[] = $row;
@@ -119,14 +122,27 @@ class Disease extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
-        // OLD DATA
-        $old_data = $this->disease_model->getDiseaseByID($id);
+        $desc = $this->security->xss_clean($this->input->post('desc'));
+        $caused = $this->security->xss_clean($this->input->post('caused'));
+        $treatment = $this->security->xss_clean($this->input->post('treatment'));
 
-        $data=array(
-            'diseaseName'=>$name,		
-			"lastUpdated"=>$datetime,
-			"lastUpdatedBy"=>"sample"
-        );
+        // OLD DATA
+        $old_data = $this->disease_model->getDiseaseByIdWithoutIsacitve($id);
+
+        $data['diseaseName'] = $name;
+        $data['lastUpdated'] = $datetime;
+        $data['lastUpdatedBy'] = "bsd";
+
+
+        if(isset($desc)){
+            $data['description'] = $desc;
+        }
+        if(isset($desc)){
+            $data['cause'] = $caused;
+        }
+        if(isset($desc)){
+            $data['treatment'] = $treatment;
+        }
 
         if($this->checkDuplicateMaster($name, true, $old_data->diseaseName)) {
             $this->db->trans_begin();
@@ -155,12 +171,13 @@ class Disease extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
 	}
 
-    function checkDuplicateMaster($name, $isEdit, $old_data){
+    function checkDuplicateMaster($name, $isEdit, $old_data)
+    {
         $query = $this->disease_model->getDiseaseByName($name, $isEdit, $old_data);
 
-        if(empty($query)) {
+        if (empty($query)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
