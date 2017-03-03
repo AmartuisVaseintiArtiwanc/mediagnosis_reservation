@@ -50,7 +50,7 @@
             $this->db->from('tbl_cyberits_t_user_otp a');
 
             $this->db->where('a.patientID',$patientID);
-            $this->db->where('a.otpID',$otpID);
+            $this->db->where('a.otpCode',$otpID);
             $this->db->where('a.isActive',1);
             $this->db->where('a.expireTime >',$datetime);
 
