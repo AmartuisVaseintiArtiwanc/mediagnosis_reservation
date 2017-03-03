@@ -21,9 +21,14 @@
     <!--DatePicker-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/bootstrap-material-datepicker/css/bootstrap-material-datetimepicker.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Alertify -->
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/alertify/alertify.min.css">
+    <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/alertify/themes/default.min.css">
 
     <!--Sweet Alert-->
     <script src="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <!-- Alertify -->
+    <script src="<?php echo base_url();?>assets/plugins/alertify/alertify.min.js"></script>
     <!--Select2-->
     <script src="<?php echo base_url();?>assets/plugins/jQuery/jQuery-2.2.0.min.js"></script>
     <!--DatePicker-->
@@ -189,7 +194,7 @@
                 $base_url = "<?php echo site_url("MedicalRecord/getMedicalRecordBySearchDate");?>";
                 var $date = $('#date').val();
                 $data={
-                    patientID : $patient,
+                    patient : $patient,
                     date : $date
                 };
 
@@ -198,7 +203,7 @@
                 var $start_date = $('#date-start').val();
                 var $end_date = $('#date-end').val();
                 $data={
-                    patientID : $patient,
+                    patient : $patient,
                     startDate : $start_date,
                     endDate : $end_date
                 };

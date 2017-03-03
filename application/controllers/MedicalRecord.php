@@ -438,10 +438,12 @@ class MedicalRecord extends CI_Controller {
             if($this->checkDoctorReservation($detailReservationID,$doctor_data->doctorID,$patientID)){
                 $this->load->view('mr/otp_medical_record_view', $data);
             }else{
-                $this->load->view('template/error');
+                $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+                $this->load->view('template/error',$data);
             }
         }else{
-            $this->load->view('template/error');
+            $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+            $this->load->view('template/error',$data);
         }
     }
 
@@ -523,16 +525,21 @@ class MedicalRecord extends CI_Controller {
                 $this->load->view('mr/medical_record_list_view', $data);
 
             }else{
-                $this->load->view('template/error');
+                $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+                $this->load->view('template/error',$data);
             }
         }else{
-            $this->load->view('template/error');
+            $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+            $this->load->view('template/error',$data);
         }
     }
 
     // Get Medical Record List For OTP by Date
     function getMedicalRecordBySearchDate($detailReservation, $patientID){
-        //$data = $this->input->post('data');
+
+        $patient = $this->security->xss_clean($this->input->post('patient'));
+        $date = $this->security->xss_clean($this->input->post('date'));
+
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
         $patient_data = $this->patient_model->getPatientByID($patientID);
 
@@ -543,7 +550,10 @@ class MedicalRecord extends CI_Controller {
 
     // Get Medical Record List For OTP by Periode
     function getMedicalRecordBySearchPeriod($detailReservation, $patientID){
-        //$data = $this->input->post('data');
+        $patient = $this->security->xss_clean($this->input->post('patient'));
+        $startDate = $this->security->xss_clean($this->input->post('startDate'));
+        $endDate = $this->security->xss_clean($this->input->post('endDate'));
+
         $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
         $patient_data = $this->patient_model->getPatientByID($patientID);
 
