@@ -13,7 +13,7 @@ class ReservationDoctor extends CI_Controller {
         $this->load->model('poli_model',"poli_model");
         $this->load->model('test_model',"test_model");
         $this->load->model('patient_model',"patient_model");
-        $this->load->model('Medical_record_detail_model',"medical_record_detail_model");\
+        $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
 		$this->load->model('Notification_model');
     }
 
@@ -175,9 +175,9 @@ class ReservationDoctor extends CI_Controller {
 						'message'=>"Silahkan ke ruang dokter ",
 						'isActive'=>1,
 						'created'=>$datetime,
-						'createdBy'=>$userID,
+						'createdBy'=>$this->session->userdata('userID'),
 						'lastUpdated'=>$datetime,
-						'lastUpdatedBy'=>$userID
+						'lastUpdatedBy'=>$this->session->userdata('userID')
 					);
 					$this->Notification_model->createNotification($data);
 					

@@ -96,7 +96,7 @@
                     'reservationType' => $reserveType,
                     'isOnline' => 1,
                     'isActive' => 1,
-                    'created' => $datetime,
+                    'created' => $reserveDate,
                     'createdBy' => $userID,
                     'lastUpdated' => $datetime,
                     'lastUpdatedBy' => $userID
@@ -161,7 +161,7 @@
                     'reservationType' => $reserveType,
                     'isOnline' => 1,
                     'isActive' => 1,
-                    'created' => $datetime,
+                    'created' => $reserveDate,
                     'createdBy' => $userID,
                     'lastUpdated' => $datetime,
                     'lastUpdatedBy' => $userID
