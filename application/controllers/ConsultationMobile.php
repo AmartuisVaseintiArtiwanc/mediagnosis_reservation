@@ -140,9 +140,11 @@
 				//$role = "doctor";
 				$token = $token_wrapper->patientToken; // dokter kirim ke pasien, butuhnya token pasien
 				$experts = $this->doctor_model->getDoctorByUserID($userID);
+				$onlineStatus = $this->topic_model->getSpecificExpertOnlineStatus($userID);
 				$data = array(
 					'expertID'=>$experts->doctorID,
 					'phoneNumber'=>$experts->phoneNumber,
+					'isOnline'=>$onlineStatus->isOnline,
 					'topicID'=>$token_wrapper->topicID,
 					'oppositionName'=>$token_wrapper->doctorName
 				);

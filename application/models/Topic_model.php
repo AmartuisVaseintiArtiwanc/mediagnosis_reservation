@@ -26,5 +26,19 @@
 			$query = $this->db->get();
 			return $query->result_array();	
 		}
+		
+		function getSpecificExpertOnlineStatus($userID){
+			$this->db->select('mu.isOnline'); 
+			$this->db->from('tbl_cyberits_s_topic st');
+			$this->db->join('tbl_cyberits_m_doctors md', 'md.doctorID = st.doctorID');
+			$this->db->join('tbl_cyberits_m_users mu', 'mu.userID = md.userID');
+			$this->db->where('st.isActive', 1);
+			$this->db->where('md.isActive', 1);
+			$this->db->where('mu.isActive', 1);
+			$this->db->where('mu.userID', $userID);
+			
+			$query = $this->db->get();
+			return $query->row();
+		}
 	}
 ?>
