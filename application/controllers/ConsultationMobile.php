@@ -148,7 +148,7 @@
 					'topicID'=>$token_wrapper->topicID,
 					'oppositionName'=>$token_wrapper->doctorName
 				);
-				$this->sendNotificationToSpesificActivity("Dr.".$token_wrapper->doctorName,$recentChat, $token, $click_action, $data);
+				$this->sendNotificationToSpesificActivity("Dr.".$token_wrapper->doctorName,"Anda mendapat pesan baru", $token, $click_action, $data);
 				/*$data = array(
 					'userID'=>$token_wrapper->patientUserID,
 					'header'=>"Dr.".$token_wrapper->doctorName,
@@ -172,7 +172,7 @@
 					'topicID'=>$token_wrapper->topicID,
 					'oppositionName'=>$token_wrapper->patientName
 				);
-				$this->sendNotificationToSpesificActivity($token_wrapper->patientName,$recentChat, $token, $click_action, $data);
+				$this->sendNotificationToSpesificActivity($token_wrapper->patientName,"Anda mendapat pesan baru", $token, $click_action, $data);
 				/*$data = array(
 					'userID'=>$token_wrapper->doctorUserID,
 					'header'=>$token_wrapper->patientName,
@@ -229,7 +229,8 @@
 			
 			$fields = array('to'=>$token,
 							'notification'=>array('title'=>$title, 'body'=>$message, 'click_action'=>$click_action),
-							'data'=>$data
+							'data'=>$data,
+							'sound'=>"default"
 			);
 			
 			//echo json_encode($fields);

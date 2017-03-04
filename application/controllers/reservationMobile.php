@@ -115,7 +115,7 @@
                     $status = 'success';
                     $msg = "Proses Reservasi berhasil";
 
-                    $this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
+                    $this->sendNotification("Antrian anda sudah diterima. Harap tunggu","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
 					
 					/*$data = array(
 						'userID'=>$userID,
@@ -180,7 +180,7 @@
                     $status = 'success';
                     $msg = "Proses Reservasi berhasil";
 
-                    $this->sendNotification("Proses reservasi berhasil","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
+                    $this->sendNotification("Antrian anda sudah diterima. Harap tunggu","Nomor antrian anda ".$data_reservasi["noQueue"],$token);
 					
 					/*$data = array(
 						'userID'=>$userID,
@@ -499,7 +499,8 @@
 			);
 			
 			$fields = array('to'=>$token,
-							'notification'=>array('title'=>$title, 'body'=>$message)
+							'notification'=>array('title'=>$title, 'body'=>$message),
+							'sound'=>"default"
 			);
 			
 			$payload= json_encode($fields);

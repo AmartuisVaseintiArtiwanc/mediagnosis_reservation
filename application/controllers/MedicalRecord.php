@@ -364,7 +364,7 @@ class MedicalRecord extends CI_Controller {
 			
 			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
-			$this->sendNotification("Harap review kunjungan hari ini","Kunjungan anda tleh selesai",$token);
+			$this->sendNotification("Harap berikan penilaian untuk pelayanan yang diberikan","Kunjungan anda telah selesai",$token);
 			
 			/*$data = array(
 				'userID'=>$token_wrapper->userID,
@@ -781,7 +781,8 @@ class MedicalRecord extends CI_Controller {
 		);
 		
 		$fields = array('to'=>$token,
-						'notification'=>array('title'=>$title, 'body'=>$message)
+						'notification'=>array('title'=>$title, 'body'=>$message),
+						'sound'=>"default"
 		);
 		
 		$payload= json_encode($fields);

@@ -15,8 +15,8 @@
 		}
 
 		function generateUserOtp(){
-			$datetime = date("Y-m-d h:i:s", strtotime("now"));
-			$expireTime = date("Y-m-d h:i:s", strtotime("+30 minutes"));
+			$datetime = date("Y-m-d H:i:s", strtotime("now"));
+			$expireTime = date("Y-m-d H:i:s", strtotime("+30 minutes"));
 			$OtpCode = $this->input->post("otpCode"); 
 			$userID = $this->input->post("userID");
             $patient_data = $this->Patient_model->getPatientByUserID($userID);
