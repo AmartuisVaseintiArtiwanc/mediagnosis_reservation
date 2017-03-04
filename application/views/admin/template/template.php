@@ -130,10 +130,11 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                  <!--
-                  <li><a href="<?php echo site_url("ClinicAdmin");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
+                  <!---->
+                  <li><a href="<?php echo site_url("SuperAdminClinic");?>"><i class="fa fa-circle-o"></i> Super Admin Clinic</a></li>
+                  <li><a href="<?php echo site_url("Clinic/indexAdmin");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
+                  <li><a href="<?php echo site_url("Doctor/indexAdmin");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>
                   <li><a href="<?php echo site_url("Poli");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
-                  <li><a href="<?php echo site_url("Doctor");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>-->
                   <li><a href="<?php echo site_url("Disease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
                   <li><a href="<?php echo site_url("Symptomp");?>"><i class="fa fa-circle-o"></i> Gejala</a></li>
               </ul>
