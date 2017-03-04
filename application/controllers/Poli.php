@@ -6,13 +6,20 @@ class Poli extends CI_Controller {
         parent::__construct();
         $this->load->helper(array('form', 'url','security','date'));
         $this->load->library("pagination");
+        $this->load->library("Authentication");
         $this->is_logged_in();
         $this->load->model('poli_model',"poli_model");
     }
     
 	function index(){
         $data['main_content'] = 'master/poli_list_view';
-        $this->load->view('template/template', $data);
+
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+            $this->load->view('admin/template/template', $data);
+        }else if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $this->load->view('template/template', $data);
+        }
 	}
 
     function dataPoliListAjax(){
@@ -161,27 +168,48 @@ class Poli extends CI_Controller {
     }
 
     function deletePoli(){
-
+        $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post("delID"));
-        $this->poli_model->deletePoli($id);
 
-        $e = $this->db->error();
-        if ($e){
-            $status = 'error';
-            $msg = "Poli cannot be deleted !";
-        }else{
-            $status = 'success';
-            $msg = "Poli has been deleted successfully !";
+        $data=array(
+            'isActive'=>0,
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+        $this->db->trans_begin();
+        $query = $this->poli_model->updatePoli($data, $id);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg = "Cannot save master to Database";
+        } else {
+            if ($query == 1) {
+                $this->db->trans_commit();
+                $status = "success";
+                $msg = "Master Poli has been updated successfully.";
+            } else {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Failed to save data Master ! ";
+            }
         }
-
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
     function is_logged_in(){
         $is_logged_in = $this->session->userdata('is_logged_in');
+        $role = $this->session->userdata('role');
         if(!isset($is_logged_in) || $is_logged_in != true) {
             $url_login = site_url("Login");
             redirect($url_login, 'refresh');
+
+        }else{
+            if(!$this->authentication->isAuthorizeAdminMediagnosis($role) &&
+                !$this->authentication->isAuthorizeSuperAdmin($role)){
+                $url_login = site_url("Login");
+                redirect($url_login, 'refresh');
+            }
         }
     }
 }

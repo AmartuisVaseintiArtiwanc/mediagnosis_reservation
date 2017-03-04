@@ -1,46 +1,22 @@
 <?php
 
-class Clinic extends CI_Controller {
-	
+class SuperAdminClinic extends CI_Controller {
+
     function __construct(){
         parent::__construct();
         $this->load->helper(array('form', 'url','security','date'));
         $this->load->library("pagination");
-        $this->load->library("Authentication");
+        $this->load->library("authentication");
         $this->is_logged_in();
-        $this->load->model('clinic_model',"clinic_model");
+        $this->load->model('User_model',"user_model");
     }
-    
-	function index($superUserID=""){
 
-        $role = $this->session->userdata('role');
-
-        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
-            $data['main_content'] = 'admin/master/clinic_list_view';
-            $data['superUserID'] = $superUserID;
-            $this->load->view('admin/template/template', $data);
-
-        }else if($this->authentication->isAuthorizeSuperAdmin($role)){
-            $data['main_content'] = 'master/clinic_list_view';
-            $data['superUserID'] = $superUserID;
-            $this->load->view('template/template', $data);
-
-        }
-	}
-
-    function indexAdmin(){
-        $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
-        $data['master'] = 'clinic';
+    function index(){
+        $data['main_content'] = 'admin/master/super_admin_clinic_list_view';
         $this->load->view('admin/template/template', $data);
     }
 
-    function dataClinicListAjax($superUserID=""){
-
-        //Check Super Admin Clinic
-        $role = $this->session->userdata('role');
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
-            $superUserID = $this->session->userdata('superUserID');
-        }
+    function dataSuperAdminClinicListAjax(){
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
         $limit = $_POST['length'];
@@ -56,9 +32,9 @@ class Clinic extends CI_Controller {
             $orderDir = "ASC";
         }
 
-        $result = $this->clinic_model->getClinicListData($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit);
-        $resultTotalAll = $this->clinic_model->count_all($superUserID);
-        $resultTotalFilter  = $this->clinic_model->count_filtered($superUserID,$searchText);
+        $result = $this->user_model->getSuperAdminClinicListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
+        $resultTotalAll = $this->user_model->countSuperAdminClinicAll();
+        $resultTotalFilter  = $this->user_model->countSuperAdminClinicFiltered($searchText);
 
         $data = array();
         $no = $_POST['start'];
@@ -68,8 +44,9 @@ class Clinic extends CI_Controller {
             $date_lastModified=date_create($item['lastUpdated']);
             $row = array();
             $row[] = $no;
-            $row[] = $item['clinicID'];
-            $row[] = $item['clinicName'];
+            $row[] = $item['userID'];
+            $row[] = $item['userName'];
+            $row[] = $item['email'];
             $row[] = $item['isActive'];
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
             $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
@@ -87,22 +64,30 @@ class Clinic extends CI_Controller {
         //output to json format
         echo json_encode($output);
     }
-	
-	function createClinic(){
+
+    function createClinic(){
         $status = "";
         $msg="";
 
         $name = $this->security->xss_clean($this->input->post('name'));
+        $placeID = $this->security->xss_clean($this->input->post('place'));
+        $address = $this->security->xss_clean($this->input->post('address'));
+        $long = $this->security->xss_clean($this->input->post('long'));
+        $lat = $this->security->xss_clean($this->input->post('lat'));
 
         $datetime = date('Y-m-d H:i:s', time());
         $data=array(
             'isActive'=>1,
             'clinicName'=>$name,
+            'placeID'=>$placeID,
+            'clinicAddress'=>$address,
+            'longitude'=>$long,
+            'latitude'=>$lat,
             'isActive'=>1,
             'created'=>$datetime,
-            "createdBy" => $this->session->userdata('superUserID'),
-			"lastUpdated"=>$datetime,
-			"lastUpdatedBy"=>$this->session->userdata('userID')
+            "createdBy" => $this->session->userdata('userID'),
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
         );
 
         if($this->checkDuplicateMaster($name,false,null)){
@@ -131,21 +116,29 @@ class Clinic extends CI_Controller {
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
-	}
-    
-   	function editClinic(){
+    }
+
+    function editClinic(){
         $status = "";
         $msg="";
 
         $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
+        $placeID = $this->security->xss_clean($this->input->post('place'));
+        $address = $this->security->xss_clean($this->input->post('address'));
+        $long = $this->security->xss_clean($this->input->post('long'));
+        $lat = $this->security->xss_clean($this->input->post('lat'));
         $isActive = $this->security->xss_clean($this->input->post('isActive'));
         // OLD DATA
         $old_data = $this->clinic_model->getClinicByID($id);
 
         $data=array(
             'clinicName'=>$name,
+            'placeID'=>$placeID,
+            'clinicAddress'=>$address,
+            'longitude'=>$long,
+            'latitude'=>$lat,
             "lastUpdated"=>$datetime,
             'isActive'=>$isActive,
             "lastUpdatedBy"=>$this->session->userdata('userID')
@@ -176,7 +169,7 @@ class Clinic extends CI_Controller {
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
-	}
+    }
 
     function checkDuplicateMaster($name, $isEdit, $old_data){
         $query = $this->clinic_model->getClinicByName($name, $isEdit, $old_data);
@@ -200,6 +193,7 @@ class Clinic extends CI_Controller {
         );
 
         $this->db->trans_begin();
+        //$this->clinic_model->deleteClinic($id);
         $query = $this->clinic_model->updateClinic($data, $id);
 
         if ($this->db->trans_status() === FALSE) {
@@ -225,14 +219,12 @@ class Clinic extends CI_Controller {
         $is_logged_in = $this->session->userdata('is_logged_in');
         $role = $this->session->userdata('role');
         if(!isset($is_logged_in) || $is_logged_in != true) {
-            $url_login = site_url("Login");
+            $url_login = site_url("LoginAdmin");
             redirect($url_login, 'refresh');
         }else{
-            if(!$this->authentication->isAuthorizeAdminMediagnosis($role) &&
-                !$this->authentication->isAuthorizeSuperAdmin($role)){
-                $url_login = site_url("Login");
+            if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
+                $url_login = site_url("LoginAdmin");
                 redirect($url_login, 'refresh');
-
             }
         }
     }

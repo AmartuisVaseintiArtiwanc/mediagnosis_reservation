@@ -106,13 +106,11 @@ class LoginAdmin extends CI_Controller {
     function is_logged_in(){
         $is_logged_in = $this->session->userdata('is_logged_in');
         if(!isset($is_logged_in) || $is_logged_in != true) {
-            $url_login = site_url("Login");
-            echo 'You don\'t have permission to access this page. <a href="'.$url_login.'"">Login</a>';
-            die();
-            $this->load->view('login_form');
+            $url_login = site_url("LoginAdmin");
+            redirect($url_login, 'refresh');
         }else{
             $data['main_content'] = '';
-            $this->load->view('template/template',$data);
+            $this->load->view('admin/template/template',$data);
         }
     }
 	

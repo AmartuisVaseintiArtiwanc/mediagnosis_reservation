@@ -24,7 +24,7 @@ class Login_admin_model extends CI_Model {
     }
 
     public function getUserDataByUserRole($userRole){
-        $this->db->select('userID, userName, userRole');
+        $this->db->select('userID, userName, userRole, email');
         $this->db->from('tbl_cyberits_m_users u');
         $this->db->where('userRole', $userRole);
         $this->db->where('isActive', 1);

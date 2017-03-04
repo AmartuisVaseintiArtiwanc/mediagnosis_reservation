@@ -128,7 +128,7 @@
                 $(this).saveData({
                     url: "<?php echo site_url('Clinic/createClinic')?>",
                     data: formData,
-                    locationHref: "<?php echo site_url('Clinic')?>",
+                    locationHref: "<?php echo site_url('Clinic/index/'.$superUserID)?>",
                     hrefDuration : 1000
                 });
             }
@@ -145,7 +145,7 @@
                 $(this).saveData({
                     url: "<?php echo site_url('Clinic/editClinic')?>",
                     data: formData,
-                    locationHref: "<?php echo site_url('Clinic')?>",
+                    locationHref: "<?php echo site_url('Clinic/index/'.$superUserID)?>",
                     hrefDuration : 1000
                 });
             }

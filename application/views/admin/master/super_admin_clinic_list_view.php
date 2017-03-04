@@ -15,18 +15,18 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Clinic</small>
+        <small>Super Admin Clinic</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-        <li class="active">Clinic</li>
+        <li class="active">Super Admin Clinic</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Clinic List</h3>
+            <h3 class="box-title">Super Admin Clinic List</h3>
         </div>
 
         <div class="box-body">
@@ -40,11 +40,12 @@
                 </div>
             </div>
             </p>
-            <table  class="table table-bordered table-striped tbl-master" id="dataTables-list">
+            <table  class="table table-bordered table-striped tbl-master" id="dataTables-admin">
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Username</th>
+                    <th style = "text-align:left;">Email</th>
                     <th style = "text-align:center;">Status</th>
                     <th style = "text-align:left;display:none;">Created</th>
                     <th style = "text-align:left;display:none;">Created By</th>
@@ -67,9 +68,10 @@
 
 <script>
     $(function() {
-        var baseurl = "<?php echo site_url();?>/";
+        var $base_url = "<?php echo site_url();?>/";
         var selected = [];
-        var table = $('#dataTables-list').DataTable({
+
+        var table = $('#dataTables-admin').DataTable({
             "lengthChange": false,
             "processing": true, //Feature control the processing indicator.
             "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -78,7 +80,7 @@
             deferRender: true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": baseurl+"Clinic/dataClinicListAjax/"+<?php echo $superUserID;?>,
+                "url": $base_url+"SuperAdminClinic/dataSuperAdminClinicListAjax",
                 "type": "POST"
             },
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
@@ -86,9 +88,10 @@
             },
             columns: [
                 { data: 0,"width": "10%" },
-                { data: 2, "width": "40%"},
-                { data: 3, "width": "10%"},
-                { data: 4, "width": "40%"}
+                { data: 2, "width": "30%"},
+                { data: 3, "width": "30%"},
+                { data: 4, "width": "10%"},
+                { data: 5, "width": "10%"}
             ],
             //Set column definition initialisation properties.
             "columnDefs": [
@@ -114,7 +117,7 @@
                     "orderable": false//set not orderable}
                 },
                 {
-                    "targets": [2], //thrid column
+                    "targets": [3], //thrid column
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
 
@@ -135,23 +138,6 @@
             }
 
         });
-
-        $('#dataTables-list tbody').on('click', 'tr', function () {
-            var id = this.id;
-            var index = $.inArray(id, selected);
-
-            if ( index === -1 ) {
-                selected.push( id );
-            } else {
-                selected.splice( index, 1 );
-            }
-
-            var count_selected = selected.length;
-            $("#dataTables-list_info span").empty();
-            $("#dataTables-list_info").append(" <span>"+count_selected+" selected</span>");
-
-            $(this).toggleClass('selected');
-        } );
 
         $('#clinic-modal-add').on('shown.bs.modal', function () {
             $('#clinic-form-add')[0].reset();
@@ -208,7 +194,7 @@
                 alertTitle   : "Delete Confirmation",
                 url		     : "<?php echo site_url('Clinic/deleteClinic')?>",
                 data		 : formData,
-                locationHref : "<?php echo site_url('Clinic/indexAdmin')?>"
+                locationHref : "<?php echo site_url('Clinic')?>"
             });
 
         });

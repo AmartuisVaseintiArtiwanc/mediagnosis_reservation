@@ -12,12 +12,35 @@ class Doctor extends CI_Controller {
         $this->load->model('SPoli_model',"spoli_model");
     }
     
-	function index(){
-        $data['main_content'] = 'master/doctor_list_view';
-        $this->load->view('template/template', $data);
+	function index($superUserID=""){
+        $role = $this->session->userdata('role');
+
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+            $data['main_content'] = 'admin/master/doctor_list_view';
+            $data['superUserID'] = $superUserID;
+            $this->load->view('admin/template/template', $data);
+
+        }else if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $data['main_content'] = 'master/doctor_list_view';
+            $data['superUserID'] = $superUserID;
+            $this->load->view('template/template', $data);
+
+        }
 	}
 
-    function dataDoctorListAjax(){
+    function indexAdmin(){
+        $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
+        $data['master'] = 'doctor';
+        $this->load->view('admin/template/template', $data);
+    }
+
+    function dataDoctorListAjax($superUserID=""){
+
+        //Check Super Admin Clinic
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $superUserID = $this->session->userdata('superUserID');
+        }
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
         $limit = $_POST['length'];
@@ -33,9 +56,9 @@ class Doctor extends CI_Controller {
             $orderDir = "ASC";
         }
 
-        $result = $this->doctor_model->getDoctorListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
-        $resultTotalAll = $this->doctor_model->count_all();
-        $resultTotalFilter  = $this->doctor_model->count_filtered($searchText);
+        $result = $this->doctor_model->getDoctorListData($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit);
+        $resultTotalAll = $this->doctor_model->count_all($superUserID);
+        $resultTotalFilter  = $this->doctor_model->count_filtered($superUserID,$searchText);
 
         $data = array();
         $no = $_POST['start'];
@@ -181,19 +204,49 @@ class Doctor extends CI_Controller {
     }
 
     function deleteDoctor(){
-        $status = 'success';
-        $msg = "Doctor has been deleted successfully !";
+        $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post("delID"));
-        $this->doctor_model->deleteDoctor($id);
+        $data=array(
+            'isActive'=>0,
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+
+        $this->db->trans_begin();
+        $query = $this->doctor_model->updateDoctor($data, $id);
+
+        if ($this->db->trans_status() === FALSE) {
+            $this->db->trans_rollback();
+            $status = "error";
+            $msg = "Cannot save master to Database";
+        } else {
+            if ($query == 1) {
+                $this->db->trans_commit();
+                $status = "success";
+                $msg = "Master Doctor has been updated successfully.";
+            } else {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Failed to save data Master ! ";
+            }
+        }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
     function is_logged_in(){
         $is_logged_in = $this->session->userdata('is_logged_in');
+        $role = $this->session->userdata('role');
         if(!isset($is_logged_in) || $is_logged_in != true) {
             $url_login = site_url("Login");
             redirect($url_login, 'refresh');
+        }else{
+            if(!$this->authentication->isAuthorizeAdminMediagnosis($role) &&
+                !$this->authentication->isAuthorizeSuperAdmin($role)){
+                $url_login = site_url("Login");
+                redirect($url_login, 'refresh');
+
+            }
         }
     }
 }

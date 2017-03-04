@@ -54,15 +54,18 @@
                         <input type="text" class="form-control" id="master-name-edit" name="poli_name"
                                placeholder="Name" data-label="#err-master-name-edit">
                     </div>
-                    <div class="form-group">
-                        <label for="master-isactive-edit" class="control-label">Status :</label>
-                        <input type="hidden" class="form-control" id="master-isactive-edit">
-                        <br/>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-isactive" data-status="1" id="btn-status-active">ACTIVE</button>
-                            <button type="button" class="btn btn-default btn-isactive" data-status="0" id="btn-status-no-active">NO ACTIVE</button>
+
+                    <?php if($this->session->userdata('role')=="mediagnosis_admin"){ ?>
+                        <div class="form-group" id="is-active-container">
+                            <label for="master-isactive-edit" class="control-label">Status :</label>
+                            <br/>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-isactive" data-status="1" id="btn-status-active">ACTIVE</button>
+                                <button type="button" class="btn btn-default btn-isactive" data-status="0" id="btn-status-no-active">NO ACTIVE</button>
+                            </div>
                         </div>
-                    </div>
+                    <?php } ?>
+                    <input type="hidden" class="form-control" id="master-isactive-edit">
                 </form>
             </div><!--modal body-->
 

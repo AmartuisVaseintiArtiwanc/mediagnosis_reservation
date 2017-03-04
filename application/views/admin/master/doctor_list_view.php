@@ -1,5 +1,5 @@
-<?php $this->load->helper('HTML');
-?>
+<!--ADMIN MEDIGANOSIS-->
+<?php $this->load->helper('HTML');?>
 <style>
     .cd-error-message{
         font-size:12px;
@@ -15,18 +15,18 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Clinic</small>
+        <small>Doctor</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-        <li class="active">Clinic</li>
+        <li class="active">Doctor</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Clinic List</h3>
+            <h3 class="box-title">Doctor List</h3>
         </div>
 
         <div class="box-body">
@@ -34,7 +34,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <button type="button" class="btn btn-primary btn-xl" id="add-btn"
-                            data-toggle="modal" data-target="#clinic-modal-add">
+                            data-toggle="modal" data-target="#doctor-modal-add">
                         <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
                     </button>
                 </div>
@@ -44,7 +44,7 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Doctor</th>
                     <th style = "text-align:center;">Status</th>
                     <th style = "text-align:left;display:none;">Created</th>
                     <th style = "text-align:left;display:none;">Created By</th>
@@ -63,7 +63,7 @@
     </div>
 </section>
 
-<?php $this->load->view('modal/modal_add_edit_clinic')?>
+<?php $this->load->view('modal/modal_add_edit_doctor')?>
 
 <script>
     $(function() {
@@ -78,7 +78,7 @@
             deferRender: true,
             // Load data for the table's content from an Ajax source
             "ajax": {
-                "url": baseurl+"Clinic/dataClinicListAjax/"+<?php echo $superUserID;?>,
+                "url": baseurl+"Doctor/dataDoctorListAjax/"+<?php echo $superUserID;?>,
                 "type": "POST"
             },
             "fnCreatedRow": function( nRow, aData, iDataIndex ) {
@@ -98,7 +98,7 @@
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
-                            "data-toggle":"modal","data-target":"#clinic-modal-edit","data-value": rowData[1]});
+                            "data-toggle":"modal","data-target":"#doctor-modal-edit","data-value": rowData[1]});
                         $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
                         var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
@@ -153,16 +153,16 @@
             $(this).toggleClass('selected');
         } );
 
-        $('#clinic-modal-add').on('shown.bs.modal', function () {
-            $('#clinic-form-add')[0].reset();
-            $('#modal-title-add').text("Add New Clinic");
+        $('#doctor-modal-add').on('shown.bs.modal', function () {
+            $('#doctor-form-add')[0].reset();
+            $('#modal-title-add').text("Add New Doctor");
             $('#err-master-name-add').text("");
             $('#master-name-add').focus();
         })
 
         //Edit open Modal
         $( "#dataTables-list tbody" ).on( "click", "button.edit-btn", function() {
-            $('#clinic-form-edit')[0].reset();
+            $('#doctor-form-edit')[0].reset();
             $('#err-master-name-edit').text("");
 
             var id_item =  $(this).attr("data-value");
@@ -173,7 +173,7 @@
             var created = $td.find('div.item-info').attr("data-created");
             var last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
-            $('#modal-title-edit').html("Edit Clinic - <b>"+text+"</b>");
+            $('#modal-title-edit').html("Edit Kategori - <b>"+text+"</b>");
             $('#master-name-edit').val(text);
             $('#master-id').val(id_item);
 
@@ -204,11 +204,11 @@
             formData.append("delID", id_item);
 
             $(this).deleteData({
-                alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Clinic ?",
+                alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Doctor ?",
                 alertTitle   : "Delete Confirmation",
-                url		     : "<?php echo site_url('Clinic/deleteClinic')?>",
+                url		     : "<?php echo site_url('Doctor/deleteDoctor')?>",
                 data		 : formData,
-                locationHref : "<?php echo site_url('Clinic/indexAdmin')?>"
+                locationHref : "<?php echo site_url('Doctor/indexAdmin')?>"
             });
 
         });

@@ -19,9 +19,9 @@ class Doctor_Model extends CI_Model {
 		return $query->result_array();
 	}
 
-    function getDoctorListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit){
+    function getDoctorListData ($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit){
         $this->_dataDoctorQuery($searchText,$orderByColumnIndex,$orderDir);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         // LIMIT
         if($limit!=null || $start!=null){
             $this->db->limit($limit, $start);
@@ -31,16 +31,16 @@ class Doctor_Model extends CI_Model {
 
     }
 
-    function count_filtered($searchText){
+    function count_filtered($superUserID,$searchText){
         $this->_dataDoctorQuery($searchText,null,null);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_all(){
+    public function count_all($superUserID){
         $this->db->from("tbl_cyberits_m_doctors a");
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         return $this->db->count_all_results();
     }
 
