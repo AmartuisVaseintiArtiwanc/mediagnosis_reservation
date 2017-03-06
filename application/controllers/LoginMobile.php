@@ -153,6 +153,9 @@ class LoginMobile extends CI_Controller{
 		else{
 			if($res==1){
 				$this->db->trans_commit();
+				if($isOnline == 0){
+					$this->clearToken($userID);
+				}
 
 			}else{
 				$this->db->trans_rollback();
@@ -161,8 +164,61 @@ class LoginMobile extends CI_Controller{
 		
 	}
 	
-	public function resetPassword(){
-		$this->load->view("registration/reset_password_view");
+	public function clearToken($userID){
+		$this->load->model('Login_model');
+		$this->load->model('Doctor_model');
+		$this->load->model('Patient_model');
+		
+		$datetime = date('Y-m-d H:i:s', time());
+		$userData = $this->Login_model->getUserDataByUserID($userID);
+		
+		$data_token = array(
+			"token" => "",
+			"lastUpdated" => $datetime,
+			"lastUpdatedBy" => $userID
+		);
+		if($userData->userRole == "patient"){
+			//update token tabel pasien dengan id user tertentu
+			$this->db->trans_begin();
+			$res = $this->Patient_model->updatePatient($userID,$data_token);
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+			}
+			else{
+				if($res==1){
+					$this->db->trans_commit();
+				}else{
+					$this->db->trans_rollback();
+				}
+			}
+				
+		}else if($userData->userRole == "doctor"){
+			//update token tabel dokter dengan id user tertentu
+			$this->db->trans_begin();
+			$res = $this->Doctor_model->updateDoctorByUserID($data_token,$userID);
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+			}
+			else{
+				if($res==1){
+					$this->db->trans_commit();
+				}else{
+					$this->db->trans_rollback();
+				}
+			}
+		}
+		
+	}
+	
+	public function emailHandler(){
+		$mode = $this->input->get("mode");
+		if($mode == "resetPassword"){
+			$this->load->view("registration/reset_password_view");
+		}else if($mode == "verifyEmail"){
+			$this->load->view("registration/verify_email_view");
+		}else if ($mode == "recoverEmail"){
+			$this->load->view("registration/recover_email_view");
+		}
 	}
 	
 	public function doResetPassword(){
@@ -182,7 +238,7 @@ class LoginMobile extends CI_Controller{
 			$data = array(
 				"password"=>$this->hash->hashPass($new_password),
 				"lastUpdated"=>$datetime,
-				"lastUpdatedBy"=>"the_forgotter"
+				"lastUpdatedBy"=>$email
 			);
 			
 			$this->db->trans_begin();
@@ -201,6 +257,48 @@ class LoginMobile extends CI_Controller{
 					$this->db->trans_rollback();
 					$status = "error";
 					$msg="Maaf password Anda tidak dapat tereset, cobalah beberapa saat lagi !";
+				}
+			}
+			
+		}
+		echo json_encode(array('status' => $status, 'msg' => $msg));
+	}
+	
+	public function doRevertEmail(){
+		$status="error";
+        $msg="Error";
+        $datetime = date('Y-m-d H:i:s', time());
+		$this->load->model('Login_model');
+		
+		$newEmail = $this->security->xss_clean($this->input->post('newEmail'));
+		$oldEmail = $this->security->xss_clean($this->input->post('oldEmail'));
+		
+		if(empty($newEmail) || empty($oldEmail)){
+			$status="error";
+			$msg="Maaf terdapat input yang kosong, silahkan diperiksa kembali..";
+		}else{
+			$data = array(
+				"email"=>$oldEmail,
+				"lastUpdated"=>$datetime,
+				"lastUpdatedBy"=>$oldEmail
+			);
+			
+			$this->db->trans_begin();
+			$res = $this->Login_model->updateUserByEmail($data,$newEmail);
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+				$status = "error";
+				$msg="Maaf data Anda tidak dapat tersimpan, cobalah beberapa saat lagi !";
+
+			}else{
+				if($res==1){
+					$this->db->trans_commit();
+					$status = "success";
+					$msg="Email anda berhasil di kembalikan ke semula";
+				}else{
+					$this->db->trans_rollback();
+					$status = "error";
+					$msg="Maaf email Anda tidak dapat di revert, cobalah beberapa saat lagi !";
 				}
 			}
 			

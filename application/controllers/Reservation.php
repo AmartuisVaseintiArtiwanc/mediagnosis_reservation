@@ -547,9 +547,10 @@ class Reservation extends CI_Controller {
 			'Content-Type:application/json'
 		);
 		
+		$data = array('title'=>$title, 'body'=>$message, 'open_drawer'=>"OPEN");
 		$fields = array('to'=>$token,
-						'notification'=>array('title'=>$title, 'body'=>$message),
-						'sound'=>"default"
+						//'notification'=>array('title'=>$title, 'body'=>$message),
+						'data'=>$data
 		);
 		
 		$payload= json_encode($fields);

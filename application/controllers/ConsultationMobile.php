@@ -227,10 +227,12 @@
 				'Content-Type:application/json'
 			);
 			
+			$notifArray = array('title'=>$title, 'body'=>$message, 'click_action'=>$click_action);
+			$data = array_merge($notifArray, $data);
+			
 			$fields = array('to'=>$token,
-							'notification'=>array('title'=>$title, 'body'=>$message, 'click_action'=>$click_action),
-							'data'=>$data,
-							'sound'=>"default"
+							//'notification'=>array('title'=>$title, 'body'=>$message, 'click_action'=>$click_action),
+							'data'=>$data
 			);
 			
 			//echo json_encode($fields);

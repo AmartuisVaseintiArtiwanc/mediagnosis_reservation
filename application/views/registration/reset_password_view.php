@@ -3,9 +3,26 @@
 
 <script src="<?php echo base_url();?>assets/plugins/jQuery/jQuery-2.2.0.min.js"></script>
 <form id="reset-form" method="POST">
-	<label for="new_password">New Password :</label>
-	<input type="password" name="new_password" id="new-password"/>
-	<br/>
+	<table>
+	<tr>
+		<td>
+			<label for="new_password">Password Baru</label>
+		</td>
+		<td>:</td>
+		<td>
+			<input type="password" name="new_password" id="new-password"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<label for="con_password">Konfirmasi Password Baru</label>
+		</td>
+		<td>:</td>
+		<td>
+			<input type="password" name="con_password" id="con-password"/>
+		</td>
+	</tr>
+	</table>
 	<button id="btn-submit-reset">Reset</button>
 </form>
 <!-- Alertify -->
@@ -44,8 +61,17 @@
 		
 		$("#btn-submit-reset").click(function(){
 			$new_password = $("#new-password").val();
+			$con_password = $("#con-password").val();
 			if($new_password == null || $new_password == ""){
 				alert("Harap isi password baru");
+				return false;
+			}
+			else if($new_password.length < 6){
+				alert("Password minimal 6 karakter");
+				return false;
+			}
+			else if($new_password != $con_password){
+				alert("Konfirmasi password baru harus sama dengan password baru");
 				return false;
 			}
 			else{
