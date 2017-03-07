@@ -90,7 +90,7 @@
             </div>-->
             <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$reservation_data->detailReservationID."/".$reservation_data->patientID);?>"
                target="_blank">
-                <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge request-otp-btn" type="button">REQUEST OTP</button>
+                <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge request-otp-btn" type="button">MASUKKAN OTP</button>
             </a>
             <!--
             <div class="w3-container w3-border-top w3-padding-16">
@@ -167,7 +167,7 @@
                 <div class="w3-margin">
                     <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$reservation_data->detailReservationID."/".$reservation_data->patientID);?>"
                        target="_blank">
-                        <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple request-otp-btn">REQUEST OTP</button>
+                        <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple request-otp-btn">MASUKKAN OTP</button>
                     </a>
                 </div>
 
@@ -313,7 +313,7 @@
                         <p>
                             <label class="w3-label">Kesadaran</label> <span class="w3-tag w3-red" id="conscious-err-msg"></span>
                             <div class="w3-row">
-                            <select class="w3-select" name="option" id="conscious-input">
+                            <select class="w3-select physical-elements" name="option" id="conscious-input" disabled="disabled">
                                 <option value="Compos Mentis" selected>Compos Mentis</option>
                                 <option value="Apatis">Apatis</option>
                                 <option value="Delirium">Delirium</option>
@@ -328,11 +328,11 @@
                             <label class="w3-label">Tekanan Darah</label> <span class="w3-tag w3-red" id="blood-preasure-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m2">
-                                    <input class="w3-input input-number" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text">
+                                    <input class="w3-input input-number physical-elements" id="blood-preasure-low-input" data-label="#blood-preasure-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m1 w3-center"><span class="w3-xlarge">/</span></div>
                                 <div class="w3-col m2">
-                                    <input class="w3-input input-number" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text">
+                                    <input class="w3-input input-number physical-elements" id="blood-preasure-high-input" data-label="#blood-preasure-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m3">
                                     <label class="w3-padding">mmHg</label>
@@ -343,7 +343,7 @@
                             <label class="w3-label">Tekanan Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input input-number" id="respiration-input" type="text" data-label="#respiration-err-msg">
+                                    <input class="w3-input input-number physical-elements" id="respiration-input" type="text" data-label="#respiration-err-msg" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">x/minutes</label>
@@ -354,7 +354,7 @@
                             <label class="w3-label">Denyut Nadi</label> <span class="w3-tag w3-red" id="pulse-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input input-number" id="pulse-input" data-label="#pulse-err-msg" type="text">
+                                    <input class="w3-input input-number physical-elements" id="pulse-input" data-label="#pulse-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">x/minutes</label>
@@ -365,7 +365,7 @@
                             <label class="w3-label">Suhu Tubuh</label> <span class="w3-tag w3-red" id="temperature-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input input-number" id="temperature-input" data-label="#temperature-err-msg" type="text">
+                                    <input class="w3-input input-number physical-elements" id="temperature-input" data-label="#temperature-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">&deg Celcius</label>
@@ -376,7 +376,7 @@
                             <label class="w3-label">Tinggi Badan</label> <span class="w3-tag w3-red" id="height-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input input-number" id="height-input" data-label="#height-err-msg" type="text">
+                                    <input class="w3-input input-number physical-elements" id="height-input" data-label="#height-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">cm</label>
@@ -387,13 +387,20 @@
                             <label class="w3-label">Berat Badan</label> <span class="w3-tag w3-red" id="weight-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
-                                    <input class="w3-input input-number" id="weight-input" data-label="#weight-err-msg" type="text">
+                                    <input class="w3-input input-number physical-elements" id="weight-input" data-label="#weight-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
                                     <label class="w3-padding">Kg</label>
                                 </div>
                             </div>
                         </p>
+						<p>
+							<div class="w3-row">
+								<button class="w3-btn w3-round-xxlarge w3-ripple w3-left w3-blue w3-margin btn-edit-physical">
+									Edit
+								</button>
+							</div>
+						</p>
                     </form>
                 </div>
 
@@ -590,7 +597,7 @@
             </div>
 
             <!--Rujukan-->
-            <div class="w3-col m6 w3-padding-small">
+            <!--<div class="w3-col m6 w3-padding-small">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
                         <h4 class="w3-left">PERAWATAN</h4>
@@ -612,7 +619,7 @@
                         <br/>
                     </form>
                 </div>
-            </div>
+            </div>-->
 
             <!--Rujukan-->
             <div class="w3-col m6 w3-padding-small">
@@ -652,7 +659,11 @@
         //$("#otp-input-form").hide();
         $(".w3-modal").show();
 
-
+		$("button.btn-edit-physical").click(function() {
+			$(".physical-elements").removeAttr("disabled");
+			$(this).hide();
+			return false;
+		});
     });
 </script>
 <script>

@@ -199,8 +199,12 @@ class ReservationDoctor extends CI_Controller {
     function goToMedicalRecord($detailReservation){
         $userID =  $this->session->userdata('userID');
         $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
-        $check_medical_record = $this->test_model->getReservationDetailDoctor($detailReservation,$doctor_data->doctorID,'confirm');
-
+		$check_medical_record = $this->test_model->getReservationDetailDoctor($detailReservation,$doctor_data->doctorID,"confirm");
+		
+		
+		//print_r($doctor_data);
+		//print_r($check_medical_record);
+		
         if(isset($check_medical_record)){
             $data['pe_data'] = $this->medical_record_detail_model->getPhysicalExaminationByDetailReservation($detailReservation);
             $data['header_data'] = $this->test_model->getHeaderMedicalRecordByDetail($detailReservation);
@@ -211,7 +215,9 @@ class ReservationDoctor extends CI_Controller {
         }else{
             $index = site_url("ReservationDoctor");
             redirect($index, 'refresh');
+			
         }
+		
     }
 	
 	function countdownThreeNotificationReminder($currQueue){

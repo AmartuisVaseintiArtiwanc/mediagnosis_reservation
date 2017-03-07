@@ -407,7 +407,7 @@ $(document).ready(function(){
         var $rujukan = $("#rujukan-text").val();
 
         var $visit_type = $('input[name=visit-type-input]:checked', '#visit-form').val();
-        var $treatment = $('input[name=treatment-input]:checked', '#treatment-form').val();
+        var $treatment = "Rawat Jalan";//$('input[name=treatment-input]:checked', '#treatment-form').val();
         var $status_diagnose = $('#status-diagnose-input').val();
 
         //Physical Examination
