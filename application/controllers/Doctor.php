@@ -8,6 +8,7 @@ class Doctor extends CI_Controller {
         $this->load->library("pagination");
         $this->load->library("authentication");
         $this->is_logged_in();
+        $this->load->model('Login_model',"login_model");
         $this->load->model('Doctor_model',"doctor_model");
         $this->load->model('SPoli_model',"spoli_model");
     }
@@ -18,6 +19,7 @@ class Doctor extends CI_Controller {
         if($this->authentication->isAuthorizeAdminMediagnosis($role)){
             $data['main_content'] = 'admin/master/doctor_list_view';
             $data['superUserID'] = $superUserID;
+            $data['data_account'] = $this->login_model->getUserDataByUserID($superUserID, "none");
             $this->load->view('admin/template/template', $data);
 
         }else if($this->authentication->isAuthorizeSuperAdmin($role)){
@@ -30,7 +32,7 @@ class Doctor extends CI_Controller {
 
     function indexAdmin(){
         $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
-        $data['master'] = 'doctor';
+        $data['master'] = 'Doctor';
         $this->load->view('admin/template/template', $data);
     }
 
@@ -38,7 +40,7 @@ class Doctor extends CI_Controller {
 
         //Check Super Admin Clinic
         $role = $this->session->userdata('role');
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
+        if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
             $superUserID = $this->session->userdata('superUserID');
         }
 

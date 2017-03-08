@@ -6,9 +6,11 @@ class Clinic extends CI_Controller {
         parent::__construct();
         $this->load->helper(array('form', 'url','security','date'));
         $this->load->library("pagination");
+        $this->load->library('Hash');
         $this->load->library("Authentication");
         $this->is_logged_in();
-        $this->load->model('clinic_model',"clinic_model");
+        $this->load->model('Clinic_model',"clinic_model");
+        $this->load->model('Login_model',"login_model");
     }
     
 	function index($superUserID=""){
@@ -18,6 +20,7 @@ class Clinic extends CI_Controller {
         if($this->authentication->isAuthorizeAdminMediagnosis($role)){
             $data['main_content'] = 'admin/master/clinic_list_view';
             $data['superUserID'] = $superUserID;
+            $data['data_account'] = $this->login_model->getUserDataByUserID($superUserID, "none");
             $this->load->view('admin/template/template', $data);
 
         }else if($this->authentication->isAuthorizeSuperAdmin($role)){
@@ -30,7 +33,7 @@ class Clinic extends CI_Controller {
 
     function indexAdmin(){
         $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
-        $data['master'] = 'clinic';
+        $data['master'] = 'Clinic';
         $this->load->view('admin/template/template', $data);
     }
 
@@ -38,7 +41,7 @@ class Clinic extends CI_Controller {
 
         //Check Super Admin Clinic
         $role = $this->session->userdata('role');
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
+        if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
             $superUserID = $this->session->userdata('superUserID');
         }
 
@@ -73,6 +76,9 @@ class Clinic extends CI_Controller {
             $row[] = $item['isActive'];
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
             $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
+            $row[] = $item['userID'];
+            $row[] = $item['userName'];
+            $row[] = $item['email'];
             $data[] = $row;
         }
 
@@ -93,41 +99,57 @@ class Clinic extends CI_Controller {
         $msg="";
 
         $name = $this->security->xss_clean($this->input->post('name'));
+        $username = $this->security->xss_clean($this->input->post('username'));
+        $password = $this->security->xss_clean($this->input->post('password'));
+        $email = $this->security->xss_clean($this->input->post('email'));
+        $superUserID = $this->security->xss_clean($this->input->post('superUserID'));
+
+        $role = $this->session->userdata('role');
+        if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
+            $superUserID = $this->session->userdata('superUserID');
+        }
 
         $datetime = date('Y-m-d H:i:s', time());
-        $data=array(
-            'isActive'=>1,
-            'clinicName'=>$name,
-            'isActive'=>1,
-            'created'=>$datetime,
-            "createdBy" => $this->session->userdata('superUserID'),
-			"lastUpdated"=>$datetime,
-			"lastUpdatedBy"=>$this->session->userdata('userID')
-        );
+        //Start
+        $this->db->trans_begin();
+        $save_account = $this->saveAccountClinic($username, $password, $email, $superUserID);
 
-        if($this->checkDuplicateMaster($name,false,null)){
-            $this->db->trans_begin();
-            $query = $this->clinic_model->createClinic($data);
+        if($save_account['status'] == "success"){
+            if($this->checkDuplicateMaster($name,false,null,$superUserID)){
+                $data=array(
+                    'userID'=>$save_account['userID'],
+                    'clinicName'=>$name,
+                    'isActive'=>1,
+                    'created'=>$datetime,
+                    "createdBy" => $superUserID,
+                    "lastUpdated"=>$datetime,
+                    "lastUpdatedBy"=>$this->session->userdata('userID')
+                );
+                $query = $this->clinic_model->createClinic($data);
 
-            if ($this->db->trans_status() === FALSE) {
-                $this->db->trans_rollback();
-                $status = "error";
-                $msg="Cannot save master to Database";
-            }
-            else {
-                if($query==1){
-                    $this->db->trans_commit();
-                    $status = "success";
-                    $msg="Master Clinic has been added successfully.";
-                }else{
+                if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Failed to save data Master ! ";
+                    $msg="Cannot save master to Database";
                 }
+                else {
+                    if($query==1){
+                        $this->db->trans_commit();
+                        $status = "success";
+                        $msg="Master Clinic has been added successfully.";
+                    }else{
+                        $this->db->trans_rollback();
+                        $status = "error";
+                        $msg="Failed to save data Master ! ";
+                    }
+                }
+            }else{
+                $status = "error";
+                $msg="This ".$name." Clinic already exist !";
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Clinic already exist !";
+            $msg = $save_account['msg'];
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -141,8 +163,10 @@ class Clinic extends CI_Controller {
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
         $isActive = $this->security->xss_clean($this->input->post('isActive'));
+        $superUserID = $this->security->xss_clean($this->input->post('superUserID'));
+
         // OLD DATA
-        $old_data = $this->clinic_model->getClinicByID($id);
+        //$old_data = $this->clinic_model->getClinicByID($id,$superUserID);
 
         $data=array(
             'clinicName'=>$name,
@@ -151,7 +175,7 @@ class Clinic extends CI_Controller {
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
 
-        if($this->checkDuplicateMaster($name, true, $old_data->clinicName)) {
+        if($this->checkDuplicateMaster($name, true, $id,$superUserID)) {
             $this->db->trans_begin();
             $query = $this->clinic_model->updateClinic($data, $id);
 
@@ -178,8 +202,78 @@ class Clinic extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
 	}
 
-    function checkDuplicateMaster($name, $isEdit, $old_data){
-        $query = $this->clinic_model->getClinicByName($name, $isEdit, $old_data);
+    function editAccountClinic(){
+        $status = "error";
+        $msg="";
+        $flag = 0;
+
+        $datetime = date('Y-m-d H:i:s', time());
+        $id = $this->security->xss_clean($this->input->post('id'));
+        $username = $this->security->xss_clean($this->input->post('username'));
+        $password = $this->security->xss_clean($this->input->post('password'));
+        $email = $this->security->xss_clean($this->input->post('email'));
+        $superUserID = $this->security->xss_clean($this->input->post('superUserID'));
+
+        $data = [];
+        // Check Duplicate Username
+        if(isset($username) && $username != ""){
+            if(!($this->checkDuplicateUsername($username))){
+                $msg = "Username already exist !";
+                $status = "error";
+                $flag++;
+            }else{
+                $data['username'] = $username;
+            }
+        }
+        // Check Duplicate Email
+        if(isset($email) && $email != ""){
+            if(!($this->checkDuplicateEmail($email))){
+                $msg = "Email already exist !";
+                $status = "error";
+                $flag++;
+            }else{
+                $data['email'] = $email;
+            }
+        }
+
+        if(isset($password)){
+            $data['password'] = $this->hash->hashPass($password);
+        }
+
+        $data['lastUpdated'] = $datetime;
+        $data['lastUpdatedBy'] = $this->session->userdata('userID');
+
+        if($flag == 0){
+            $this->db->trans_begin();
+            $query = $this->login_model->updateUser($id,$data);
+
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $status = "error";
+                $msg = "Cannot save master to Database";
+            } else {
+                if ($query == 1) {
+                    $this->db->trans_commit();
+                    $status = "success";
+                    $msg = "Master Clinic has been updated successfully.";
+                } else {
+                    $this->db->trans_rollback();
+                    $status = "error";
+                    $msg = "Failed to save data Master ! ";
+                }
+            }
+        }
+        echo json_encode(array('status' => $status, 'msg' => $msg));
+    }
+
+    function checkDuplicateMaster($name, $isEdit, $clinicID, $superUserID=""){
+        //Check Super Admin Clinic
+        $role = $this->session->userdata('role');
+        if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+
+        $query = $this->clinic_model->checkDupicateClinicName($name, $isEdit, $clinicID, $superUserID);
 
         if(empty($query)) {
             return true;
@@ -235,5 +329,75 @@ class Clinic extends CI_Controller {
 
             }
         }
+    }
+
+    private function saveDataClinic($clinicName, $userID){
+
+    }
+
+    private function saveAccountClinic($username, $password, $email, $superUserID){
+        $data['msg'] = '';
+        $data['status'] = 'error';
+
+        if(!($this->checkDuplicateUsername($username))){
+            $data['msg'] = "Username already exist !";
+
+        }else if(!($this->checkDuplicateEmail($email))){
+            $data['msg'] = "Email already exist !";
+
+        }else {
+            $datetime = date('Y-m-d H:i:s', time());
+            $data=array(
+                'isActive'=>1,
+                'userName'=>$username,
+                'password'=>$this->hash->hashPass($password),
+                'email'=>$email,
+                'userRole'=>"admin",
+                'superUserID'=>$superUserID,
+                'created'=>$datetime,
+                "createdBy" => $this->session->userdata('userID'),
+                "lastUpdated"=>$datetime,
+                "lastUpdatedBy"=>$this->session->userdata('userID')
+            );
+            $query = $this->login_model->insertUser($data);
+            $data['status'] = 'success';
+            // set Inserted ID
+            $data['userID'] = $query;
+        }
+        return $data;
+    }
+
+    private function checkDuplicateEmail($email){
+        $result = false;
+        if($email != ""){
+            $check = $this->login_model->checkEmailExists($email);
+            if($check == 0){
+                $result = true;
+            }
+        }
+        return $result;
+    }
+
+    private function checkDuplicateUsername($username){
+        $result = false;
+        if($username != ""){
+            $check = $this->login_model->checkUsernameExists($username);
+            if($check == 0){
+                $result = true;
+            }
+        }
+        return $result;
+    }
+
+    function testing(){
+        echo  $this->session->userdata('superUserID');
+    }
+
+    function call(){
+        $data['superUserID'] = 'master/clinic_list_view';
+        $data['superUserID'] = "1";
+        $data['superUserID'] = 'master/clinic_list_view';
+
+        return $data;
     }
 }

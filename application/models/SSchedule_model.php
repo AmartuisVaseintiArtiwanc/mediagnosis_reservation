@@ -5,13 +5,14 @@ class SSchedule_model extends CI_Model {
     var $column_order = array('sClinicID','clinicName','poliName',null); //set column field database for datatable orderable
     var $column_search = array('clinicName','poliName'); //set column field database for datatable searchable just firstname ,
 
-    function getScheduleListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit, $clinic){
+    function getScheduleListData ($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit, $clinic){
         $this->_dataSettingQuery($searchText,$orderByColumnIndex,$orderDir);
         // LIMIT
         if($limit!=null || $start!=null){
             $this->db->limit($limit, $start);
         }
 
+        $this->db->where('a.createdBy',$superUserID);
         //ROLE
         $role = $this->session->userdata('role');
         if($role=="admin"){
@@ -23,8 +24,10 @@ class SSchedule_model extends CI_Model {
 
     }
 
-    function count_filtered($searchText,$clinic){
+    function count_filtered($superUserID,$searchText,$clinic){
         $this->_dataSettingQuery($searchText,null,null);
+
+        $this->db->where('a.createdBy',$superUserID);
         //ROLE
         $role = $this->session->userdata('role');
         if($role=="admin"){
@@ -34,14 +37,15 @@ class SSchedule_model extends CI_Model {
         return $query->num_rows();
     }
 
-    public function count_all($clinic){
+    public function count_all($superUserID,$clinic){
         $this->db->from("tbl_cyberits_s_clinic a");
+
+        $this->db->where('a.createdBy',$superUserID);
         //ROLE
         $role = $this->session->userdata('role');
         if($role=="admin"){
             $this->db->where('a.clinicID',$clinic);
         }
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
         return $this->db->count_all_results();
     }
 
@@ -50,7 +54,6 @@ class SSchedule_model extends CI_Model {
         $this->db->from('tbl_cyberits_s_clinic a');
         $this->db->join('tbl_cyberits_m_poli b','a.poliID = b.poliID');
         $this->db->join('tbl_cyberits_m_clinics c','a.clinicID = c.clinicID');
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
 
         //WHERE
         $i = 0;

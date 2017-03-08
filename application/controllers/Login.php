@@ -35,6 +35,11 @@ class Login extends CI_Controller {
                     'role' => $userVerifier->userRole,
                     'is_logged_in' => true
                 );
+
+                if($userVerifier->userRole == "super_admin" || $userVerifier->userRole == "mediagnosis_admin"){
+                    $data['superUserID'] = $userVerifier->userID;
+                }
+
                 $this->session->set_userdata($data);
                 $status = 'success';
                 $msg = "";

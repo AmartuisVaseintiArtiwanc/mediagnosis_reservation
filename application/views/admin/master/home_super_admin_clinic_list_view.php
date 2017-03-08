@@ -16,6 +16,7 @@
     <h1>
         Master
         <small>Super Admin Clinic</small>
+        - <?php echo $master;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
@@ -137,13 +138,8 @@
         //Delete
         $( "#dataTables-admin tbody" ).on( "click", "button.btn-detail", function() {
             var $id_item =  $(this).attr("data-value");
-            var $url = "";
-
-            if($master == "doctor"){
-                $url = $base_url+"Doctor/index/"+$id_item
-            }else if($master == "clinic"){
-                $url = $base_url+"Clinic/index/"+$id_item
-            }
+            // ex : $base_url+"Doctor/index/"+$id_item
+            var $url = $base_url+$master+"/index/"+$id_item
 
             window.setTimeout( function(){
                 window.open($url,'_blank');

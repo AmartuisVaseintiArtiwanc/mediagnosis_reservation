@@ -16,6 +16,7 @@
     <h1>
         Master
         <small>Doctor</small>
+        - <?php echo $data_account->userName."-".$data_account->email;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>

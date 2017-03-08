@@ -8,23 +8,56 @@ class SPoli extends CI_Controller {
         $this->load->library("pagination");
         $this->load->library("authentication");
         $this->is_logged_in();
-        $this->load->model('doctor_model',"doctor_model");
-		$this->load->model('poli_model',"poli_model");
-        $this->load->model('clinic_model',"clinic_model");
-		$this->load->model('sPoli_model',"spoli_model");
-        $this->load->model('sSchedule_model',"sschedule_model");
+        $this->load->model('Login_model',"login_model");
+        $this->load->model('Doctor_model',"doctor_model");
+		$this->load->model('Poli_model',"poli_model");
+        $this->load->model('Clinic_model',"clinic_model");
+		$this->load->model('SPoli_model',"spoli_model");
+        $this->load->model('SSchedule_model',"sschedule_model");
     }
     
-	function index(){
-        $data['main_content'] = 'setting/setting_poli_list_view';
-        $this->load->view('template/template', $data);
+	function index($superUserID=""){
+        $role = $this->session->userdata('role');
+
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+            // Super Admin Mediagnosis
+            $data['main_content'] = 'admin/setting/setting_poli_list_view';
+            $data['superUserID'] = $superUserID;
+            $data['data_account'] = $this->login_model->getUserDataByUserID($superUserID, "none");
+            $this->load->view('admin/template/template', $data);
+
+        }else{
+            $data['main_content'] = 'setting/setting_poli_list_view';
+            $this->load->view('template/template', $data);
+        }
 	}
 
-    function dataSPoliListAjax(){
+    function indexAdmin(){
+        $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
+        $data['master'] = 'SPoli';
+        $this->load->view('admin/template/template', $data);
+    }
+
+    function dataSPoliListAjax($superUserID=""){
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
         $limit = $_POST['length'];
         $start = $_POST['start'];
+
+        //Check Super Admin Clinic
+        $role = $this->session->userdata('role');
+        $clinic = '';
+
+        if($this->authentication->isAuthorizeSuperAdmin($role)){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+
+        if($this->authentication->isAuthorizeAdmin($role)){
+            $userID =  $this->session->userdata('userID');
+            $superUserID = $this->session->userdata('superUserID');
+            $clinicData = $this->clinic_model->getClinicByUserID($userID);
+            $clinic = $clinicData->clinicID;
+        }
 
         // here order processing
         if(isset($_POST['order'])){
@@ -36,18 +69,9 @@ class SPoli extends CI_Controller {
             $orderDir = "ASC";
         }
 
-        $role = $this->session->userdata('role');
-        $clinic = '';
-
-        if($this->authentication->isAuthorizeAdmin($role)){
-            $userID =  $this->session->userdata('userID');
-            $clinicData = $this->clinic_model->getClinicByUserID($userID);
-            $clinic = $clinicData->clinicID;
-        }
-
-        $result = $this->sschedule_model->getScheduleListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit,$clinic);
-        $resultTotalAll = $this->sschedule_model->count_all($clinic);
-        $resultTotalFilter  = $this->sschedule_model->count_filtered($searchText,$clinic);
+        $result = $this->sschedule_model->getScheduleListData($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit,$clinic);
+        $resultTotalAll = $this->sschedule_model->count_all($superUserID,$clinic);
+        $resultTotalFilter  = $this->sschedule_model->count_filtered($superUserID,$searchText,$clinic);
 
         $data = array();
         $no = $_POST['start'];
@@ -73,17 +97,27 @@ class SPoli extends CI_Controller {
         echo json_encode($output);
     }
 	
-	function goToSettingDetailPoli($id){
-        
-        $data['main_content'] = 'setting/setting_poli_detail_view';
-        $data['data'] = null;
-        $data['msg'] = null;
-        
+	function goToSettingDetailPoli($id,$superUserID=""){
         //Data Selection
         $data['data_setting_header'] = $this->spoli_model->getSettingHeaderPoli($id);
-        $data['data_setting_detail'] = $this->spoli_model->getSettingDetailPoli($id);
-        
-		$this->load->view('template/template', $data);
+        $data['data_setting_detail'] = $this->spoli_model->getSettingDetailPoli($id,$superUserID);
+
+        $data['data'] = null;
+        $data['msg'] = null;
+
+        //Check Super Admin Mediagnosis
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+            //Super Admin Mediagnosis
+            $data['main_content'] = 'admin/setting/setting_poli_detail_view';
+            $data['superUserID'] = $superUserID;
+            $this->load->view('admin/template/template', $data);
+
+        }else{
+            $data['main_content'] = 'setting/setting_poli_detail_view';
+            $this->load->view('template/template', $data);
+
+        }
     }
 	
 	function savePoli(){
@@ -93,7 +127,13 @@ class SPoli extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $data = $this->input->post('data');
         $sClinicID= $data[0]['sClinicID'];
-		
+
+        if(!isset($data[0]['superUserID'])){
+            $superUserID = $this->session->userdata('superUserID');
+        }else{
+            $superUserID= $data[0]['superUserID'];
+        }
+
 		$this->db->trans_begin();
 		// ADD NEW DATA 
 		if(isset($data[1])){
@@ -103,7 +143,7 @@ class SPoli extends CI_Controller {
 					'doctorID'=>$row['doctorID'],
                     'isActive'=>1,
                     'created'=>$datetime,
-                    "createdBy" => $this->session->userdata('superUserID'),
+                    "createdBy" => $superUserID,
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
 				);
@@ -144,7 +184,13 @@ class SPoli extends CI_Controller {
         }
     }
 
-    function dataLookupDoctorListAjax(){
+    function dataLookupDoctorListAjax($superUserID=""){
+
+        //Check Super Admin Clinic
+        $role = $this->session->userdata('role');
+        if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
+            $superUserID = $this->session->userdata('superUserID');
+        }
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
         $limit = $_POST['length'];
@@ -160,9 +206,9 @@ class SPoli extends CI_Controller {
             $orderDir = "ASC";
         }
 
-        $result = $this->doctor_model->getDoctorLookupListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
-        $resultTotalAll = $this->doctor_model->count_lookup_all();
-        $resultTotalFilter  = $this->doctor_model->count_lookup_filtered($searchText);
+        $result = $this->doctor_model->getDoctorLookupListData($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit);
+        $resultTotalAll = $this->doctor_model->count_lookup_all($superUserID);
+        $resultTotalFilter  = $this->doctor_model->count_lookup_filtered($superUserID,$searchText);
 
         $data = array();
         $no = $_POST['start'];

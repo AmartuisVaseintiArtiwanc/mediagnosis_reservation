@@ -150,10 +150,9 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                  <!--
-                  <li><a href="<?php echo site_url("SClinic");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
-                  <li><a href="<?php echo site_url("SPoli");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
-                  <li><a href="<?php echo site_url("SettingSchedule");?>"><i class="fa fa-circle-o"></i> Schedule</a></li>-->
+                  <li><a href="<?php echo site_url("SClinic/indexAdmin");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
+                  <li><a href="<?php echo site_url("SPoli/indexAdmin");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
+                  <li><a href="<?php echo site_url("SettingSchedule/indexAdmin");?>"><i class="fa fa-circle-o"></i> Schedule</a></li>
                   <li><a href="<?php echo site_url("SDisease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
               </ul>
             </li>

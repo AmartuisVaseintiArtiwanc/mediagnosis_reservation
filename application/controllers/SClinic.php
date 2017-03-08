@@ -8,25 +8,52 @@ class SClinic extends CI_Controller {
         $this->load->library("pagination");
         $this->load->library("authentication");
         $this->is_logged_in();
+        $this->load->model('Login_model',"login_model");
         $this->load->model('clinic_model',"clinic_model");
 		$this->load->model('poli_model',"poli_model");
 		$this->load->model('sClinic_model',"sclinic_model");
         $this->load->model('sSchedule_model',"sschedule_model");
     }
     
-	function index(){
+	function index($superUserID=""){
         $role = $this->session->userdata('role');
+
         if($this->authentication->isAuthorizeSuperAdmin($role)){
+            // Super Admin Clinic
             $data['main_content'] = 'setting/setting_clinic_list_view';
+            $data['superUserID'] = $superUserID;
             $this->load->view('template/template', $data);
+
         }else if($this->authentication->isAuthorizeAdmin($role)){
+            // Admin Clinic
             $userID =  $this->session->userdata('userID');
+            $data['superUserID'] = $superUserID;
             $clinic = $this->clinic_model->getClinicByUserID($userID);
             $this->goToSettingDetailClinic($clinic->clinicID);
+
+        }else if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+            // Super Admin Mediagnosis
+            $data['main_content'] = 'admin/setting/setting_clinic_list_view';
+            $data['superUserID'] = $superUserID;
+            $data['data_account'] = $this->login_model->getUserDataByUserID($superUserID, "none");
+            $this->load->view('admin/template/template', $data);
+
         }
 	}
 
-    function dataClinicListAjax(){
+    function indexAdmin(){
+        $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
+        $data['master'] = 'SClinic';
+        $this->load->view('admin/template/template', $data);
+    }
+
+    function dataClinicListAjax($superUserID=""){
+
+        //Check Super Admin Clinic
+        $role = $this->session->userdata('role');
+        if(!$this->authentication->isAuthorizeAdminMediagnosis($role)){
+            $superUserID = $this->session->userdata('superUserID');
+        }
 
         $searchText = $this->security->xss_clean($_POST['search']['value']);
         $limit = $_POST['length'];
@@ -42,9 +69,9 @@ class SClinic extends CI_Controller {
             $orderDir = "ASC";
         }
 
-        $result = $this->clinic_model->getClinicListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
-        $resultTotalAll = $this->clinic_model->count_all();
-        $resultTotalFilter  = $this->clinic_model->count_filtered($searchText);
+        $result = $this->clinic_model->getClinicListData($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit);
+        $resultTotalAll = $this->clinic_model->count_all($superUserID);
+        $resultTotalFilter  = $this->clinic_model->count_filtered($superUserID,$searchText);
 
         $data = array();
         $no = $_POST['start'];
@@ -71,17 +98,27 @@ class SClinic extends CI_Controller {
         echo json_encode($output);
     }
 	
-	function goToSettingDetailClinic($id){
-        
-        $data['main_content'] = 'setting/setting_clinic_detail_view';
+	function goToSettingDetailClinic($id,$superUserID=""){
+        //Data Selection
+        $data['data_setting_header'] = $this->clinic_model->getClinicByID($id,$superUserID);
+        $data['data_setting_detail'] = $this->sclinic_model->getSettingDetailClinic($id,$superUserID);
+
         $data['data'] = null;
         $data['msg'] = null;
-        
-        //Data Selection
-        $data['data_setting_header'] = $this->clinic_model->getClinicByID($id);
-        $data['data_setting_detail'] = $this->sclinic_model->getSettingDetailClinic($id);
-        
-		$this->load->view('template/template', $data);
+
+        //Check Super Admin Mediagnosis
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+            //Super Admin Mediagnosis
+            $data['main_content'] = 'admin/setting/setting_clinic_detail_view';
+            $data['superUserID'] = $superUserID;
+            $this->load->view('admin/template/template', $data);
+
+        }else{
+            $data['main_content'] = 'setting/setting_clinic_detail_view';
+            $this->load->view('template/template', $data);
+
+        }
     }
 	
 	function saveClinic(){
@@ -91,7 +128,13 @@ class SClinic extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $data = $this->input->post('data');
         $clinicID= $data[0]['clinicID'];
-		
+
+        if(!isset($data[0]['superUserID'])){
+            $superUserID = $this->session->userdata('superUserID');
+        }else{
+            $superUserID= $data[0]['superUserID'];
+        }
+
 		$this->db->trans_begin();
 		// ADD NEW DATA 
 		if(isset($data[1])){
@@ -102,7 +145,7 @@ class SClinic extends CI_Controller {
 					'poliID'=>$row['poliID'],
                     'isActive'=>1,
                     'created'=>$datetime,
-                    "createdBy" => $this->session->userdata('superUserID'),
+                    "createdBy" => $superUserID,
                     "lastUpdated"=>$datetime,
                     "lastUpdatedBy"=>$this->session->userdata('userID')
 				);
@@ -121,7 +164,7 @@ class SClinic extends CI_Controller {
                         'isOpen'=>0,
                         'isActive'=>1,
                         'created'=>$datetime,
-                        "createdBy" => $this->session->userdata('superUserID'),
+                        "createdBy" => $superUserID,
                         "lastUpdated"=>$datetime,
                         "lastUpdatedBy"=>$this->session->userdata('userID')
                     );
@@ -180,16 +223,6 @@ class SClinic extends CI_Controller {
         }
 
         return $dayName;
-    }
-
-    function checkDuplicateMaster($name, $isEdit, $old_data){
-        $query = $this->clinic_model->getClinicByName($name, $isEdit, $old_data);
-
-        if(empty($query)) {
-            return true;
-        }else{
-            return false;
-        }
     }
 
     function is_logged_in(){

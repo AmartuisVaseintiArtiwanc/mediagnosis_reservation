@@ -2,13 +2,20 @@
 
 class SPoli_Model extends CI_Model {
 
-    function getSettingDetailPoli($sClinicID){
+    function getSettingDetailPoli($sClinicID, $superUserID=""){
 		$this->db->select('*');
         $this->db->from('tbl_cyberits_s_poli a');
 		$this->db->join('tbl_cyberits_m_doctors b', 'a.doctorID = b.doctorID');
         $this->db->where('a.sClinicID',$sClinicID);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
-		$this->db->order_by('b.doctorName','asc');
+
+        // Check Role
+        $role = $this->session->userdata('role');
+        if($role != "mediagnosis_admin"){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+        $this->db->where('a.createdBy',$superUserID);
+
+        $this->db->order_by('b.doctorName','asc');
         $query = $this->db->get();
 		return $query->result_array();
 	}
@@ -45,8 +52,8 @@ class SPoli_Model extends CI_Model {
 		return $result;
 	}
     
-    function deleteSettingPoli($poliID,$doctorID){
-        $this->db->where('poliID',$poliID);
+    function deleteSettingPoli($sClinicID,$doctorID){
+        $this->db->where('sClinicID',$sClinicID);
         $this->db->where('doctorID',$doctorID);
         $this->db->delete('tbl_cyberits_s_poli');
 	}

@@ -16,6 +16,7 @@
     <h1>
         Master
         <small>Clinic</small>
+        - <?php echo $data_account->userName."-".$data_account->email;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
@@ -155,7 +156,7 @@
 
         $('#clinic-modal-add').on('shown.bs.modal', function () {
             $('#clinic-form-add')[0].reset();
-            $('#modal-title-add').text("Add New Clinic");
+            $('#modal-title-add').text("Tambah Klinik Baru");
             $('#err-master-name-add').text("");
             $('#master-name-add').focus();
         })

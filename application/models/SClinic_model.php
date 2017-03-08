@@ -2,13 +2,20 @@
 
 class SClinic_Model extends CI_Model {
 
-    function getSettingDetailClinic($clinicID){
+    function getSettingDetailClinic($clinicID, $superUserID=""){
 		$this->db->select('*');
         $this->db->from('tbl_cyberits_s_clinic a');
 		$this->db->join('tbl_cyberits_m_poli b', 'a.poliID = b.poliID');
         $this->db->where('a.clinicID',$clinicID);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
-		$this->db->order_by('b.poliName','asc');
+
+        // Check Role
+        $role = $this->session->userdata('role');
+        if($role != "mediagnosis_admin"){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+        $this->db->where('a.createdBy',$superUserID);
+
+        $this->db->order_by('b.poliName','asc');
         $query = $this->db->get();
 		return $query->result_array();
 	}

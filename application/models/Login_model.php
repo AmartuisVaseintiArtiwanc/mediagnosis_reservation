@@ -43,12 +43,17 @@ class Login_model extends CI_Model {
 		
 	}
 
-    public function getUserDataByUserID($userID){
+    public function getUserDataByUserID($userID, $isActive="1"){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_users u');
         //$this->db->join('tbl_cyberits_m_patients p', 'u.userID=p.userID');
         $this->db->where('userID', $userID);
-        $this->db->where('isActive', 1);
+
+        // Using isActive or Not
+        if($isActive != "none"){
+            $this->db->where('isActive', $isActive);
+        }
+
         $query = $this->db->get();
         return $query->row();
     }

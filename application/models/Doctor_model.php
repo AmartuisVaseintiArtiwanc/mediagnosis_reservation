@@ -76,9 +76,9 @@ class Doctor_Model extends CI_Model {
     }
 
     //LOOKUP SETTING
-    function getDoctorLookupListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit){
-        $this->_dataLookupDoctorQuery($searchText,$orderByColumnIndex,$orderDir);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+    function getDoctorLookupListData ($superUserID,$searchText,$orderByColumnIndex,$orderDir, $start,$limit){
+        $this->_dataLookupDoctorQuery($superUserID,$searchText,$orderByColumnIndex,$orderDir);
+        $this->db->where('a.createdBy',$superUserID);
         // LIMIT
         if($limit!=null || $start!=null){
             $this->db->limit($limit, $start);
@@ -88,25 +88,25 @@ class Doctor_Model extends CI_Model {
 
     }
 
-    function count_lookup_filtered($searchText){
-        $this->_dataLookupDoctorQuery($searchText,null,null);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+    function count_lookup_filtered($superUserID,$searchText){
+        $this->_dataLookupDoctorQuery($superUserID,$searchText,null,null);
+        $this->db->where('a.createdBy',$superUserID);
         $query = $this->db->get();
         return $query->num_rows();
     }
 
-    public function count_lookup_all(){
+    public function count_lookup_all($superUserID){
         $this->db->from("tbl_cyberits_m_doctors a");
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         return $this->db->count_all_results();
     }
 
-    function _dataLookupDoctorQuery($searchText,$orderByColumnIndex,$orderDir){
+    function _dataLookupDoctorQuery($superUserID,$searchText,$orderByColumnIndex,$orderDir){
         #Create where clause
         $this->db->select('doctorID');
         $this->db->from('tbl_cyberits_s_poli');
         $this->db->where('isActive', 1);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         $where_clause = $this->db->get_compiled_select();
 
         $this->db->select('*');

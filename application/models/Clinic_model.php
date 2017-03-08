@@ -47,8 +47,10 @@ class Clinic_Model extends CI_Model {
     }
 
     function _dataClinicQuery($searchText,$orderByColumnIndex,$orderDir){
-        $this->db->select('*');
+        $this->db->select('a.clinicID, a.clinicName, b.userID, b.userName, b.email,
+        a.isActive, a.created, a.lastUpdated, a.createdBy, a.lastUpdatedBy');
         $this->db->from('tbl_cyberits_m_clinics a');
+        $this->db->join('tbl_cyberits_m_users b',"a.userID = b.userID");
 
         //WHERE
         $i = 0;
@@ -77,11 +79,13 @@ class Clinic_Model extends CI_Model {
         }
     }
 
-    function getClinicByName($name, $isEdit, $old_data){
+    function getClinicByName($name, $isEdit, $old_data, $superUserID=""){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_clinics a');
         $this->db->where('clinicName',$name);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+
+        $this->db->where('a.createdBy',$superUserID);
+
         if($isEdit){
             $this->db->where('clinicName != ', $old_data);
         }
@@ -89,12 +93,34 @@ class Clinic_Model extends CI_Model {
         return $query->row();
     }
 
-    function getClinicByID($id){
+    function checkDupicateClinicName($name, $isEdit, $clinicID, $superUserID=""){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_clinics a');
+        $this->db->where('a.clinicName',$name);
+
+        $this->db->where('a.createdBy',$superUserID);
+
+        if($isEdit){
+            $this->db->where('a.clinicID != ', $clinicID);
+        }
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    function getClinicByID($id,$superUserID=""){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_clinics a');
         $this->db->where('clinicID',$id);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
         $this->db->where('a.isActive',1);
+
+        // Check Role
+        $role = $this->session->userdata('role');
+        if($role != "mediagnosis_admin"){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+
+        $this->db->where('a.createdBy',$superUserID);
+
         $query = $this->db->get();
         return $query->row();
     }

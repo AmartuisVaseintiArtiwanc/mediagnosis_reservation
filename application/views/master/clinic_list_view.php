@@ -101,12 +101,17 @@
                             "data-toggle":"modal","data-target":"#clinic-modal-edit","data-value": rowData[1]});
                         $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
+                        var $btn_edit_account = $("<button>", { class:"btn btn-primary btn-xs edit-account-btn","type": "button",
+                            "data-toggle":"modal","data-target":"#clinic-modal-edit-account",
+                            "data-value": rowData[6],"data-username": rowData[7],"data-email": rowData[8]});
+                        $btn_edit_account.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit Akun");
+
                         var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
                             "data-value": rowData[1]});
-                        $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
+                        $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Hapus");
 
                         var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[4],"data-last-modifed":rowData[5]});
-                        $(td).html($btn_edit).append(" ").append($btn_del).append($div_info);
+                        $(td).html($btn_edit).append(" ").append($btn_edit_account).append(" ").append($btn_del).append($div_info);
                     }
                 },
                 {
@@ -155,15 +160,33 @@
 
         $('#clinic-modal-add').on('shown.bs.modal', function () {
             $('#clinic-form-add')[0].reset();
-            $('#modal-title-add').text("Add New Clinic");
+            $('#modal-title-add').text("Tambah Klinik Baru");
             $('#err-master-name-add').text("");
             $('#master-name-add').focus();
         })
 
+        //Edit Account Open Modal
+        $( "#dataTables-list tbody" ).on( "click", "button.edit-account-btn", function() {
+            $('#clinic-form-edit-account')[0].reset();
+            $('.cd-error-message').text("");
+
+            var id_item =  $(this).attr("data-value"); //userID
+            var username =  $(this).attr("data-username");
+            var email =  $(this).attr("data-email");
+
+            $('#master-username-edit').val(username);
+            $('#master-username-edit').attr("data-value",username);
+
+            $('#master-email-edit').val(email);
+            $('#master-email-edit').attr("data-value",email);
+            $('#master-user-id').val(id_item);
+
+        });
+
         //Edit open Modal
         $( "#dataTables-list tbody" ).on( "click", "button.edit-btn", function() {
             $('#clinic-form-edit')[0].reset();
-            $('#err-master-name-edit').text("");
+            $('.cd-error-message').text("");
 
             var id_item =  $(this).attr("data-value");
             var $tr =  $(this).closest("tr");
