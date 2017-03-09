@@ -50,7 +50,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>I</b>NV</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Reservasi</b>    </span>
+      <span class="logo-lg"><b>Mediagnosis</b>    </span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -119,7 +119,7 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-        <li><a href="<?php echo site_url("Welcome");?>"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="active"><a href="<?php echo site_url("Welcome");?>"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 
           <!--SUPER ADMIN  MASTER-->
           <?php if($this->session->userdata('role')=="super_admin"){?>

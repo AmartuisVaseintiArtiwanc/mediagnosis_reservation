@@ -44,6 +44,7 @@ class SClinic extends CI_Controller {
     function indexAdmin(){
         $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
         $data['master'] = 'SClinic';
+        $data['master_title'] = 'Setting Clinic - Poli';
         $this->load->view('admin/template/template', $data);
     }
 

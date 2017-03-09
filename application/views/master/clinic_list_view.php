@@ -35,7 +35,7 @@
                 <div class="col-lg-8">
                     <button type="button" class="btn btn-primary btn-xl" id="add-btn"
                             data-toggle="modal" data-target="#clinic-modal-add">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Klinik
                     </button>
                 </div>
             </div>

@@ -34,6 +34,7 @@ class Clinic extends CI_Controller {
     function indexAdmin(){
         $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
         $data['master'] = 'Clinic';
+        $data['master_title'] = 'Master Clinic';
         $this->load->view('admin/template/template', $data);
     }
 
@@ -315,26 +316,6 @@ class Clinic extends CI_Controller {
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
-    function is_logged_in(){
-        $is_logged_in = $this->session->userdata('is_logged_in');
-        $role = $this->session->userdata('role');
-        if(!isset($is_logged_in) || $is_logged_in != true) {
-            $url_login = site_url("Login");
-            redirect($url_login, 'refresh');
-        }else{
-            if(!$this->authentication->isAuthorizeAdminMediagnosis($role) &&
-                !$this->authentication->isAuthorizeSuperAdmin($role)){
-                $url_login = site_url("Login");
-                redirect($url_login, 'refresh');
-
-            }
-        }
-    }
-
-    private function saveDataClinic($clinicName, $userID){
-
-    }
-
     private function saveAccountClinic($username, $password, $email, $superUserID){
         $data['msg'] = '';
         $data['status'] = 'error';
@@ -389,15 +370,20 @@ class Clinic extends CI_Controller {
         return $result;
     }
 
-    function testing(){
-        echo  $this->session->userdata('superUserID');
+    function is_logged_in(){
+        $is_logged_in = $this->session->userdata('is_logged_in');
+        $role = $this->session->userdata('role');
+        if(!isset($is_logged_in) || $is_logged_in != true) {
+            $url_login = site_url("Login");
+            redirect($url_login, 'refresh');
+        }else{
+            if(!$this->authentication->isAuthorizeAdminMediagnosis($role) &&
+                !$this->authentication->isAuthorizeSuperAdmin($role)){
+                $url_login = site_url("Login");
+                redirect($url_login, 'refresh');
+
+            }
+        }
     }
 
-    function call(){
-        $data['superUserID'] = 'master/clinic_list_view';
-        $data['superUserID'] = "1";
-        $data['superUserID'] = 'master/clinic_list_view';
-
-        return $data;
-    }
 }

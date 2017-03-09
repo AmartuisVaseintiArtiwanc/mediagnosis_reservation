@@ -82,14 +82,14 @@ class SSchedule_model extends CI_Model {
         }
     }
 
-    function getHeaderData($clinicID, $poliID){
+    function getHeaderData($clinicID, $poliID, $superUserID){
         $this->db->select('clinicName, poliName, a.clinicID, a.poliID');
         $this->db->from('tbl_cyberits_s_clinic a');
         $this->db->join('tbl_cyberits_m_poli b','a.poliID = b.poliID');
         $this->db->join('tbl_cyberits_m_clinics c','a.clinicID = c.clinicID');
         $this->db->where('a.clinicID',$clinicID);
         $this->db->where('a.poliID',$poliID);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         $query = $this->db->get();
         return $query->row();
     }

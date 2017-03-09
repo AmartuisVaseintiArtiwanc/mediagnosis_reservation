@@ -35,6 +35,7 @@ class SPoli extends CI_Controller {
     function indexAdmin(){
         $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
         $data['master'] = 'SPoli';
+        $data['master_title'] = 'Setting Poli - Doctor';
         $this->load->view('admin/template/template', $data);
     }
 

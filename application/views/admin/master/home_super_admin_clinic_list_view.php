@@ -16,7 +16,7 @@
     <h1>
         Master
         <small>Super Admin Clinic</small>
-        - <?php echo $master;?>
+        - <?php echo $master_title;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>

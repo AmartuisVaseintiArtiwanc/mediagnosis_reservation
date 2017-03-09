@@ -45,8 +45,10 @@ class Doctor_Model extends CI_Model {
     }
 
     function _dataDoctorQuery($searchText,$orderByColumnIndex,$orderDir){
-        $this->db->select('*');
+        $this->db->select('a.doctorID, a.doctorName, b.userID, b.userName, b.email,
+        a.isActive, a.created, a.lastUpdated, a.createdBy, a.lastUpdatedBy');
         $this->db->from('tbl_cyberits_m_doctors a');
+        $this->db->join('tbl_cyberits_m_users b',"a.userID = b.userID");
 
         //WHERE
         $i = 0;
@@ -140,13 +142,13 @@ class Doctor_Model extends CI_Model {
         }
     }
 
-    function getDoctorByName($name, $isEdit, $old_data){
+    function getDoctorByName($name, $isEdit, $doctorID, $superUserID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_doctors a');
         $this->db->where('doctorName',$name);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        $this->db->where('a.createdBy',$superUserID);
         if($isEdit){
-            $this->db->where('doctorName != ', $old_data);
+            $this->db->where('doctorID != ', $doctorID);
         }
         $query = $this->db->get();
         return $query->row();

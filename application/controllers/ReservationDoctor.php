@@ -23,28 +23,33 @@ class ReservationDoctor extends CI_Controller {
             $userID =  $this->session->userdata('userID');
             $doctor_data = $this->doctor_model->getClinicPoliDoctorByUserID($userID);
 
-            $check_reservation = $this->test_model->checkUnfinishReservation($doctor_data->doctorID);
-            if(isset($check_reservation->detailReservationID)){
-                $this->goToMedicalRecord($check_reservation->detailReservationID);
-            }else{
-                $check_reservation = $this->test_model->checkWaitingConfirmReservation($doctor_data->doctorID);
+            if(isset($doctor_data)){
+                $check_reservation = $this->test_model->checkUnfinishReservation($doctor_data->doctorID);
                 if(isset($check_reservation->detailReservationID)){
-                    $status = "waiting";
-                    $data['detailID']  = $check_reservation->detailReservationID;
+                    $this->goToMedicalRecord($check_reservation->detailReservationID);
                 }else{
-                    $status = "clear";
-                    $data['detailID']  = "";
-                }
-                // CREATE & CHECK RESERVATION CLINIC POLI
-                $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
-                $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
-                $data['reversation_clinic_data']  = $headerData;
-                $data['doctor_data']  = $doctor_data;
-                $data['status']  = $status;
+                    $check_reservation = $this->test_model->checkWaitingConfirmReservation($doctor_data->doctorID);
+                    if(isset($check_reservation->detailReservationID)){
+                        $status = "waiting";
+                        $data['detailID']  = $check_reservation->detailReservationID;
+                    }else{
+                        $status = "clear";
+                        $data['detailID']  = "";
+                    }
+                    // CREATE & CHECK RESERVATION CLINIC POLI
+                    $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
+                    $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
+                    $data['reversation_clinic_data']  = $headerData;
+                    $data['doctor_data']  = $doctor_data;
+                    $data['status']  = $status;
 
-                //$data['main_content'] = 'reservation/doctor/home_view';
-                $this->load->view('reservation/doctor/reservation_doctor_view', $data);
-                //$this->output->enable_profiler(TRUE);
+                    //$data['main_content'] = 'reservation/doctor/home_view';
+                    $this->load->view('reservation/doctor/reservation_doctor_view', $data);
+                    //$this->output->enable_profiler(TRUE);
+                }
+            }else{
+                $data['doctor_data']  = $doctor_data;
+                $this->load->view('reservation/doctor/reservation_doctor_uncomplete_view', $data);
             }
         }
     }

@@ -205,7 +205,6 @@
                 err++;
             }
 
-
             if (err != 0) {
                 return false;
             } else {
