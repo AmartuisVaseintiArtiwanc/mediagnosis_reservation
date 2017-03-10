@@ -26,7 +26,7 @@
  <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Poli List</h3>
+            <h3 class="box-title">Daftar Poli</h3>
         </div>
 
         <div class="box-body">
@@ -35,7 +35,7 @@
                     <div class="col-lg-8">
                         <button type="button" class="btn btn-primary btn-xl" id="add-btn"
                                 data-toggle="modal" data-target="#poli-modal-add">
-                            <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
+                            <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Poli Baru
                         </button>
                     </div>
                 </div>
@@ -69,6 +69,10 @@
      $(function() {
          var baseurl = "<?php echo site_url();?>/";
          var selected = [];
+		 
+		 $(".sidebar-menu").find(".active").removeClass("active");
+		 $(".mediagnosis-navigation-master").addClass("active");
+		 
          var table = $('#dataTables-list').DataTable({
              "lengthChange": false,
              "processing": true, //Feature control the processing indicator.
@@ -103,7 +107,7 @@
 
                          var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
                             "data-value": rowData[1]});
-                         $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
+                         $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Hapus");
 
                          var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[4],"data-last-modifed":rowData[5]});
                          $(td).html($btn_edit).append(" ").append($btn_del).append($div_info);
@@ -155,7 +159,7 @@
 
          $('#poli-modal-add').on('shown.bs.modal', function () {
              $('#Poli-form-add')[0].reset();
-             $('#modal-title-add').text("Add New Poli");
+             $('#modal-title-add').text("Tambah Poli Baru");
              $('#err-master-name-add').text("");
              $('#master-name-add').focus();
          })
@@ -204,8 +208,8 @@
              formData.append("delID", id_item);
 
              $(this).deleteData({
-                 alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Poli ?",
-                 alertTitle   : "Delete Confirmation",
+                 alertMsg     : "Apakah anda ingin menghapus poli <i><b>"+col_title+"</b></i> ini ?",
+                 alertTitle   : "Konfirmasi Penghapusan",
                  url		     : "<?php echo site_url('Poli/deletePoli')?>",
                  data		 : formData,
                  locationHref : "<?php echo site_url('Poli')?>"

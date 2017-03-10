@@ -9,6 +9,8 @@ class Poli extends CI_Controller {
         $this->load->library("Authentication");
         $this->is_logged_in();
         $this->load->model('poli_model',"poli_model");
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
     
 	function index(){
@@ -91,22 +93,22 @@ class Poli extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg="Cannot save master to Database";
+                $msg=$this->lang->line("002");//"Cannot save master to Database";
             }
             else {
                 if($query==1){
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg="Master Poli has been added successfully.";
+                    $msg=$this->lang->line("001");//"Master Poli has been added successfully.";
                 }else{
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Failed to save data Master ! ";
+                    $msg=$this->lang->line("002");//"Failed to save data Master ! ";
                 }
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Poli already exist !";
+            $msg=$name." ".$this->lang->line("003");//"This ".$name." Poli already exist !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -137,21 +139,21 @@ class Poli extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save master to Database";
+                $msg = $this->lang->line("002");//"Cannot save master to Database";
             } else {
                 if ($query == 1) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Master Poli has been updated successfully.";
+                    $msg = $this->lang->line("004");//"Master Poli has been updated successfully.";
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data Master ! ";
+                    $msg = $this->lang->line("002");//"Failed to save data Master ! ";
                 }
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Poli already exist !";
+            $msg=$name." ".$this->lang->line("003");//"This ".$name." Poli already exist !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -182,16 +184,16 @@ class Poli extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg = "Cannot save master to Database";
+            $msg = $this->lang->line("006");//"Cannot save master to Database";
         } else {
             if ($query == 1) {
                 $this->db->trans_commit();
                 $status = "success";
-                $msg = "Master Poli has been updated successfully.";
+                $msg = $this->lang->line("005");//"Master Poli has been updated successfully.";
             } else {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Failed to save data Master ! ";
+                $msg = $this->lang->line("006"); //"Failed to save data Master ! ";
             }
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));

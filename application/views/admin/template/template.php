@@ -50,7 +50,7 @@
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>I</b>NV</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Reservasi</b>    </span>
+      <span class="logo-lg"><b>Mediagnosis</b>    </span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -119,11 +119,11 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
-        <li><a href="<?php echo site_url("Welcome");?>"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+        <li class="active mediagnosis-navigation-dashboard"><a href="<?php echo site_url("Welcome");?>"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
 
           <!--SUPER ADMIN  MASTER-->
           <?php if($this->session->userdata('role')=="mediagnosis_admin"){?>
-            <li class="treeview">
+            <li class="treeview mediagnosis-navigation-master">
               <a href="#">
                 <i class="fa fa-database"></i>
                 <span>Masters</span>
@@ -131,9 +131,9 @@
               </a>
               <ul class="treeview-menu">
                   <!---->
-                  <li><a href="<?php echo site_url("SuperAdminClinic");?>"><i class="fa fa-circle-o"></i> Super Admin Clinic</a></li>
-                  <li><a href="<?php echo site_url("Clinic/indexAdmin");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
-                  <li><a href="<?php echo site_url("Doctor/indexAdmin");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>
+                  <li><a href="<?php echo site_url("SuperAdminClinic");?>"><i class="fa fa-circle-o"></i> Super Admin Klinik</a></li>
+                  <li><a href="<?php echo site_url("Clinic/indexAdmin");?>"><i class="fa fa-circle-o"></i> Klinik</a></li>
+                  <li><a href="<?php echo site_url("Doctor/indexAdmin");?>"><i class="fa fa-circle-o"></i> Dokter</a></li>
                   <li><a href="<?php echo site_url("Poli");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
                   <li><a href="<?php echo site_url("Disease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
                   <li><a href="<?php echo site_url("Symptomp");?>"><i class="fa fa-circle-o"></i> Gejala</a></li>
@@ -143,43 +143,43 @@
 
         <!--SETTING-->
         <?php if($this->session->userdata('role')=="mediagnosis_admin"){?>
-            <li class="treeview">
+            <li class="treeview mediagnosis-navigation-setting">
               <a href="#">
                 <i class="fa fa-gear"></i>
                 <span>Settings</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                  <li><a href="<?php echo site_url("SClinic/indexAdmin");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
+                  <li><a href="<?php echo site_url("SClinic/indexAdmin");?>"><i class="fa fa-circle-o"></i> Klinik</a></li>
                   <li><a href="<?php echo site_url("SPoli/indexAdmin");?>"><i class="fa fa-circle-o"></i> Poli</a></li>
-                  <li><a href="<?php echo site_url("SettingSchedule/indexAdmin");?>"><i class="fa fa-circle-o"></i> Schedule</a></li>
+                  <li><a href="<?php echo site_url("SettingSchedule/indexAdmin");?>"><i class="fa fa-circle-o"></i> Jadwal</a></li>
                   <li><a href="<?php echo site_url("SDisease");?>"><i class="fa fa-circle-o"></i> Penyakit</a></li>
               </ul>
             </li>
 
-            <li class="treeview">
+            <li class="treeview mediagnosis-navigation-register">
                 <a href="#">
                     <i class="fa fa-sign-in"></i>
-                    <span>Register</span>
+                    <span>Register Akun</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                  <li><a href="<?php echo site_url("RegisterAdmin/goToAddAdminForm");?>"><i class="fa fa-circle-o"></i> Admin</a></li>
-                  <li><a href="<?php echo site_url("RegisterAdmin/goToAddClinicForm");?>"><i class="fa fa-circle-o"></i> Clinic</a></li>
-                    <li><a href="<?php echo site_url("RegisterAdmin/goToAddDoctorForm");?>"><i class="fa fa-circle-o"></i> Doctor</a></li>
+                  <li><a href="<?php echo site_url("RegisterAdmin/goToAddAdminForm");?>"><i class="fa fa-circle-o"></i>Super Admin Klinik</a></li>
+                  <li><a href="<?php echo site_url("RegisterAdmin/goToAddClinicForm");?>"><i class="fa fa-circle-o"></i> Admin Klinik</a></li>
+                    <li><a href="<?php echo site_url("RegisterAdmin/goToAddDoctorForm");?>"><i class="fa fa-circle-o"></i> Dokter</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="treeview mediagnosis-navigation-transaction">
                 <a href="#">
                     <i class="fa fa-gear"></i>
-                    <span>Trasction</span>
+                    <span>Transction</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?php echo site_url("Rating/ratingUpdate");?>"><i class="fa fa-circle-o"></i> Update Rating</a></li>
                 </ul>
             </li>
-            <li><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-stethoscope"></i> <span>Diagnosa</span></a></li>
+            <li class="mediagnosis-navigation-diagnose"><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-stethoscope"></i> <span>Diagnosa</span></a></li>
         <?php } ?>
 
       </ul>

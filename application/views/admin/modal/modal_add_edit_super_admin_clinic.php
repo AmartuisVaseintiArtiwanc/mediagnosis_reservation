@@ -1,11 +1,11 @@
 <!--Modal ADD-->
-<div class="modal fade" id="clinic-modal-add" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="super-admin-clinic-modal-add" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal-title-add">Tambah Klinik Baru</h4>
+                <h4 class="modal-title" id="modal-title-add">Tambah Super Admin Klinik Baru</h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -13,17 +13,8 @@
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 
                 </div>
-                <form id="clinic-form-add" action="">
-                    <div class="form-group">
-                        <label for="master-name-add" class="control-label cd-name">Nama Klinik :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-name-add"></span>
-                        <input type="text" class="form-control" id="master-name-add" name="clinic_name"
-                               placeholder="Nama Klinik Anda" data-label="#err-master-name-add" autofocus>
-                    </div>
-
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Akun Klinik</h3>
-                    </div>
+                <form id="super-admin-clinic-form-add" action="">
+                                  
                     <div class="form-group">
                         <label for="master-username-add" class="control-label">Username :</label>
                         <span class="cd-error-message label label-danger" id="err-master-username-add"></span>
@@ -52,53 +43,7 @@
             </div><!--modal body-->
 
             <div class="modal-footer">                
-                <button type="submit" class="btn btn-primary" id="btn-save">Simpan</button>
-            </div><!--modal footer-->
-
-        </div><!--modal content-->
-    </div><!--modal dialog-->
-</div>
-
-<!--Modal EDIT-->
-<div class="modal fade" id="clinic-modal-edit" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal-title-edit"></h4>
-            </div><!--modal header-->
-
-            <div class="modal-body">
-                <div class="alert alert-danger hidden" id="err-msg">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-
-                </div>
-                <form id="clinic-form-edit" action="">
-                    <input type="hidden" class="form-control" id="master-id">
-                    <div class="form-group">
-                        <label for="master-name-edit" class="control-label cd-name">Nama Klinik :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-name-edit"></span>
-                        <input type="text" class="form-control" id="master-name-edit"
-                               placeholder="Name" data-label="#err-master-name-edit">
-                    </div>
-                    <div class="form-group">
-                        <label for="master-isactive-edit" class="control-label">Status :</label>
-                        <input type="hidden" class="form-control" id="master-isactive-edit">
-                        <br/>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-isactive" data-status="1" id="btn-status-active">ACTIVE</button>
-                            <button type="button" class="btn btn-default btn-isactive" data-status="0" id="btn-status-no-active">NO ACTIVE</button>
-                        </div>
-                    </div>
-                </form>
-            </div><!--modal body-->
-
-            <div class="modal-footer">
-                <p id="created"></p>
-                <p id="last_modified"></p>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                <button type="submit" class="btn btn-primary" id="btn-update">Edit</button>
+                <button type="submit" class="btn btn-primary" id="btn-save">Save</button>
             </div><!--modal footer-->
 
         </div><!--modal content-->
@@ -106,13 +51,13 @@
 </div>
 
 <!--Modal EDIT Account-->
-<div class="modal fade" id="clinic-modal-edit-account" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="super-admin-clinic-modal-edit-account" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Ubah Akun Klinik</h4>
+                <h4 class="modal-title">Ubah Akun Super Admin Klinik</h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -120,7 +65,7 @@
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
 
                 </div>
-                <form id="clinic-form-edit-account" action="">
+                <form id="super-admin-clinic-form-edit-account" action="">
                     <input type="hidden" class="form-control" id="master-user-id">
                     <div class="form-group">
                         <label for="master-username-edit" class="control-label">Ubah Username :</label>
@@ -146,11 +91,21 @@
                         <input type="password" class="form-control" id="master-confirm-password-edit"
                                placeholder="Konfirmasi Reset Password" data-label="#err-master-confirm-password-edit">
                     </div>
+					
+					<div class="form-group">
+                        <label for="master-isactive-edit" class="control-label">Status :</label>
+                        <input type="hidden" class="form-control" id="master-isactive-edit">
+                        <br/>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-isactive" data-status="1" id="btn-status-active">ACTIVE</button>
+                            <button type="button" class="btn btn-default btn-isactive" data-status="0" id="btn-status-no-active">NO ACTIVE</button>
+                        </div>
+                    </div>
                 </form>
             </div><!--modal body-->
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="submit" class="btn btn-primary" id="btn-update-account">Edit</button>
             </div><!--modal footer-->
 
@@ -161,9 +116,7 @@
 <script>
 
     $(document).ready( function($) {
-
-        var $superUser = "<?php echo $superUserID;?>";
-
+       
         $(".btn-isactive").click(function(){
             var $status = $(this).attr("data-status");
             if($status == 1){
@@ -178,11 +131,7 @@
         });
 
         function validate() {
-            var err = 0;
-
-            if (!$('#master-name-add').validateRequired()) {
-                err++;
-            }
+            var err = 0;          
 
             if (!$('#master-username-add').validateRequired()) {
                 err++;
@@ -202,19 +151,6 @@
             }
 
             if (!$('#master-email-add').validateEmailForm()) {
-                err++;
-            }
-
-            if (err != 0) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-        function validateEdit() {
-            var err = 0;
-
-            if (!$('#master-name-edit').validateRequired()) {
                 err++;
             }
 
@@ -254,36 +190,16 @@
                 formData.append("username", $("#master-username-add").val());
                 formData.append("password", $("#master-password-add").val());
                 formData.append("email", $("#master-email-add").val());
-
-                formData.append("superUserID", $superUser);
-
+                
                 $(this).saveData({
-                    url: "<?php echo site_url('Clinic/createClinic')?>",
+                    url: "<?php echo site_url('SuperAdminClinic/createClinic')?>",
                     data: formData,
-                    locationHref: "<?php echo site_url('Clinic/index/'.$superUserID)?>",
+                    locationHref: "<?php echo site_url('SuperAdminClinic/index')?>",
                     hrefDuration : 1000
                 });
             }
             e.preventDefault();
-        };
-
-        var updateDataEvent = function(e){
-            if (validateEdit()) {
-                var formData = new FormData();
-                formData.append("id", $("#master-id").val());
-                formData.append("name", $("#master-name-edit").val());
-                formData.append("isActive", $("#master-isactive-edit").val());
-                formData.append("superUserID", $superUser);
-
-                $(this).saveData({
-                    url: "<?php echo site_url('Clinic/editClinic')?>",
-                    data: formData,
-                    locationHref: "<?php echo site_url('Clinic/index/'.$superUserID)?>",
-                    hrefDuration : 1000
-                });
-            }
-            e.preventDefault();
-        };
+        };     
 
         var updateAccountDataEvent = function(e){
             if (validateEditAccount()) {
@@ -294,6 +210,7 @@
                 var $username_old =  $("#master-username-edit").attr("data-value");
                 var $email_old =  $("#master-email-edit").attr("data-value");
                 var $password =  $("#master-password-edit").val();
+				var $is_active =  $("#master-isactive-edit").val();
 
                 if($username != $username_old){
                     formData.append("username",$username);
@@ -304,13 +221,13 @@
                 if($password != ""){
                     formData.append("password", $password);
                 }
-                formData.append("id", $("#master-user-id").val());
-                formData.append("superUserID", $superUser);
+                formData.append("isActive", $is_active);   
+				formData.append("id", $("#master-user-id").val());               
 
                 $(this).saveData({
-                    url: "<?php echo site_url('Clinic/editAccountClinic')?>",
+                    url: "<?php echo site_url('SuperAdminClinic/editAccountSuperAdminClinic');?>",
                     data: formData,
-                    locationHref: "<?php echo site_url('Clinic/index/'.$superUserID)?>",
+                    locationHref: "<?php echo site_url('SuperAdminClinic/index');?>",
                     hrefDuration : 1000
                 });
             }
@@ -319,15 +236,11 @@
 
         // SAVE DATA TO DB
         $('#btn-save').click(saveDataEvent);
-        $("#clinic-form-add").on("submit", saveDataEvent);
-
-        // UPDATE DATA TO DB
-        $('#btn-update').click(updateDataEvent);
-        $("#clinic-form-edit").on("submit", updateDataEvent);
+        $("#super-admin-clinic-form-add").on("submit", saveDataEvent);
 
         // UPDATE ACCOUNT TO DB
         $('#btn-update-account').click(updateAccountDataEvent);
-        $("#clinic-form-edit-account").on("submit", updateAccountDataEvent);
+        $("#super-admin-form-edit-account").on("submit", updateAccountDataEvent);
     });
 
 </script>

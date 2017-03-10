@@ -15,19 +15,19 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Clinic</small>
+        <small>Klinik</small>
         - <?php echo $data_account->userName."-".$data_account->email;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-        <li class="active">Clinic</li>
+        <li class="active">Klinik</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Clinic List</h3>
+            <h3 class="box-title">Daftar Klinik</h3>
         </div>
 
         <div class="box-body">
@@ -45,7 +45,7 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Klinik</th>
                     <th style = "text-align:center;">Status</th>
                     <th style = "text-align:left;display:none;">Created</th>
                     <th style = "text-align:left;display:none;">Created By</th>
@@ -70,6 +70,10 @@
     $(function() {
         var baseurl = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-master").addClass("active");
+		
         var table = $('#dataTables-list').DataTable({
             "lengthChange": false,
             "processing": true, //Feature control the processing indicator.
@@ -179,7 +183,7 @@
             var created = $td.find('div.item-info').attr("data-created");
             var last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
-            $('#modal-title-edit').html("Edit Clinic - <b>"+text+"</b>");
+            $('#modal-title-edit').html("Edit Klinik - <b>"+text+"</b>");
             $('#master-name-edit').val(text);
             $('#master-id').val(id_item);
 
@@ -228,8 +232,8 @@
             formData.append("delID", id_item);
 
             $(this).deleteData({
-                alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Clinic ?",
-                alertTitle   : "Delete Confirmation",
+                alertMsg     : "DApakah anda ingin menghapus klinik <i><b>"+col_title+"</b></i> ini ?",
+                alertTitle   : "Konfirmasi Penghapusan",
                 url		     : "<?php echo site_url('Clinic/deleteClinic')?>",
                 data		 : formData,
                 locationHref : "<?php echo site_url('Clinic/indexAdmin')?>"

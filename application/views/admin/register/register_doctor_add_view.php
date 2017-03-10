@@ -2,11 +2,11 @@
 <section class="content-header">
     <h1>
         Register
-        <small>Doctor</small>
+        <small>Dokter</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Register</a></li>
-        <li class="active">Doctor</li>
+        <li class="active">Dokter</li>
     </ol>
 </section>
 
@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <button type="button" class="btn btn-primary btn-xl" id="btn-save">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp SAVE
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp SIMPAN
                     </button>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <input type="password" class="form-control" id="password-input" placeholder="Password" data-label="#err-password-input">
                 </div>
                 <div class="form-group">
-                    <label for="confirm-password-input" class="control-label">Confirm Password :</label>
+                    <label for="confirm-password-input" class="control-label">Konfirmasi Password :</label>
                     <span class="cd-error-message label label-danger" id="err-confirm-password-input"></span>
                     <input type="password" class="form-control" id="confirm-password-input" placeholder="Password" data-label="#err-confirm-password-input">
                 </div>
@@ -49,7 +49,7 @@
                     <input type="text" class="form-control" id="email-input" placeholder="Email" data-label="#err-email-input" autofocus>
                 </div>
                 <div class="form-group">
-                    <label for="admin-input" class="control-label">Choose Admin :</label>
+                    <label for="admin-input" class="control-label">Pilih Admin :</label>
                     <span class="cd-error-message label label-danger" id="err-admin-input"></span>
                     <div class="input-group">
                         <input type="text" class="form-control" id="admin-input" placeholder="Admin" data-label="#err-admin-input" disabled>
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="doctor-name-input" class="control-label">Doctor Name :</label>
+                    <label for="doctor-name-input" class="control-label">Nama Dokter :</label>
                     <span class="cd-error-message label label-danger" id="err-doctor-name-input"></span>
                     <input type="text" class="form-control" id="doctor-name-input" placeholder="Doctor" data-label="#err-doctor-name-input" autofocus>
                 </div>
@@ -78,6 +78,9 @@
         var $base_url = "<?php echo site_url();?>/";
         var selected = [];
         var table = "";
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-register").addClass("active");
 
         function getData(){
             // Quickly and simply clear a table

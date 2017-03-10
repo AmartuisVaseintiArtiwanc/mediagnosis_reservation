@@ -15,32 +15,22 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Super Admin Clinic</small>
+        <small>Super Admin Klinik</small>
         - <?php echo $master_title;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-        <li class="active">Super Admin Clinic</li>
+        <li class="active">Super Admin Klinik</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Super Admin Clinic List</h3>
+            <h3 class="box-title">Daftar Super Admin Klinik</h3>
         </div>
 
         <div class="box-body">
-            <p>
-            <div class="row">
-                <div class="col-lg-8">
-                    <button type="button" class="btn btn-primary btn-xl" id="add-btn"
-                            data-toggle="modal" data-target="#clinic-modal-add">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
-                    </button>
-                </div>
-            </div>
-            </p>
             <table  class="table table-bordered table-striped tbl-master" id="dataTables-admin">
                 <thead>
                 <tr>
@@ -65,13 +55,14 @@
     </div>
 </section>
 
-<?php $this->load->view('modal/modal_add_edit_clinic')?>
-
 <script>
     $(function() {
         var $base_url = "<?php echo site_url();?>/";
         var $master =  "<?php echo $master;?>";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-master").addClass("active");
 
         var table = $('#dataTables-admin').DataTable({
             "lengthChange": false,

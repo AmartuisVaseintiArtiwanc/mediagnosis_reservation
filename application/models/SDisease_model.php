@@ -12,6 +12,16 @@ class SDisease_Model extends CI_Model {
 		return $query->result_array();
 	}
 	
+	 function getSettingDetailDiseaseBySymptomp($symptompID){
+		$this->db->select('*');
+        $this->db->from('tbl_cyberits_s_diseasesymptomps a');
+		$this->db->join('tbl_cyberits_m_symptomps b', 'a.symptompID = b.symptompID');
+        $this->db->where('a.symptompID',$symptompID);
+		$this->db->order_by('b.symptompName','asc');
+        $query = $this->db->get();
+		return $query->result_array();
+	}
+	
     function createSettingDisease($data){
         $this->db->insert('tbl_cyberits_s_diseasesymptomps',$data);	
 		$result=$this->db->affected_rows();

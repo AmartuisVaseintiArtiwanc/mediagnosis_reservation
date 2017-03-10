@@ -15,28 +15,29 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Super Admin Clinic</small>
+        <small>Super Admin Klinik</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-        <li class="active">Super Admin Clinic</li>
+        <li class="active">Super Admin Klinik</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Super Admin Clinic List</h3>
+            <h3 class="box-title">Daftar Super Admin Klinik</h3>
         </div>
 
         <div class="box-body">
             <p>
             <div class="row">
                 <div class="col-lg-8">
-                    <button type="button" class="btn btn-primary btn-xl" id="add-btn"
-                            data-toggle="modal" data-target="#clinic-modal-add">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
-                    </button>
+					<a href="<?php echo site_url("RegisterAdmin/goToAddAdminForm");?>">
+						<button type="button" class="btn btn-primary btn-xl" id="add-btn">
+							<span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Baru
+						</button>
+					</a>
                 </div>
             </div>
             </p>
@@ -64,12 +65,15 @@
     </div>
 </section>
 
-<?php $this->load->view('modal/modal_add_edit_clinic')?>
+<?php $this->load->view('admin/modal/modal_add_edit_super_admin_clinic')?>
 
 <script>
     $(function() {
         var $base_url = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-master").addClass("active");
 
         var table = $('#dataTables-admin').DataTable({
             "lengthChange": false,
@@ -101,12 +105,13 @@
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
-                            "data-toggle":"modal","data-target":"#clinic-modal-edit","data-value": rowData[1]});
+                            "data-toggle":"modal","data-target":"#super-admin-clinic-modal-edit-account",
+							"data-value": rowData[1],"data-username": rowData[2],"data-email": rowData[3],"data-status": rowData[4]});
                         $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
                         var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
                             "data-value": rowData[1]});
-                        $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
+                        $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Hapus");
 
                         var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[4],"data-last-modifed":rowData[5]});
                         $(td).html($btn_edit).append(" ").append($btn_del).append($div_info);
@@ -139,31 +144,25 @@
 
         });
 
-        $('#clinic-modal-add').on('shown.bs.modal', function () {
-            $('#clinic-form-add')[0].reset();
-            $('#modal-title-add').text("Add New Clinic");
-            $('#err-master-name-add').text("");
-            $('#master-name-add').focus();
-        })
+         //Edit Account Open Modal
+        $( "#dataTables-admin tbody" ).on( "click", "button.edit-btn", function() {
+            $('#super-admin-clinic-form-edit-account')[0].reset();
+            $('.cd-error-message').text("");
+			
+            var id_item =  $(this).attr("data-value"); //userID
+            var username =  $(this).attr("data-username");
+            var email =  $(this).attr("data-email");
+			var status =  $(this).attr("data-status");
+			
 
-        //Edit open Modal
-        $( "#dataTables-list tbody" ).on( "click", "button.edit-btn", function() {
-            $('#clinic-form-edit')[0].reset();
-            $('#err-master-name-edit').text("");
+            $('#master-username-edit').val(username);
+            $('#master-username-edit').attr("data-value",username);
 
-            var id_item =  $(this).attr("data-value");
-            var $tr =  $(this).closest("tr");
-            var $td =  $(this).closest("td");
-            var text = $tr.find('td').eq(1).text();
-            var status = $tr.find('td span.status-label').attr("data-status");
-            var created = $td.find('div.item-info').attr("data-created");
-            var last_modified = $td.find('div.item-info').attr("data-last-modifed");
-
-            $('#modal-title-edit').html("Edit Clinic - <b>"+text+"</b>");
-            $('#master-name-edit').val(text);
-            $('#master-id').val(id_item);
-
-            if(status == 1){
+            $('#master-email-edit').val(email);
+            $('#master-email-edit').attr("data-value",email);
+            $('#master-user-id').val(id_item);
+			
+			if(status == 1){
                 $("#btn-status-active").removeClass("btn-default").addClass("btn-success");
                 $("#btn-status-no-active").removeClass("btn-danger").addClass("btn-default");
                 $("#master-isactive-edit").val(1);
@@ -173,15 +172,10 @@
                 $("#master-isactive-edit").val(0);
             }
 
-            $('#created').empty();
-            $('#created').append("Created : "+"<b>"+created+"</b>");
-            $('#last_modified').empty();
-            $('#last_modified').append("Last Modified : "+"<b>"+last_modified+"</b>");
-
         });
 
         //Delete
-        $( "#dataTables-list tbody" ).on( "click", "button.del-btn", function() {
+        $( "#dataTables-admin tbody" ).on( "click", "button.del-btn", function() {
             var id_item =  $(this).attr("data-value");
             var $tr =  $(this).closest("tr");
             var col_title = $tr.find('td').eq(1).text();
@@ -190,11 +184,11 @@
             formData.append("delID", id_item);
 
             $(this).deleteData({
-                alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Clinic ?",
-                alertTitle   : "Delete Confirmation",
-                url		     : "<?php echo site_url('Clinic/deleteClinic')?>",
+                alertMsg     : "Apakah anda ingin menghapus super admin klinik <i><b>"+col_title+"</b></i> ini ?",
+                alertTitle   : "Konfirmasi penghapusan",
+                url		     : "<?php echo site_url('SuperAdminClinic/deleteSuperAdminClinic')?>",
                 data		 : formData,
-                locationHref : "<?php echo site_url('Clinic')?>"
+                locationHref : "<?php echo site_url('SuperAdminClinic')?>"
             });
 
         });

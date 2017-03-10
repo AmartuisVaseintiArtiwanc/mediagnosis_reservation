@@ -14,6 +14,8 @@
             $this->load->model('Clinic_model',"clinic_model");
             $this->load->model('Doctor_model',"doctor_model");
             $this->is_logged_in_admin();
+			$this->load->helper("language");
+			$this->load->language("main", "bahasa");
         }
 
         function goToAddAdminForm(){
@@ -47,9 +49,9 @@
             $email = $this->security->xss_clean($this->input->post('email'));
 
             if(!($this->checkDuplicateUsername($username))){
-                $msg="Username already exist !";
+                $msg=$this->lang->line("007");//"Username already exist !";
             }else if(!($this->checkDuplicateEmail($email))){
-                $msg="Email already exist !";
+                $msg=$this->lang->line("008");//"Email already exist !";
             }else{
                 $datetime = date('Y-m-d H:i:s', time());
                 $data=array(
@@ -71,17 +73,17 @@
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Cannot save to Database";
+                    $msg= $this->lang->line("002");//"Cannot save to Database";
                 }
                 else {
                     if(isset($query)){
                         $this->db->trans_commit();
                         $status = "success";
-                        $msg="User has been added successfully.";
+                        $msg=$this->lang->line("001");//"User has been added successfully.";
                     }else{
                         $this->db->trans_rollback();
                         $status = "error";
-                        $msg="Failed to save User ! ";
+                        $msg=$this->lang->line("002");//"Failed to save User ! ";
                     }
                 }
             }
@@ -99,9 +101,9 @@
             $clinic_name = $this->security->xss_clean($this->input->post('clinic'));
 
             if(!($this->checkDuplicateUsername($username))){
-                $msg="Username already exist !";
+                $msg=$this->lang->line("007");//"Username already exist !";
             }else if(!($this->checkDuplicateEmail($email))){
-                $msg="Email already exist !";
+                $msg=$this->lang->line("008");//"Email already exist !";
             }else{
                 $datetime = date('Y-m-d H:i:s', time());
                 $data=array(
@@ -136,17 +138,17 @@
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Cannot save to Database";
+                    $msg=$this->lang->line("002");//"Cannot save to Database";
                 }
                 else {
                     if(isset($account_id) && isset($clinic_query)){
                         $this->db->trans_commit();
                         $status = "success";
-                        $msg="User has been added successfully.";
+                        $msg=$this->lang->line("001");//"User has been added successfully.";
                     }else{
                         $this->db->trans_rollback();
                         $status = "error";
-                        $msg="Failed to save User ! ";
+                        $msg=$this->lang->line("002");//"Failed to save User ! ";
                     }
                 }
             }
@@ -164,9 +166,9 @@
             $doctor_name = $this->security->xss_clean($this->input->post('doctor'));
 
             if(!($this->checkDuplicateUsername($username))){
-                $msg="Username already exist !";
+                $msg=$this->lang->line("007");//"Username already exist !";
             }else if(!($this->checkDuplicateEmail($email))){
-                $msg="Email already exist !";
+                $msg=$this->lang->line("008");//"Email already exist !";
             }else{
                 $datetime = date('Y-m-d H:i:s', time());
                 $data=array(
@@ -201,17 +203,17 @@
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Cannot save to Database";
+                    $msg=$this->lang->line("002");//"Cannot save to Database";
                 }
                 else {
                     if(isset($account_id) && isset($doctor_query)){
                         $this->db->trans_commit();
                         $status = "success";
-                        $msg="User has been added successfully.";
+                        $msg=$this->lang->line("001");//"User has been added successfully.";
                     }else{
                         $this->db->trans_rollback();
                         $status = "error";
-                        $msg="Failed to save User ! ";
+                        $msg=$this->lang->line("002");//"Failed to save User ! ";
                     }
                 }
             }

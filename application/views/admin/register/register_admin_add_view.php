@@ -1,12 +1,12 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Register
-        <small>Admin</small>
+        Register Akun
+        <small>Super Admin Klinik</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Register</a></li>
-        <li class="active">Admin</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Register Akun</a></li>
+        <li class="active">Super Admin Klinik</li>
     </ol>
 </section>
 
@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <button type="button" class="btn btn-primary btn-xl" id="btn-save">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp SAVE
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp SIMPAN
                     </button>
                 </div>
             </div>
@@ -39,9 +39,9 @@
                     <input type="password" class="form-control" id="password-input" placeholder="Password" data-label="#err-password-input">
                 </div>
                 <div class="form-group">
-                    <label for="confirm-password-input" class="control-label">Confirm Password :</label>
+                    <label for="confirm-password-input" class="control-label">Konfirmasi Password :</label>
                     <span class="cd-error-message label label-danger" id="err-confirm-password-input"></span>
-                    <input type="password" class="form-control" id="confirm-password-input" placeholder="Password" data-label="#err-confirm-password-input">
+                    <input type="password" class="form-control" id="confirm-password-input" placeholder="Konfirmasi Password" data-label="#err-confirm-password-input">
                 </div>
                 <div class="form-group">
                     <label for="email-input" class="control-label">Email :</label>
@@ -56,6 +56,9 @@
 <script>
 
     $(document).ready( function($) {
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-register").addClass("active");
         function validate() {
             var err = 0;
 

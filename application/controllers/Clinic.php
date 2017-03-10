@@ -11,6 +11,8 @@ class Clinic extends CI_Controller {
         $this->is_logged_in();
         $this->load->model('Clinic_model',"clinic_model");
         $this->load->model('Login_model',"login_model");
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
     
 	function index($superUserID=""){
@@ -131,22 +133,22 @@ class Clinic extends CI_Controller {
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Cannot save master to Database";
+                    $msg= $this->lang->line("002");//"Cannot save master to Database";
                 }
                 else {
                     if($query==1){
                         $this->db->trans_commit();
                         $status = "success";
-                        $msg="Master Clinic has been added successfully.";
+                        $msg= $this->lang->line("001");//"Master Clinic has been added successfully.";
                     }else{
                         $this->db->trans_rollback();
                         $status = "error";
-                        $msg="Failed to save data Master ! ";
+                        $msg= $this->lang->line("002");//"Failed to save data Master ! ";
                     }
                 }
             }else{
                 $status = "error";
-                $msg="This ".$name." Clinic already exist !";
+                $msg= $name." ".$this->lang->line("003");//"This ".$name." Clinic already exist !";
             }
         }else{
             $status = "error";
@@ -183,21 +185,21 @@ class Clinic extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save master to Database";
+                $msg = $this->lang->line("002");//"Cannot save master to Database";
             } else {
                 if ($query == 1) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Master Clinic has been updated successfully.";
+                    $msg = $this->lang->line("004");//"Master Clinic has been updated successfully.";
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data Master ! ";
+                    $msg = $this->lang->line("002");//"Failed to save data Master ! ";
                 }
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Clinic already exist !";
+            $msg=$name." ".$this->lang->line("003");//"This ".$name." Clinic already exist !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -219,7 +221,7 @@ class Clinic extends CI_Controller {
         // Check Duplicate Username
         if(isset($username) && $username != ""){
             if(!($this->checkDuplicateUsername($username))){
-                $msg = "Username already exist !";
+                $msg = $this->lang->line("007");//"Username already exist !";
                 $status = "error";
                 $flag++;
             }else{
@@ -229,7 +231,7 @@ class Clinic extends CI_Controller {
         // Check Duplicate Email
         if(isset($email) && $email != ""){
             if(!($this->checkDuplicateEmail($email))){
-                $msg = "Email already exist !";
+                $msg = $this->lang->line("008");//"Email already exist !";
                 $status = "error";
                 $flag++;
             }else{
@@ -251,16 +253,16 @@ class Clinic extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save master to Database";
+                $msg = $this->lang->line("002");//"Cannot save master to Database";
             } else {
                 if ($query == 1) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Master Clinic has been updated successfully.";
+                    $msg = $this->lang->line("004");//"Master Clinic has been updated successfully.";
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data Master ! ";
+                    $msg = $this->lang->line("002");//"Failed to save data Master ! ";
                 }
             }
         }
@@ -300,16 +302,16 @@ class Clinic extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg = "Cannot delete master in Database";
+            $msg = $this->lang->line("006");//"Cannot delete master in Database";
         } else {
             if ($query == 1) {
                 $this->db->trans_commit();
                 $status = "success";
-                $msg = "Clinic has been deleted successfully !";
+                $msg = $this->lang->line("005");//"Clinic has been deleted successfully !";
             } else {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Failed to delete data Master ! ";
+                $msg = $this->lang->line("006");//"Failed to delete data Master ! ";
             }
         }
 
@@ -321,10 +323,10 @@ class Clinic extends CI_Controller {
         $data['status'] = 'error';
 
         if(!($this->checkDuplicateUsername($username))){
-            $data['msg'] = "Username already exist !";
+            $data['msg'] = $this->lang->line("007");//"Username already exist !";
 
         }else if(!($this->checkDuplicateEmail($email))){
-            $data['msg'] = "Email already exist !";
+            $data['msg'] = $this->lang->line("008");//"Email already exist !";
 
         }else {
             $datetime = date('Y-m-d H:i:s', time());

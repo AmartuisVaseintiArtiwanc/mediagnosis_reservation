@@ -15,18 +15,18 @@
  <section class="content-header">
      <h1>
          Master
-         <small>Symptomp</small>
+         <small>Gejala</small>
      </h1>
      <ol class="breadcrumb">
          <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-         <li class="active">Symptomp</li>
+         <li class="active">Gejala</li>
      </ol>
  </section>
  <!-- Main content -->
  <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Symptomp List</h3>
+            <h3 class="box-title">List Gejala</h3>
         </div>
 
         <div class="box-body">
@@ -35,7 +35,7 @@
                     <div class="col-lg-8">
                         <button type="button" class="btn btn-primary btn-xl" id="add-btn"
                                 data-toggle="modal" data-target="#symptomp-modal-add">
-                            <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
+                            <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Baru
                         </button>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th style = "text-align:left;">Symptomp</th>
+                        <th style = "text-align:left;">Gejala</th>
                         <th style = "text-align:left;display:none;">Created</th>
                         <th style = "text-align:left;display:none;">Created By</th>
                         <th style = "text-align:left;display:none;">Last Modified</th>
@@ -67,6 +67,10 @@
  <script>
      $(function() {
          var baseurl = "<?php echo site_url();?>/";
+		 
+		 $(".sidebar-menu").find(".active").removeClass("active");
+		 $(".mediagnosis-navigation-master").addClass("active");
+		 
          var selected = [];
          var table = $('#dataTables-list').DataTable({
              "lengthChange": false,
@@ -101,7 +105,7 @@
 
                          var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
                             "data-value": cellData});
-                         $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
+                         $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Hapus");
 
                          var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[3],"data-last-modifed":rowData[4]});
                          $(td).html($btn_edit).append(" ").append($btn_del).append($div_info);
@@ -139,7 +143,7 @@
 
          $('#symptomp-modal-add').on('shown.bs.modal', function () {
              $('#Symptomp-form-add')[0].reset();
-             $('#modal-title-add').text("Add New Symptomp");
+             $('#modal-title-add').text("Tambah Gejala Baru");
              $('#err-master-name-add').text("");
              $('#master-name-add').focus();
          })
@@ -156,7 +160,7 @@
              var created = $td.find('div.item-info').attr("data-created");
              var last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
-             $('#modal-title-edit').html("Edit Symptomp - <b>"+text+"</b>");
+             $('#modal-title-edit').html("Edit Gejala - <b>"+text+"</b>");
              $('#master-name-edit').val(text);
              $('#master-id').val(id_item);
 
@@ -177,8 +181,8 @@
              formData.append("delID", id_item);
 
              $(this).deleteData({
-                 alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Symptomp ?",
-                 alertTitle   : "Delete Confirmation",
+                 alertMsg     : "Apakah anda ingin menghapus gejala <i><b>"+col_title+"</b></i> ini ?",
+                 alertTitle   : "Konfirmasi Penghapusan",
                  url		     : "<?php echo site_url('Symptomp/deleteSymptomp')?>",
                  data		 : formData,
                  locationHref : "<?php echo site_url('Symptomp')?>"

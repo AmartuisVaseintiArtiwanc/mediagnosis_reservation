@@ -5,7 +5,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal-title-add">Add New Poli</h4>
+                <h4 class="modal-title" id="modal-title-add">Tambah Poli Baru</h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -15,7 +15,7 @@
                 </div>
                 <form id="poli-form-add" action="">
                     <div class="form-group">
-                        <label for="master-name-add" class="control-label cd-name">Poli Name :</label>
+                        <label for="master-name-add" class="control-label cd-name">Nama Poli :</label>
                         <span class="cd-error-message label label-danger" id="err-master-name-add"></span>
                         <input type="text" class="form-control" id="master-name-add" name="poli_name"
                                placeholder="Name" data-label="#err-master-name-add" autofocus>
@@ -24,7 +24,7 @@
             </div><!--modal body-->
 
             <div class="modal-footer">               
-                <button type="submit" class="btn btn-primary" id="btn-save">Save</button>
+                <button type="submit" class="btn btn-primary" id="btn-save">Simpan</button>
             </div><!--modal footer-->
 
         </div><!--modal content-->
@@ -49,7 +49,7 @@
                 <form id="poli-form-edit" action="">
                     <input type="hidden" class="form-control" id="master-id">
                     <div class="form-group">
-                        <label for="master-name-edit" class="control-label cd-name">Poli Name :</label>
+                        <label for="master-name-edit" class="control-label cd-name">Nama Poli :</label>
                         <span class="cd-error-message label label-danger" id="err-master-name-edit"></span>
                         <input type="text" class="form-control" id="master-name-edit" name="poli_name"
                                placeholder="Name" data-label="#err-master-name-edit">
@@ -72,7 +72,7 @@
             <div class="modal-footer">
                 <p id="created"></p>
                 <p id="last_modified"></p>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary" id="btn-update">Edit</button>
             </div><!--modal footer-->
 

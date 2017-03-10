@@ -5,7 +5,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal-title-add">Add New Disease</h4>
+                <h4 class="modal-title" id="modal-title-add">Tambah Penyakit Baru</h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -15,16 +15,16 @@
                 </div>
                 <form id="disease-form-add" action="">
                     <div class="form-group">
-                        <label for="master-name-add" class="control-label cd-name">Disease Name :</label>
+                        <label for="master-name-add" class="control-label cd-name">Nama Penyakit :</label>
                         <span class="cd-error-message label label-danger" id="err-master-name-add"></span>
                         <input type="text" class="form-control" id="master-name-add" name="kategori_name"
-                               placeholder="Name" data-label="#err-master-name-add" autofocus>
+                               placeholder="Nama penyakit" data-label="#err-master-name-add" autofocus>
                     </div>
                 </form>
             </div><!--modal body-->
 
             <div class="modal-footer">                
-                <button type="submit" class="btn btn-primary" id="btn-save">Save</button>
+                <button type="submit" class="btn btn-primary" id="btn-save">Simpan</button>
             </div><!--modal footer-->
 
         </div><!--modal content-->
@@ -49,28 +49,28 @@
                 <form id="disease-form-edit" action="">
                     <input type="hidden" class="form-control" id="master-id">
                     <div class="form-group">
-                        <label for="master-name-edit" class="control-label cd-name">Disease Name :</label>
+                        <label for="master-name-edit" class="control-label cd-name">Nama Penyakit :</label>
                         <span class="cd-error-message label label-danger" id="err-master-name-edit"></span>
                         <input type="text" class="form-control" id="master-name-edit"
-                               placeholder="Name" data-label="#err-master-name-edit">
+                               placeholder="Nama Penyakit" data-label="#err-master-name-edit">
                     </div>
                     <div class="form-group">
-                        <label for="master-desc-edit" class="control-label cd-name">Description :</label>
+                        <label for="master-desc-edit" class="control-label cd-name">Deskripsi :</label>
                         <span class="cd-error-message label label-danger" id="err-master-desc-edit"></span>
                         <textarea class="form-control" id="master-desc-edit"
-                               placeholder="Disease Description" data-label="#err-master-desc-edit" rows="10" ></textarea>
+                               placeholder="Deskripsi penyakit" data-label="#err-master-desc-edit" rows="10" ></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="master-caused-edit" class="control-label cd-name">Caused :</label>
+                        <label for="master-caused-edit" class="control-label cd-name">Penyebab :</label>
                         <span class="cd-error-message label label-danger" id="err-master-caused-edit"></span>
                         <textarea class="form-control" id="master-caused-edit"
-                                  placeholder="Caused" data-label="#err-master-caused-edit" rows="10" ></textarea>
+                                  placeholder="penyebab" data-label="#err-master-caused-edit" rows="10" ></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="master-treatment-edit" class="control-label cd-name">Treatment :</label>
+                        <label for="master-treatment-edit" class="control-label cd-name">Cara Pengobatan :</label>
                         <span class="cd-error-message label label-danger" id="err-master-treatment-edit"></span>
                         <textarea class="form-control" id="master-treatment-edit"
-                                  placeholder="Treatment" data-label="#err-master-treatment-edit" rows="10" ></textarea>
+                                  placeholder="cara pengobatan" data-label="#err-master-treatment-edit" rows="10" ></textarea>
                     </div>
                 </form>
             </div><!--modal body-->
@@ -78,7 +78,7 @@
             <div class="modal-footer">
                 <p id="created"></p>
                 <p id="last_modified"></p>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary" id="btn-update">Edit</button>
             </div><!--modal footer-->
 

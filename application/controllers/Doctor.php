@@ -12,6 +12,8 @@ class Doctor extends CI_Controller {
         $this->load->model('Login_model',"login_model");
         $this->load->model('Doctor_model',"doctor_model");
         $this->load->model('SPoli_model',"spoli_model");
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
     
 	function index($superUserID=""){
@@ -130,22 +132,22 @@ class Doctor extends CI_Controller {
                 if ($this->db->trans_status() === FALSE) {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Cannot save master to Database";
+                    $msg=$this->lang->line("002");//"Cannot save master to Database";
                 }
                 else {
                     if($query==1){
                         $this->db->trans_commit();
                         $status = "success";
-                        $msg="Master Doctor has been added successfully.";
+                        $msg=$this->lang->line("001");//"Master Doctor has been added successfully.";
                     }else{
                         $this->db->trans_rollback();
                         $status = "error";
-                        $msg="Failed to save data Master ! ";
+                        $msg=$this->lang->line("002");//"Failed to save data Master ! ";
                     }
                 }
             }else{
                 $status = "error";
-                $msg="This ".$name." Doctor already exist !";
+                $msg=$name." ".$this->lang->line("003");//"This ".$name." Doctor already exist !";
             }
         }else{
             $status = "error";
@@ -181,21 +183,21 @@ class Doctor extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save master to Database";
+                $msg = $this->lang->line("002");//"Cannot save master to Database";
             } else {
                 if ($query == 1) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Master Doctor has been updated successfully.";
+                    $msg = $this->lang->line("004");//"Master Doctor has been updated successfully.";
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data Master ! ";
+                    $msg = $this->lang->line("002");//"Failed to save data Master ! ";
                 }
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Doctor already exist !";
+            $msg=$name." ".$this->lang->line("003");//"This ".$name." Doctor already exist !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -249,16 +251,16 @@ class Doctor extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save master to Database";
+                $msg = $this->lang->line("002");//"Cannot save master to Database";
             } else {
                 if ($query == 1) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Master Clinic has been updated successfully.";
+                    $msg = $this->lang->line("004");//"Master Clinic has been updated successfully.";
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data Master ! ";
+                    $msg = $this->lang->line("002");//"Failed to save data Master ! ";
                 }
             }
         }
@@ -270,10 +272,10 @@ class Doctor extends CI_Controller {
         $data['status'] = 'error';
 
         if(!($this->checkDuplicateUsername($username))){
-            $data['msg'] = "Username already exist !";
+            $data['msg'] = $this->lang->line("007");//"Username already exist !";
 
         }else if(!($this->checkDuplicateEmail($email))){
-            $data['msg'] = "Email already exist !";
+            $data['msg'] = $this->lang->line("008");//"Email already exist !";
 
         }else {
             $datetime = date('Y-m-d H:i:s', time());
@@ -345,16 +347,16 @@ class Doctor extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg = "Cannot save master to Database";
+            $msg = $this->lang->line("006");//"Cannot save master to Database";
         } else {
             if ($query == 1) {
                 $this->db->trans_commit();
                 $status = "success";
-                $msg = "Master Doctor has been updated successfully.";
+                $msg = $this->lang->line("005");//"Master Doctor has been updated successfully.";
             } else {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Failed to save data Master ! ";
+                $msg = $this->lang->line("006");//"Failed to save data Master ! ";
             }
         }
 

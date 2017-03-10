@@ -9,6 +9,9 @@ class Disease extends CI_Controller {
         $this->load->library("Authentication");
         //$this->is_logged_in();
         $this->load->model('Diseases_model',"disease_model");
+		$this->load->model('SDisease_model',"sdisease_model");
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
     
 	function index(){
@@ -94,22 +97,22 @@ class Disease extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg="Cannot save master to Database";
+                $msg=$this->lang->line("002"); //"Cannot save master to Database";
             }
             else {
                 if($query){
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg="Master Disease has been added successfully.";
+                    $msg=$this->lang->line("001");//"Master Disease has been added successfully.";
                 }else{
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg="Failed to save data Master ! ";
+                    $msg=$this->lang->line("002"); //"Failed to save data Master ! ";
                 }
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Disease already exist !";
+            $msg=$name." ".$this->lang->line("003");//"This ".$name." Disease already exist !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -151,21 +154,21 @@ class Disease extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save master to Database";
+                $msg =$this->lang->line("002");  //"Cannot save master to Database";
             } else {
                 if ($query == 1) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Master Disease has been updated successfully.";
+                    $msg =$this->lang->line("004");  //"Master Disease has been updated successfully.";
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data Master ! ";
+                    $msg =$this->lang->line("002");  //"Failed to save data Master ! ";
                 }
             }
         }else{
             $status = "error";
-            $msg="This ".$name." Disease already exist !";
+            $msg=$name." ".$this->lang->line("003");//"This ".$name." Disease already exist !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -183,13 +186,30 @@ class Disease extends CI_Controller {
     }
 
     function deleteDisease(){
-        $status = 'success';
-        $msg = "Disease has been deleted successfully !";
-        $id = $this->security->xss_clean($this->input->post("delID"));
-        $this->disease_model->deleteDisease($id);
-
+        $status = 'error';
+		$id = $this->security->xss_clean($this->input->post("delID"));
+		
+		if($this->checkSettingUsage($id)){
+			$status = "success";
+			$msg = $this->lang->line("005"); //"Disease has been deleted successfully !";
+			$this->disease_model->deleteDisease($id);
+			
+		}else{
+			$msg = $this->lang->line("006"); // Master masi dipakai di setting
+		}
+        
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
+	
+	private function checkSettingUsage($diseaseID){
+		$data = $this->sdisease_model->getSettingDetailDisease($diseaseID);
+		
+		if(count($data) == 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 
     function is_logged_in_admin(){
         $is_logged_in = $this->session->userdata('is_logged_in');
