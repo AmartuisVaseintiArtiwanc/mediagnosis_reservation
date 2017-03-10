@@ -46,6 +46,7 @@ class SettingSchedule extends CI_Controller
         $data['main_content'] = 'admin/master/home_super_admin_clinic_list_view';
         $data['master'] = 'SettingSchedule';
         $data['master_title'] = 'Setting Schedule';
+		$data['navigation_flag'] = "setting";
         $this->load->view('admin/template/template', $data);
     }
 

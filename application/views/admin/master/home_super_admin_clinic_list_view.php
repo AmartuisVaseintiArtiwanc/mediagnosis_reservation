@@ -60,9 +60,23 @@
         var $base_url = "<?php echo site_url();?>/";
         var $master =  "<?php echo $master;?>";
         var selected = [];
+		<?php 
+			if(isset($navigation_flag)){
+				if($navigation_flag == "setting"){
+				?>
+					$(".sidebar-menu").find(".active").removeClass("active");
+					$(".mediagnosis-navigation-setting").addClass("active");
+				<?php
+				}
+			}
+			else{
+				?>
+				$(".sidebar-menu").find(".active").removeClass("active");
+				$(".mediagnosis-navigation-master").addClass("active");
+				<?php
+			}
+		?>
 		
-		$(".sidebar-menu").find(".active").removeClass("active");
-		$(".mediagnosis-navigation-master").addClass("active");
 
         var table = $('#dataTables-admin').DataTable({
             "lengthChange": false,
