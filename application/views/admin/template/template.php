@@ -176,7 +176,8 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="<?php echo site_url("Rating/ratingUpdate");?>"><i class="fa fa-circle-o"></i> Update Rating</a></li>
+                    <li><a href="<?php echo site_url("Rating/ratingClinicList");?>"><i class="fa fa-circle-o"></i> Update Rating Klinik</a></li>
+					<li><a href="<?php echo site_url("Rating/ratingDoctorList");?>"><i class="fa fa-circle-o"></i> Update Rating Dokter</a></li>
                 </ul>
             </li>
             <li class="mediagnosis-navigation-diagnose"><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-stethoscope"></i> <span>Diagnosa</span></a></li>

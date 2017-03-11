@@ -94,7 +94,7 @@
         var selected = [];
 
         $(".sidebar-menu").find(".active").removeClass("active");
-        $(".mediagnosis-navigation-master").addClass("active");
+        $(".mediagnosis-navigation-transaction").addClass("active");
 
         var table = $('#dataTables-list').DataTable({
             "lengthChange": false,
