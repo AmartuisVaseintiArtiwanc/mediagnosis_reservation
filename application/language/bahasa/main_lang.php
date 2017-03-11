@@ -22,4 +22,7 @@
 	
 	//Spesifik email sudah ada
 	$lang["008"]="Email sudah ada";
+	
+	//Pesan data berhasil disimpan untuk bulk up action
+	$lang["009"]="Data berhasil disimpan";
 ?>

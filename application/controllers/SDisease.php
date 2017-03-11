@@ -11,6 +11,8 @@ class SDisease extends CI_Controller {
         $this->load->model('Diseases_model',"disease_model");
 		$this->load->model('Symptomps_model',"symptomp_model");
 		$this->load->model('SDisease_model',"sdisease_model");
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
     
 	function index(){
@@ -127,12 +129,12 @@ class SDisease extends CI_Controller {
 		if ($this->db->trans_status() === FALSE){
 			$this->db->trans_rollback();
 			$status="error";
-			$msg="Error while saved data!";
+			$msg=$this->lang->line("002");//"Error while saved data!";
         }
         else{
 			$this->db->trans_commit();
 			$status="success";
-			$msg="Setting berhasil disimpan!";
+			$msg=$this->lang->line("009");//"Setting berhasil disimpan!";
         }
 		
         // return message to AJAX
@@ -147,15 +149,6 @@ class SDisease extends CI_Controller {
         }else{
             return false;
         }
-    }
-
-    function deleteDisease(){
-        $status = 'success';
-        $msg = "Disease has been deleted successfully !";
-        $id = $this->security->xss_clean($this->input->post("delID"));
-        $this->disease_model->deleteDisease($id);
-
-        echo json_encode(array('status' => $status, 'msg' => $msg));
     }
 
     function is_logged_in_admin(){

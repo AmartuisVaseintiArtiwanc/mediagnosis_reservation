@@ -14,6 +14,8 @@ class SettingSchedule extends CI_Controller
         $this->load->model('Clinic_model', "clinic_model");
         $this->load->model('Poli_model', "poli_model");
         $this->load->model('SSchedule_model', "sschedule_model");
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
 
     function index($superUserID=""){
@@ -195,12 +197,12 @@ class SettingSchedule extends CI_Controller
         if ($this->db->trans_status() === FALSE){
             $this->db->trans_rollback();
             $status="error";
-            $msg="Error while saved data!";
+            $msg=$this->lang->line("002");//"Error while saved data!";
         }
         else{
             $this->db->trans_commit();
             $status="success";
-            $msg="Setting berhasil disimpan!";
+            $msg=$this->lang->line("009");//"Setting berhasil disimpan!";
         }
 
         // return message to AJAX

@@ -70,12 +70,12 @@
 				 <a class="main-nav" href="#">
                     <button type="button" class="btn btn-success" id="lookup-doctor-btn"
                             data-toggle="modal" data-target="#lookup-doctor-modal">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add Item
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Dokter
                     </button>
                 </a>
                 <a href="<?=site_url('SPoli/index/'.$superUserID)?>">
                     <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Back to List
+                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Kembali
                     </button>
                 </a>
             </div>
@@ -91,7 +91,7 @@
             <table class="table table-bordered table-striped table-hover" id="tbl-detail">
                 <thead>
                 <tr>
-                    <th width="70%" style = "text-align:left;">Doctor</th>
+                    <th width="70%" style = "text-align:left;">Dokter</th>
                     <th width="10%" style = "text-align:center;">Option</th>
                 </tr>
                 </thead>
@@ -121,6 +121,9 @@
     var $currentRow = "";
 	var $data_doctor_current = <?php echo json_encode($data_setting_detail);?>;
     var $super_user = <?php echo $superUserID;?>;
+	
+	$(".sidebar-menu").find(".active").removeClass("active");
+	$(".mediagnosis-navigation-setting").addClass("active");
 	
 	var deletedDoctor = [];
     $(function(){
@@ -175,7 +178,7 @@
                         }
                     },
                     error:function(msg){
-                        alertify.error('Failed to response server!');
+                        alertify.error('Terjadi kesalahan server!');
                     }
                 });
             }

@@ -15,19 +15,19 @@
 <section class="content-header">
     <h1>
         Setting
-        <small>Clinic</small>
+        <small>Klinik</small>
         - <?php echo $data_account->userName."-".$data_account->email;?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Setting</a></li>
-        <li class="active">Clinic</li>
+        <li class="active">Klinik</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Clinic List</h3>
+            <h3 class="box-title">Daftar Klinik</h3>
         </div>
 
         <div class="box-body">
@@ -37,7 +37,7 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Klinik</th>
                     <th style = "text-align:left;display:none;">Created</th>
                     <th style = "text-align:left;display:none;">Created By</th>
                     <th style = "text-align:left;display:none;">Last Modified</th>
@@ -59,6 +59,10 @@
     $(function() {
         var baseurl = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-setting").addClass("active");
+		
         var table = $('#dataTables-list').DataTable({
             "lengthChange": false,
             "processing": true, //Feature control the processing indicator.

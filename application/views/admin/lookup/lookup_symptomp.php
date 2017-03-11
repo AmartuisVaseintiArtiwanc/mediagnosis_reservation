@@ -5,7 +5,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><b>Master Symptomp</b></h4>
+                <h4 class="modal-title"><b>Master Gejala</b></h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -13,7 +13,7 @@
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th style = "text-align:left;">Nama Symptomp</th>
+                        <th style = "text-align:left;">Nama Gejala</th>
                         <th style = "text-align:center;">Option</th>
                     </tr>
                     </thead>
@@ -38,6 +38,9 @@
         var selected = [];
         var table = "";
 
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-setting").addClass("active");
+		
         $("#lookup-symptomp-btn").click(function(){
             table = $('#dataTables-symptomp').DataTable({
                 "lengthChange": false,
@@ -76,7 +79,7 @@
                         "createdCell": function (td, cellData, rowData, row, col) {
                             var $btn_add = $("<button>", { class:"btn btn-primary btn-xs add-symptomp-btn","type": "button",
                                 "data-value": cellData}).css("width","100%");
-                            $btn_add.append("<span class='glyphicon glyphicon-plus'></span>&nbsp Add");
+                            $btn_add.append("<span class='glyphicon glyphicon-plus'></span>&nbsp Tambah");
 
                             $(td).html($btn_add);
                         }

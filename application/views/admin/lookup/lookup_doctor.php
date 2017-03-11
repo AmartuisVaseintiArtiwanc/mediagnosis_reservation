@@ -5,7 +5,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"><b>Master Doctor</b></h4>
+                <h4 class="modal-title"><b>Master Dokter</b></h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -13,7 +13,7 @@
                     <thead>
                     <tr>
                         <th>No</th>
-                        <th style = "text-align:left;">Nama Doctor</th>
+                        <th style = "text-align:left;">Nama Dokter</th>
                         <th style = "text-align:center;">Option</th>
                     </tr>
                     </thead>

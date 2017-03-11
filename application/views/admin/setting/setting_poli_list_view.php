@@ -27,7 +27,7 @@
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Poli List</h3>
+            <h3 class="box-title">Daftar Poli</h3>
         </div>
 
         <div class="box-body">
@@ -37,7 +37,7 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Klinik</th>
                     <th style = "text-align:left;">Poli</th>
                     <th style = "text-align:center;">Option</th>
                 </tr>
@@ -56,6 +56,10 @@
     $(function() {
         var baseurl = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-setting").addClass("active");
+		
         var table = $('#dataTables-list').DataTable({
             "lengthChange": false,
             "processing": true, //Feature control the processing indicator.

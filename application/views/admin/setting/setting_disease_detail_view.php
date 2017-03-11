@@ -47,11 +47,11 @@
 <section class="content-header">
     <h1>
         Setting
-        <small>Symptomp </small>
+        <small>Gejala </small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Setting</a></li>
-        <li class="active">Symptomp </li>
+        <li class="active">Gejala </li>
     </ol>
 </section>
 
@@ -69,23 +69,23 @@
 
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Setting Disease </h3>
+            <h3 class="box-title">Setting Penyakit </h3>
         </div>
         <!-- form start -->
         <div class="box-body">
             <div class="well well-sm">
                 <button type="button" class="btn btn-primary" id="btn-save">
-                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SAVE
+                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SIMPAN
                 </button>
 				 <a class="main-nav" href="#">
                     <button type="button" class="btn btn-success" id="lookup-symptomp-btn"
                             data-toggle="modal" data-target="#lookup-symptomp-modal">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add Item
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Gejala
                     </button>
                 </a>
                 <a href="<?=site_url('SDisease/index')?>">
                     <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Back to List
+                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Kembali
                     </button>
                 </a>
             </div>
@@ -101,8 +101,8 @@
             <table class="table table-bordered table-striped table-hover" id="tbl-detail">
                 <thead>
                 <tr>
-                    <th width="70%" style = "text-align:left;">Symptomp</th>
-                    <th width="20%" style = "text-align:left;">Weight</th>             
+                    <th width="70%" style = "text-align:left;">Gejala</th>
+                    <th width="20%" style = "text-align:left;">Bobot</th>             
                     <th width="10%" style = "text-align:center;">Option</th>
                 </tr>
                 </thead>
@@ -132,6 +132,9 @@
 <script type="text/javascript">
     var $currentRow = "";
 	var $data_symptomp_current = <?php echo json_encode($data_setting_detail);?>;
+	
+	$(".sidebar-menu").find(".active").removeClass("active");
+	$(".mediagnosis-navigation-setting").addClass("active");
 	
 	var deletedSymptomp = [];
     $(function(){
