@@ -151,6 +151,7 @@
 <script type="text/javascript">
     var $currentRow = "";
     var $data_poli_current = <?php echo json_encode($data_setting_detail);?>;
+	var $super_user = <?php echo $superUserID;?>;
 	
 	$(".sidebar-menu").find(".active").removeClass("active");
 	$(".mediagnosis-navigation-setting").addClass("active");
@@ -214,7 +215,7 @@
                         alertify.error(msg.msg);
                     }else{
                         alertify.success(msg.msg);
-                        location.href = "<?= site_url("SettingSchedule")?>";
+                        location.href = "<?= site_url("SettingSchedule/index/".$superUserID)?>";
                     }
                 },
                 error:function(msg){
