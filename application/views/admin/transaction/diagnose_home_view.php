@@ -33,20 +33,16 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Master
-        <small>Disease</small>
+        Simulasi
+        <small><em>Walking Diagnosis</em></small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Transaction</a></li>
-        <li class="active">Diagnose</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Diagnosa</a></li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
-        <div class="box-header">
-            <h3 class="box-title">Gejala</h3>
-        </div>
 
         <div class="box-body">
             <p>
@@ -56,7 +52,7 @@
                         <span class="glyphicon glyphicon-plus"></span>&nbsp Mulai Diagnosa
                     </button>
                     <button type="button" class="btn btn-default btn-xl" id="btn-clear-diagnose">
-                        <span class="glyphicon glyphicon-remove"></span>&nbsp Bersikan Gejala
+                        <span class="glyphicon glyphicon-remove"></span>&nbsp Bersihkan Gejala
                     </button>
                 </div>
             </div>
@@ -93,6 +89,9 @@
         var $selected = [];
         var $table_list_symptomp="";
         var $modal_table_symptomp="";
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		 $(".mediagnosis-navigation-diagnose").addClass("active");
 
         // SET Symptomp Data
         getData();
@@ -113,7 +112,7 @@
                 error: function(xhr, status, error) {
                     //var err = eval("(" + xhr.responseText + ")");
                     //alertify.error(xhr.responseText);
-                    alertify.error("Cannot response server !");
+                    alertify.error("Terjadi kesalahan server!");
                 }
             });
         }
