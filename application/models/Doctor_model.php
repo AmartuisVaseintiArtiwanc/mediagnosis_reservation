@@ -5,7 +5,12 @@ class Doctor_Model extends CI_Model {
     var $column_order = array('doctorID','doctorName',null); //set column field database for datatable orderable
     var $column_search = array('doctorName'); //set column field database for datatable searchable just firstname ,
 
-	function getDoctorList($start,$limit) //$num=10, $start=0
+    // Rating Clinic
+    var $column_rating_order = array('a.doctorID','a.doctorName','a.isActive','c.userName','a.rating','a.lastUpdatedRating'); //set column field database for datatable orderable
+    var $column_rating_search = array('doctorName'); //set column field database for datatable searchable just firstname ,
+
+
+    function getDoctorList($start,$limit) //$num=10, $start=0
 	{		
 		$this->db->select('*'); 
 		$this->db->from('tbl_cyberits_m_doctors a');
@@ -196,6 +201,70 @@ class Doctor_Model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    function getRatingDoctorListData ($searchText,$orderByColumnIndex,$orderDir, $start,$limit){
+        $this->_dataRatingDoctorQuery($searchText,$orderByColumnIndex,$orderDir);
+
+        // LIMIT
+        if($limit!=null || $start!=null){
+            $this->db->limit($limit, $start);
+        }
+        $query = $this->db->get();
+        return $query->result_array();
+
+    }
+
+    function count_rating_doctor_filtered($searchText){
+        $this->_dataRatingDoctorQuery($searchText,null,null);
+
+        $query = $this->db->get();
+        return $query->num_rows();
+    }
+
+    public function count_rating_doctor_all(){
+        $this->db->from("tbl_cyberits_m_doctors a");
+        return $this->db->count_all_results();
+    }
+
+    function _dataRatingDoctorQuery($searchText,$orderByColumnIndex,$orderDir){
+        $this->db->select('a.doctorID, a.doctorName, a.rating, a.lastUpdatedRating,
+        b.userID, b.userName, b.email, b.superUserID, c.userName as superAdmin,
+        a.isActive, a.created, a.lastUpdated, a.createdBy, a.lastUpdatedBy');
+        $this->db->from('tbl_cyberits_m_doctors a');
+        $this->db->join('tbl_cyberits_m_users b',"a.userID = b.userID");
+        $this->db->join('tbl_cyberits_m_users C',"b.superUserID = c.userID");
+
+        $this->db->where('b.userRole',"doctor");
+
+        //WHERE
+        $i = 0;
+        if($searchText != null && $searchText != ""){
+            //Search By Each Column that define in $column_search
+            foreach ($this->column_search as $item){
+                // first loop
+                if($i===0){
+                    $this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->db->like($item, $searchText);
+                }
+                else {
+                    $this->db->or_like($item, $searchText);
+                }
+
+                if(count($this->column_search) - 1 == $i) //last loop
+                    $this->db->group_end(); //close bracket
+
+                $i++;
+            }
+        }
+
+        //Order by
+        if($orderByColumnIndex != null && $orderDir != null ) {
+            $this->db->order_by($this->column_rating_order[$orderByColumnIndex], $orderDir);
+        }else{
+            $this->db->order_by("b.superUserID", "ASC");
+        }
+    }
+
 
     function createDoctor($data){
         $this->db->insert('tbl_cyberits_m_doctors',$data);	

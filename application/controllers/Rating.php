@@ -18,6 +18,126 @@ class Rating extends CI_Controller{
         $this->load->view('admin/template/template', $data);
     }
 
+    function ratingDoctorList(){
+        $data['main_content'] = 'admin/transaction/update_rating_doctor_view';
+        $this->load->view('admin/template/template', $data);
+    }
+
+    function ratingClinicList(){
+        $data['main_content'] = 'admin/transaction/update_rating_clinic_view';
+        $this->load->view('admin/template/template', $data);
+    }
+
+    function dataRatingClinicListAjax(){
+
+        $searchText = $this->security->xss_clean($_POST['search']['value']);
+        $limit = $_POST['length'];
+        $start = $_POST['start'];
+
+        // here order processing
+        if(isset($_POST['order'])){
+            $orderByColumnIndex = $_POST['order']['0']['column'];
+            $orderDir =  $_POST['order']['0']['dir'];
+        }
+        else {
+            $orderByColumnIndex = 3;
+            $orderDir = "ASC";
+        }
+
+        $result = $this->clinic_model->getRatingClinicListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
+        $resultTotalAll = $this->clinic_model->count_rating_clinic_all();
+        $resultTotalFilter  = $this->clinic_model->count_rating_clinic_filtered($searchText);
+
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($result as $item) {
+            $no++;
+            $date_created=date_create($item['created']);
+            $date_lastModified=date_create($item['lastUpdated']);
+            $date_lastUpdateRating=date_create($item['lastUpdatedRating']);
+            $row = array();
+            $row[] = $no;
+            $row[] = $item['clinicID'];
+            $row[] = $item['clinicName'];
+            $row[] = $item['isActive'];
+            $row[] = $item['superAdmin'];
+            $row[] = $item['rating'];
+            $row[] = date_format($date_lastUpdateRating,"d M Y");
+            $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
+            $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
+            $row[] = $item['userID'];
+            $row[] = $item['userName'];
+            $row[] = $item['email'];
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $resultTotalAll,
+            "recordsFiltered" => $resultTotalFilter,
+            "data" => $data,
+        );
+
+        //$this->output->enable_profiler(TRUE);
+        //output to json format
+        echo json_encode($output);
+    }
+
+    function dataRatingDoctorListAjax(){
+
+        $searchText = $this->security->xss_clean($_POST['search']['value']);
+        $limit = $_POST['length'];
+        $start = $_POST['start'];
+
+        // here order processing
+        if(isset($_POST['order'])){
+            $orderByColumnIndex = $_POST['order']['0']['column'];
+            $orderDir =  $_POST['order']['0']['dir'];
+        }
+        else {
+            $orderByColumnIndex = 3;
+            $orderDir = "ASC";
+        }
+
+        $result = $this->doctor_model->getRatingDoctorListData($searchText,$orderByColumnIndex,$orderDir, $start,$limit);
+        $resultTotalAll = $this->doctor_model->count_rating_doctor_all();
+        $resultTotalFilter  = $this->doctor_model->count_rating_doctor_filtered($searchText);
+
+        $data = array();
+        $no = $_POST['start'];
+        foreach ($result as $item) {
+            $no++;
+            $date_created=date_create($item['created']);
+            $date_lastModified=date_create($item['lastUpdated']);
+            $date_lastUpdateRating=date_create($item['lastUpdatedRating']);
+            $row = array();
+            $row[] = $no;
+            $row[] = $item['doctorID'];
+            $row[] = $item['doctorName'];
+            $row[] = $item['isActive'];
+            $row[] = $item['superAdmin'];
+            $row[] = $item['rating'];
+            $row[] = date_format($date_lastUpdateRating,"d M Y");
+            $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];
+            $row[] = date_format($date_lastModified,"d M Y")." by ".$item['lastUpdatedBy'];
+            $row[] = $item['userID'];
+            $row[] = $item['userName'];
+            $row[] = $item['email'];
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $resultTotalAll,
+            "recordsFiltered" => $resultTotalFilter,
+            "data" => $data,
+        );
+
+        //$this->output->enable_profiler(TRUE);
+        //output to json format
+        echo json_encode($output);
+    }
+
     function doUpdateClinic(){
         $status = "error";
         $msg="";

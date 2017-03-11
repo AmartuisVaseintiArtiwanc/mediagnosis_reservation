@@ -15,7 +15,7 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Clinic</small>
+        <small>Klinik</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Transaction</a></li>
@@ -112,30 +112,33 @@
         });
 
         $('#btn-update-doctor').click(function () {
-            $.ajax({
-                url: $base_url+"Rating/doUpdateDoctor",
-                type: "POST",
-                dataType: 'json',
-                cache:false,
-                beforeSend:function(){
-                    //SHOW LOADING SCREEN
-                    $("#loading-modal").modal("show");
-                },
-                success:function(data){
-                    if(data.status != "error"){
-                        alertify.success(data.msg);
-                        $("#loading-modal").modal("hide");
-                    }else{
-                        alertify.error("Failed to Update Rating !");
-                        $("#loading-modal").modal("hide");
+
+            alertify.confirm("Apakah Anda yakin untuk Meng-Update Rating Klinik ?",function(){
+                $.ajax({
+                    url: $base_url+"Rating/doUpdateDoctor",
+                    type: "POST",
+                    dataType: 'json',
+                    cache:false,
+                    beforeSend:function(){
+                        //SHOW LOADING SCREEN
+                        $("#loading-modal").modal("show");
+                    },
+                    success:function(data){
+                        if(data.status != "error"){
+                            alertify.success(data.msg);
+                            $("#loading-modal").modal("hide");
+                        }else{
+                            alertify.error("Failed to Update Rating !");
+                            $("#loading-modal").modal("hide");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        //var err = eval("(" + xhr.responseText + ")");
+                        //alertify.error(xhr.responseText);
+                        alertify.error("Cannot response server !");
                     }
-                },
-                error: function(xhr, status, error) {
-                    //var err = eval("(" + xhr.responseText + ")");
-                    //alertify.error(xhr.responseText);
-                    alertify.error("Cannot response server !");
-                }
-            });
+                });
+            }).setHeader("Konfirmasi Update");
         })
     });
 </script>
