@@ -41,11 +41,11 @@
 <section class="content-header">
     <h1>
         Setting
-        <small>Schedule </small>
+        <small>Jadwal </small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Setting</a></li>
-        <li class="active">Schedule </li>
+        <li class="active">Jadwal </li>
     </ol>
 </section>
 
@@ -63,17 +63,17 @@
 
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Setting Schedule </h3>
+            <h3 class="box-title">Setting Jadwal </h3>
         </div>
         <!-- form start -->
         <div class="box-body">
             <div class="well well-sm">
                 <button type="button" class="btn btn-primary" id="btn-save">
-                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SAVE
+                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SIMPAN
                 </button>
                 <a href="<?=site_url('SettingSchedule/index')?>">
                     <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Back to List
+                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Kembali
                     </button>
                 </a>
             </div>
@@ -93,9 +93,9 @@
             <table class="table table-bordered table-striped table-hover" id="tbl-detail">
                 <thead>
                 <tr>
-                    <th width="20%" style = "text-align:left;">Day</th>
-                    <th width="25%" style = "text-align:left;">Open Time</th>
-                    <th width="25%" style = "text-align:left;">Close Time</th>
+                    <th width="20%" style = "text-align:left;">Hari</th>
+                    <th width="25%" style = "text-align:left;">Waktu Buka</th>
+                    <th width="25%" style = "text-align:left;">Waktu Tutup</th>
                     <th width="10%" style = "text-align:center;">Active</th>
                 </tr>
                 </thead>

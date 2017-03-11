@@ -37,7 +37,7 @@
             <table class="table table-bordered table-striped tbl-master" id="report-table">
                 <thead>
                 <tr>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Klinik</th>
                     <th style = "text-align:right;">Total Kunjungan Sehat</th>
                     <th style = "text-align:right;">Total Kunjungan Sakit</th>
                     <th style = "text-align:center;">Status</th>

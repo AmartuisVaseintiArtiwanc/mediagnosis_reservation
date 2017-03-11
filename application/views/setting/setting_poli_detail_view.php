@@ -65,17 +65,17 @@
         <div class="box-body">
             <div class="well well-sm">
                 <button type="button" class="btn btn-primary" id="btn-save">
-                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SAVE
+                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SIMPAN
                 </button>
 				 <a class="main-nav" href="#">
                     <button type="button" class="btn btn-success" id="lookup-doctor-btn"
                             data-toggle="modal" data-target="#lookup-doctor-modal">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add Item
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Dokter
                     </button>
                 </a>
                 <a href="<?=site_url('SPoli/index')?>">
                     <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Back to List
+                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Kembali
                     </button>
                 </a>
             </div>
@@ -91,7 +91,7 @@
             <table class="table table-bordered table-striped table-hover" id="tbl-detail">
                 <thead>
                 <tr>
-                    <th width="70%" style = "text-align:left;">Doctor</th>
+                    <th width="70%" style = "text-align:left;">Dokter</th>
                     <th width="10%" style = "text-align:center;">Option</th>
                 </tr>
                 </thead>

@@ -37,7 +37,7 @@
             <table class="table table-bordered table-striped tbl-master" id="report-table">
                 <thead>
                 <tr>
-                    <th style = "text-align:left;">Clinic</th>
+                    <th style = "text-align:left;">Klinik</th>
                     <th style = "text-align:left;">Poli</th>
                     <th style = "text-align:right;">Rating</th>
                     <th style = "text-align:center;">Option</th>

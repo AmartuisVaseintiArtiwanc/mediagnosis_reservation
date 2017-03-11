@@ -37,11 +37,11 @@
 <section class="content-header">
     <h1>
         Setting
-        <small>Clinic </small>
+        <small>Klinik </small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Setting</a></li>
-        <li class="active">Clinic </li>
+        <li class="active">Klinik </li>
     </ol>
 </section>
 
@@ -59,23 +59,23 @@
 
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Setting Clinic </h3>
+            <h3 class="box-title">Setting Klinik </h3>
         </div>
         <!-- form start -->
         <div class="box-body">
             <div class="well well-sm">
                 <button type="button" class="btn btn-primary" id="btn-save">
-                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SAVE
+                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp SIMPAN
                 </button>
 				 <a class="main-nav" href="#">
                     <button type="button" class="btn btn-success" id="lookup-poli-btn"
                             data-toggle="modal" data-target="#lookup-poli-modal">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add Item
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Poli
                     </button>
                 </a>
                 <a href="<?=site_url('SClinic/index')?>">
                     <button type="button" class="btn btn-default">
-                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Back to List
+                        <span class="glyphicon glyphicon-circle-arrow-left"></span>&nbsp Kembali
                     </button>
                 </a>
             </div>
