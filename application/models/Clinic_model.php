@@ -185,7 +185,7 @@ class Clinic_Model extends CI_Model {
         a.isActive, a.created, a.lastUpdated, a.createdBy, a.lastUpdatedBy');
         $this->db->from('tbl_cyberits_m_clinics a');
         $this->db->join('tbl_cyberits_m_users b',"a.userID = b.userID");
-        $this->db->join('tbl_cyberits_m_users C',"b.superUserID = c.userID");
+        $this->db->join('tbl_cyberits_m_users c',"b.superUserID = c.userID");
 
         $this->db->where('b.userRole',"admin");
 
