@@ -90,8 +90,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="btn-search" data-search="">Search</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="btn-search" data-search="">Cari</button>
                 </div>
             </div>
         </div>
@@ -105,6 +105,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/plugins/daterangepicker/daterangepicker.js"></script>
 <script>
     $(function() {
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-report").addClass("active");
 
         setFilterDate();
         function setFilterDate(){
@@ -130,7 +133,7 @@
         });
 
         $('#filter-btn').click(function(){
-            $('#modal-title').text("Search by Date");
+            $('#modal-title').text("Pencarian berdasarkan tanggal");
             $('.search-date-modal').modal('show');
             $('#btn-search').attr("data-search","date");
         });
@@ -159,12 +162,12 @@
                 endDate: end,
                 "opens": "center",
                 ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    'Hari ini': [moment(), moment()],
+                    'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '7 hari terakhir': [moment().subtract(6, 'days'), moment()],
+                    '30 hari terakhir': [moment().subtract(29, 'days'), moment()],
+                    'Bulan ini': [moment().startOf('month'), moment().endOf('month')],
+                    'Bulan lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                 }
             },
             function (start, end) {

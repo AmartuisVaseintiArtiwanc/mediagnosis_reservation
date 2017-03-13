@@ -482,12 +482,6 @@ class Report extends CI_Controller {
         }
     }
 
-    function test(){
-       $data['asd'] = "Asd";
-        $data['wtf'] = "WTF";
-
-        return $data;
-    }
 
     function goToErrorPage(){
         $data['err_msg'] = "Maaf Anda tidak dapat mengakses halaman ini..";

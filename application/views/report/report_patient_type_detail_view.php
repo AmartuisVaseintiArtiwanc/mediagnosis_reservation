@@ -153,6 +153,9 @@
 <script type="text/javascript" src="<?php echo base_url();?>assets/plugins/daterangepicker/daterangepicker.js"></script>
 <script>
     $(function() {
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-report").addClass("active");
 
         setFilterDate();
         function setFilterDate(){
@@ -226,12 +229,12 @@
         $('#daterange-btn').daterangepicker(
             {
                 ranges: {
-                    'Today': [moment(), moment()],
-                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                    'This Month': [moment().startOf('month'), moment().endOf('month')],
-                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    'Hari ini': [moment(), moment()],
+                    'Kemarin': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    '7 hari terakhir': [moment().subtract(6, 'days'), moment()],
+                    '30 hari terakhir': [moment().subtract(29, 'days'), moment()],
+                    'Bulan ini': [moment().startOf('month'), moment().endOf('month')],
+                    'Bulan lalu': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                 },
                 startDate: moment().subtract(29, 'days'),
                 endDate: moment()

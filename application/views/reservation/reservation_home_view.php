@@ -78,13 +78,13 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Reservation
-        <small>Clinic</small>
+        Reservasi
+        <small>Klinik</small>
 
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Reservation</a></li>
-        <li class="active">Clinic</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Reservasi</a></li>
+        <li class="active">Reservasi Hari Ini</li>
     </ol>
 </section>
 <!-- Main content -->
@@ -96,7 +96,7 @@
                 <?php if($this->session->userdata('role')=="super_admin"){?>
                     <a href="<?=site_url('Reservation/index')?>">
                         <button class="btn btn-primary pull-right" type="button">
-                            <span class="glyphicon glyphicon-circle-arrow-left"></span> Back to list
+                            <span class="glyphicon glyphicon-circle-arrow-left"></span> Kembali
                         </button>
                     </a>
                 <?php } ?>
@@ -179,6 +179,9 @@
         var count = 1;
         var $detailID,$headerID;
         var $poliList = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-reservation").addClass("active");
 
         getPoliList();
         function getPoliList(){

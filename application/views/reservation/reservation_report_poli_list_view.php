@@ -14,12 +14,12 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Report Reservation
-        <small>List Poli</small>
+        Laporan Reservasi
+        <small>Daftar Poli</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Reservation</a></li>
-        <li class="active">List Clinic</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Reservasi</a></li>
+        <li class="active">Daftar Klinik</li>
     </ol>
 </section>
 <!-- Main content -->
@@ -31,7 +31,7 @@
                 <?php if($this->session->userdata('role')=="super_admin"){?>
                     <a href="<?=site_url('Reservation/goToReservationReportClinicList')?>">
                         <button class="btn btn-primary pull-right" type="button">
-                            <span class="glyphicon glyphicon-circle-arrow-left"></span> Back to list
+                            <span class="glyphicon glyphicon-circle-arrow-left"></span> Kembali
                         </button>
                     </a>
                 <?php } ?>
@@ -42,7 +42,7 @@
     <div class="box" id="content-container" >
 
         <div class="box-header">
-            <h3 class="box-title">Poli List</h3>
+            <h3 class="box-title">Daftar Poli</h3>
         </div>
 
         <div class="box-body">
@@ -78,6 +78,10 @@
 
 <script>
     $(function() {
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-reservation").addClass("active");
+		
         $('#dataTables-list').DataTable({
             "lengthChange": false,
             "columnDefs": [

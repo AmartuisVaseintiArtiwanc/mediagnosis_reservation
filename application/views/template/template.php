@@ -161,7 +161,7 @@
               </a>
               <ul class="treeview-menu">
                   <li><a href="<?php echo site_url("Reservation");?>"><i class="fa fa-circle-o"></i> Reservasi Hari ini</a></li>
-                  <li><a href="<?php echo site_url("Reservation/goToReservationReportClinicList");?>"><i class="fa fa-circle-o"></i> Laporan Reservasi</a></li>
+                  <!--<li><a href="<?php echo site_url("Reservation/goToReservationReportClinicList");?>"><i class="fa fa-circle-o"></i> Laporan Reservasi</a></li>-->
 				  <?php if($this->session->userdata('role')=="admin"){ ?>
                   <li><a href="<?php echo site_url("Reservation/getReservationListForPatient");?>" target="_blank"><i class="fa fa-circle-o"></i> Tampilan untuk Pasien</a></li>
 				  <?php }?>
@@ -181,7 +181,7 @@
           </li>
 		  <?php } ?>
           <?php if($this->session->userdata('role')=="super_admin" || $this->session->userdata('role')=="admin" ){?>
-              <li class="treeview mediagnosis-navigation-laporan">
+              <li class="treeview mediagnosis-navigation-report">
                   <a href="#">
                       <i class="fa fa-bar-chart"></i>
                       <span>Laporan</span>
