@@ -162,7 +162,9 @@
               <ul class="treeview-menu">
                   <li><a href="<?php echo site_url("Reservation");?>"><i class="fa fa-circle-o"></i> Reservasi Hari ini</a></li>
                   <li><a href="<?php echo site_url("Reservation/goToReservationReportClinicList");?>"><i class="fa fa-circle-o"></i> Laporan Reservasi</a></li>
+				  <?php if($this->session->userdata('role')=="admin"){ ?>
                   <li><a href="<?php echo site_url("Reservation/getReservationListForPatient");?>" target="_blank"><i class="fa fa-circle-o"></i> Tampilan untuk Pasien</a></li>
+				  <?php }?>
               </ul>
           </li>
           <li class="treeview mediagnosis-navigation-manual">

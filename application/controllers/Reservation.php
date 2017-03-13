@@ -8,16 +8,15 @@ class Reservation extends CI_Controller {
         $this->load->library("pagination");
         $this->load->library("authentication");
         $this->is_logged_in();
-        $this->load->model('doctor_model',"doctor_model");
-        $this->load->model('patient_model',"patient_model");
-        $this->load->model('clinic_model',"clinic_model");
-        $this->load->model('poli_model',"poli_model");
-        $this->load->model('sClinic_model',"sclinic_model");
-        $this->load->model('medical_record_detail_model',"medical_record_detail_model");
+        $this->load->model('Doctor_model',"doctor_model");
+        $this->load->model('Patient_model',"patient_model");
+        $this->load->model('Clinic_model',"clinic_model");
+        $this->load->model('Poli_model',"poli_model");
+        $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
         $this->load->model("HReservation_model");
         $this->load->model("DReservation_model");
-        $this->load->model('test_model',"test_model");
-        $this->load->model("SClinic_model","sClinic_Model");
+        $this->load->model('Test_model',"test_model");
+        $this->load->model("SClinic_model","sclinic_model");
 		$this->load->model('Notification_model');
     }
 
@@ -405,7 +404,7 @@ class Reservation extends CI_Controller {
             $clinicData = $this->clinic_model->getClinicByUserID($userID);
 
             if(isset($clinicData)){
-                $poli_data = $this->sClinic_Model->getClinicListByID($clinicData->clinicID);
+                $poli_data = $this->sclinic_Model->getClinicListByID($clinicData->clinicID);
                 if(isset($poli_data)){
                     $data['clinic_data'] = $clinicData;
                     $data['poli_data'] = $poli_data;
