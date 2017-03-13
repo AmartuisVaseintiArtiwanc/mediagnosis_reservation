@@ -15,18 +15,18 @@
 <section class="content-header">
     <h1>
         Master
-        <small>Doctor</small>
+        <small>Dokter</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Master</a></li>
-        <li class="active">Doctor</li>
+        <li class="active">Dokter</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Doctor List</h3>
+            <h3 class="box-title">Daftar Dokter</h3>
         </div>
 
         <div class="box-body">
@@ -44,7 +44,7 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Doctor</th>
+                    <th style = "text-align:left;">Dokter</th>
                     <th style = "text-align:center;">Status</th>
                     <th style = "text-align:left;display:none;">Created</th>
                     <th style = "text-align:left;display:none;">Created By</th>
@@ -69,6 +69,10 @@
     $(function() {
         var baseurl = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-master").addClass("active");
+		
         var table = $('#dataTables-list').DataTable({
             "lengthChange": false,
             "processing": true, //Feature control the processing indicator.
@@ -108,7 +112,7 @@
 
                         var $btn_del = $("<button>", { class:"btn btn-danger btn-xs del-btn","type": "button",
                             "data-value": rowData[1]});
-                        $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Delete");
+                        $btn_del.append("<span class='glyphicon glyphicon-remove'></span>&nbsp Hapus");
 
                         var $div_info = $("<div>",{class:"hidden item-info", "data-created":rowData[4],"data-last-modifed":rowData[5]});
                         $(td).html($btn_edit).append(" ").append($btn_edit_account).append(" ").append($btn_del).append($div_info);
@@ -196,7 +200,7 @@
             var created = $td.find('div.item-info').attr("data-created");
             var last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
-            $('#modal-title-edit').html("Edit Kategori - <b>"+text+"</b>");
+            $('#modal-title-edit').html("Edit Dokter - <b>"+text+"</b>");
             $('#master-name-edit').val(text);
             $('#master-id').val(id_item);
 
@@ -227,8 +231,8 @@
             formData.append("delID", id_item);
 
             $(this).deleteData({
-                alertMsg     : "Do you want to delete this <i><b>"+col_title+"</b></i> Doctor ?",
-                alertTitle   : "Delete Confirmation",
+                alertMsg     : "Apakah anda ingin menghapus dokter <i><b>"+col_title+"</b></i> ini ?",
+                alertTitle   : "Konfirmasi Dokter",
                 url		     : "<?php echo site_url('Doctor/deleteDoctor')?>",
                 data		 : formData,
                 locationHref : "<?php echo site_url('Doctor')?>"

@@ -153,6 +153,10 @@
     var $data_poli_current = <?php echo json_encode($data_setting_detail);?>;
 
     var deletedPoli = [];
+	
+	$(".sidebar-menu").find(".active").removeClass("active");
+	$(".mediagnosis-navigation-setting").addClass("active");
+	
     $(function(){
         //Timepicker
         //Timepicker
@@ -215,7 +219,7 @@
                     }
                 },
                 error:function(msg){
-                    alertify.error('Failed to response server!');
+                    alertify.error('Terjadi kesalahan server!');
                 }
             });
 
