@@ -25,4 +25,22 @@
 	
 	//Pesan data berhasil disimpan untuk bulk up action
 	$lang["009"]="Data berhasil disimpan";
+	
+	//Spesifik no KTP sudah ada
+	$lang["010"]="No. KTP sudah dipakai";
+	
+	//Spesifik no BPJS sudah ada
+	$lang["011"]="No. BPJS sudah dipakai";
+	
+	//Proses Reservasi berhasil
+	$lang["012"]="Proses reservasi berhasil";
+	
+	//Reservasi sudah ada di antrian
+	$lang["013"]="Pasien sudah ada di antrian saat ini";
+	
+	//error hak akses
+	$lang["014"]="Maaf, Anda tidak berhak mengakses halaman ini..";
+	
+	// pasien belum ada di antrian
+	$lang["015"]="Pasien ini tidak terdapat dalam proses reservasi ..";
 ?>

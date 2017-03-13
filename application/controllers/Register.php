@@ -16,6 +16,8 @@
 		    $this->load->model("Login_model");
 		    $this->load->model("Patient_model", "patient_model");
 		    $this->load->model("Clinic_model", "clinic_model");
+			$this->load->helper("language");
+			$this->load->language("main", "bahasa");
 		}
 
 		function registerOfflinePatient(){
@@ -94,10 +96,10 @@
 
 	        if($checkUniqueKTP == 1){
 	        	$status = "error";
-				$msg="Maaf, No. KTP sudah terpakai";
+				$msg=$this->lang->line("010");//"Maaf, No. KTP sudah terpakai";
 	        }else if($checkUniqueBPJS == 1){
 	        	$status = "error";
-				$msg="Maaf, No. BPJS sudah terpakai";
+				$msg=$this->lang->line("011");//"Maaf, No. BPJS sudah terpakai";
 	        }else{
 	        	$datetime = date('Y-m-d H:i:s', time());
 		        $data=array(
@@ -125,12 +127,12 @@
 	                // Failed to save Data to DB
 	                $this->db->trans_rollback();
 	                $status = 'error';
-					$msg = "Maaf, Terjadi kesalahan saat registrasi pasien";
+					$msg = $this->lang->line("002");//"Maaf, Terjadi kesalahan saat registrasi pasien";
 	            }
 	            else{
 	            	$this->db->trans_commit();
     				$status = 'success';
-					$msg = "Proses Registrasi berhasil";
+					$msg = $this->lang->line("001");//"Proses Registrasi berhasil";
 	            }
 	        }
 
@@ -156,10 +158,10 @@
 
             if($checkUniqueKTP == 1){
                 $status = "error";
-                $msg="Maaf, No. KTP sudah terpakai";
+                $msg=$this->lang->line("010");//"Maaf, No. KTP sudah terpakai";
             }else if($checkUniqueBPJS == 1){
                 $status = "error";
-                $msg="Maaf, No. BPJS sudah terpakai";
+                $msg=$this->lang->line("011");//"Maaf, No. BPJS sudah terpakai";
             }else{
                 $datetime = date('Y-m-d H:i:s', time());
                 $data=array(
@@ -180,12 +182,12 @@
                     // Failed to save Data to DB
                     $this->db->trans_rollback();
                     $status = 'error';
-                    $msg = "Maaf, Terjadi kesalahan saat registrasi pasien";
+                    $msg = $this->lang->line("002");//"Maaf, Terjadi kesalahan saat registrasi pasien";
                 }
                 else{
                     $this->db->trans_commit();
                     $status = 'success';
-                    $msg = "Proses Edit data berhasil";
+                    $msg = $this->lang->line("004");//"Proses Edit data berhasil";
                 }
             }
 

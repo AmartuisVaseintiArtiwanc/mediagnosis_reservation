@@ -29,10 +29,9 @@ class SettingSchedule extends CI_Controller
 
         }else if($this->authentication->isAuthorizeAdmin($role)){
             // Admin Clinic
-            $userID =  $this->session->userdata('userID');
+            $data['main_content'] = 'setting/setting_schedule_list_view';
             $data['superUserID'] = $superUserID;
-            $clinic = $this->clinic_model->getClinicByUserID($userID);
-            $this->goToSettingDetailClinic($clinic->clinicID);
+            $this->load->view('template/template', $data);
 
         }else if($this->authentication->isAuthorizeAdminMediagnosis($role)){
             // Super Admin Mediagnosis

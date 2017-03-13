@@ -14,19 +14,19 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Manual
-        <small>Patient</small>
+        Administrasi Manual
+        <small>Pendaftaran Manual</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Manual</a></li>
-        <li class="active">Patient</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Administrasi Manual</a></li>
+        <li class="active">Pendaftaran Manual</li>
     </ol>
 </section>
 <!-- Main content -->
 <section class="content">
     <div class="box" id="content-container" >
         <div class="box-header">
-            <h3 class="box-title">Patient List</h3>
+            <h3 class="box-title">Daftar Pasien</h3>
         </div>
 
         <div class="box-body">
@@ -35,7 +35,7 @@
                 <div class="col-lg-8">
                     <button type="button" class="btn btn-primary btn-xl" id="add-btn"
                             data-toggle="modal" data-target="#patient-modal-add">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp Add New
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp Tambah Baru
                     </button>
                 </div>
             </div>
@@ -44,10 +44,10 @@
                 <thead>
                 <tr>
                     <th>No</th>
-                    <th style = "text-align:left;">Patient Name</th>
+                    <th style = "text-align:left;">Nama Pasien</th>
                     <th style = "text-align:center;">No. KTP</th>
                     <th style = "text-align:center;">No. BPJS</th>
-					<th style = "text-align:center;">MRIS Number</th>
+					<th style = "text-align:center;">Nomor MRIS</th>
                     <th style = "text-align:center;">Option</th>
                 </tr>
                 </thead>
@@ -67,6 +67,10 @@
     $(function() {
         var baseurl = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-manual").addClass("active");
+		
         var table = $('#dataTables-list').DataTable({
             "lengthChange": false,
             "processing": true, //Feature control the processing indicator.
@@ -140,7 +144,7 @@
 
         $('#patient-modal-add').on('shown.bs.modal', function () {
             $('#patient-form-add')[0].reset();
-            $('#modal-title-add').text("Add New Patient");
+            $('#modal-title-add').text("Tambah Pasien Baru");
             $('#err-master-name-add').text("");
             $('#master-name-add').focus();
         })

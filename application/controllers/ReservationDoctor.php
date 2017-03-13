@@ -15,6 +15,8 @@ class ReservationDoctor extends CI_Controller {
         $this->load->model('patient_model',"patient_model");
         $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
 		$this->load->model('Notification_model');
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
 
     function index(){

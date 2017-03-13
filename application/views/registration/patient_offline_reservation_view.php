@@ -38,12 +38,12 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Manual 
-        <small>Reservasi</small>
+        Administrasi Manual 
+        <small>Reservasi Manual</small>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Manual</a></li>
-        <li class="active">Reservasi</li>
+        <li><a href="#"><i class="fa fa-dashboard"></i> Administrasi Manual</a></li>
+        <li class="active">Reservasi Manual</li>
     </ol>
 </section>
 <!-- Main content -->
@@ -196,6 +196,9 @@
     $(function() {
         var $base_url = "<?php echo site_url();?>/";
         var selected = [];
+		
+		$(".sidebar-menu").find(".active").removeClass("active");
+		$(".mediagnosis-navigation-manual").addClass("active");
 
         autosize($('textarea'));
 
@@ -244,7 +247,7 @@
                     error: function(xhr, status, error) {
                         //var err = eval("(" + xhr.responseText + ")");
                         //alertify.error(xhr.responseText);
-                        alertify.error("Cannot response server !");
+                        alertify.error("Terjadi kesalahan server!");
                     }
                 });
             }else{
@@ -366,7 +369,7 @@
                     error: function(xhr, status, error) {
                         //var err = eval("(" + xhr.responseText + ")");
                         //alertify.error(xhr.responseText);
-                        alertify.error("Cannot response server !");
+                        alertify.error("Terjadi kesalahan server!");
                     }
                 });
 

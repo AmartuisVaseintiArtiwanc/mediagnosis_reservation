@@ -18,6 +18,8 @@ class Reservation extends CI_Controller {
         $this->load->model('Test_model',"test_model");
         $this->load->model("SClinic_model","sclinic_model");
 		$this->load->model('Notification_model');
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
     }
 
     function index(){
@@ -178,12 +180,12 @@ class Reservation extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg = "Cannot save to Database !";
+            $msg = $this->lang->line("002");//"Cannot save to Database !";
         } else {
             if ($query) {
                 $this->db->trans_commit();
                 $status = "success";
-                $msg = "Save data successfully !";
+                $msg = $this->lang->line("001");//"Save data successfully !";
 				
 				if($status_rev == "late"){
 					$token_wrapper = $this->test_model->getTokenByReservationID($detailID);
@@ -205,7 +207,7 @@ class Reservation extends CI_Controller {
             } else {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Failed to save data !";
+                $msg = $this->lang->line("002");//"Failed to save data !";
             }
         }
 
@@ -291,16 +293,16 @@ class Reservation extends CI_Controller {
                     if($status == "check" || $status == "examine" ){
                         $this->goToExamineForm($detailReservation,$header_data);
                     }else{
-                        echo "Pasien ini tidak terdapat dalam proses reservasi ..";
+                        echo $this->lang->line("015");//"Pasien ini tidak terdapat dalam proses reservasi ..";
                     }
                 }else{
-                    echo "Anda tidak berhak mengakses halaman ini..";
+                    echo $this->lang->line("014");
                 }
             }else{
-                echo "Anda tidak berhak mengakses halaman ini..";
+                echo $this->lang->line("014");
             }
         }else{
-            echo "Anda tidak berhak mengakses halaman ini..";
+            echo $this->lang->line("014");
         }
     }
 
@@ -320,11 +322,11 @@ class Reservation extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg = "Cannot save to Database !";
+            $msg = $this->lang->line("002");//"Cannot save to Database !";
         } else {
             $this->db->trans_commit();
             $status = "success";
-            $msg = "Save data successfully !";
+            $msg = $this->lang->line("001");//"Save data successfully !";
         }
 
         $doctor_data = $this->doctor_model->getDoctorByID($header_data->doctorID);
@@ -384,11 +386,11 @@ class Reservation extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg = "Cannot save to Database !";
+            $msg = $this->lang->line("002");//"Cannot save to Database !";
         } else {
             $this->db->trans_commit();
             $status = "success";
-            $msg = "Save data successfully !";
+            $msg = $this->lang->line("001");//"Save data successfully !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -424,7 +426,7 @@ class Reservation extends CI_Controller {
 
         function doReservePatientOffline(){
             $status = "error";
-            $msg="Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
+            $msg=$this->lang->line("002");//"Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
             $queueNo=0;
 
             $datetime = date('Y-m-d H:i:s', time());
@@ -443,7 +445,7 @@ class Reservation extends CI_Controller {
                 //validasi multiple reservation
                 $resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
                 if($resrvationAvailability != 0){
-                    $msg = "Maaf, pasien telah melakukan reservasi sebelumnya";
+                    $msg = $this->lang->line("013");//"Maaf, pasien telah melakukan reservasi sebelumnya";
                 }else{
 
                    // CREATE AND CHECK Header Reservation
@@ -467,7 +469,7 @@ class Reservation extends CI_Controller {
                         $detailReservation = $this->DReservation_model->insertReservation($data_reservasi);
                         if(isset($detailReservation)){
                             $status = "success";
-                            $msg= "Success";
+                            $msg= $this->lang->line("012");//"Success";
                             $queueNo=$header["nextQueue"];
                         }
 

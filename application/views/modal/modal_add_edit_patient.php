@@ -5,7 +5,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal-title-add">Add New Patient</h4>
+                <h4 class="modal-title" id="modal-title-add">Tambah Pasien Baru</h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -15,7 +15,7 @@
                 </div>
                 <form id="patient-form-add" action="">
                     <div class="form-group">
-                        <label for="master-patient-name-add" class="control-label cd-patient-name-add">Patient Name :</label>
+                        <label for="master-patient-name-add" class="control-label cd-patient-name-add">Nama Pasien :</label>
                         <span class="cd-error-message label label-danger" id="err-patient-name-add"></span>
                         <input type="text" class="form-control" id="patient-name-add" placeholder="Name" data-label="#err-patient-name-add" autofocus>
                     </div>
@@ -30,7 +30,7 @@
                         <input type="text" class="form-control" id="no-bpjs-add" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-add">
                     </div>
                     <div class="form-group">
-                      <label for="gender-add" class="control-label cd-gender-add">Gender :</label>
+                      <label for="gender-add" class="control-label cd-gender-add">Jenis Kelamin :</label>
                       <span class="cd-error-message label label-danger" id="err-gender-add"></span>
                       <select class="form-control" id="gender-add" data-label="#err-gender-add">
                         <option value="Laki-laki">Laki-Laki</option>
@@ -38,14 +38,14 @@
                       </select>
                     </div>
                     <div class="form-group">
-                      <label for="participant-status-add" class="control-label cd-participant-status-add">Participant Status :</label>
+                      <label for="participant-status-add" class="control-label cd-participant-status-add">Status Partisipan :</label>
                       <span class="cd-error-message label label-danger" id="err-participant-status-add"></span>
                       <select class="form-control" id="participant-status-add" data-label="#err-participant-status-add">
                         <option value="AKTIF">AKTIF</option>
                       </select>
                     </div>
                     <div class="form-group">
-                      <label for="participant-type-add" class="control-label cd-participant-type-add">Participant Type :</label>
+                      <label for="participant-type-add" class="control-label cd-participant-type-add">Tipe Partisipan :</label>
                       <span class="cd-error-message label label-danger" id="err-participant-type-add"></span>
                       <select class="form-control" id="participant-type-add" data-label="#err-participant-type-add">
                         <option value="Karyawan Swasta">Karyawan Swasta</option>
@@ -69,7 +69,7 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal-title-edit">Edit Patient</h4>
+                <h4 class="modal-title" id="modal-title-edit">Edit Pasien</h4>
             </div><!--modal header-->
 
             <div class="modal-body">
@@ -80,7 +80,7 @@
                 <form id="patient-form-edit" action="">
                     <input type="hidden" class="form-control" id="patient-id-edit">
                     <div class="form-group">
-                        <label for="master-patient-name-edit" class="control-label cd-patient-name-edit">Patient Name :</label>
+                        <label for="master-patient-name-edit" class="control-label cd-patient-name-edit">Nama Pasien :</label>
                         <span class="cd-error-message label label-danger" id="err-patient-name-edit"></span>
                         <input type="text" class="form-control" id="patient-name-edit" placeholder="Name" data-label="#err-patient-name-edit" autofocus>
                     </div>
@@ -95,7 +95,7 @@
                         <input type="text" class="form-control" id="no-bpjs-edit" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-edit">
                     </div>
                     <div class="form-group">
-                        <label for="gender-edit" class="control-label cd-gender-edit">Gender :</label>
+                        <label for="gender-edit" class="control-label cd-gender-edit">Jenis Kelamin :</label>
                         <span class="cd-error-message label label-danger" id="err-gender-edit"></span>
                         <select class="form-control" id="gender-edit" data-label="#err-gender-edit">
                             <option value="Laki-Laki">Laki-Laki</option>
@@ -103,14 +103,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="participant-status-edit" class="control-label cd-participant-status-edit">Participant Status :</label>
+                        <label for="participant-status-edit" class="control-label cd-participant-status-edit">Status Partisipan :</label>
                         <span class="cd-error-message label label-danger" id="err-participant-status-edit"></span>
                         <select class="form-control" id="participant-status-edit" data-label="#err-participant-status-edit">
                             <option value="AKTIF">AKTIF</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="participant-type-edit" class="control-label cd-participant-type-edit">Participant Type :</label>
+                        <label for="participant-type-edit" class="control-label cd-participant-type-edit">Tipe Partisipan :</label>
                         <span class="cd-error-message label label-danger" id="err-participant-type-edit"></span>
                         <select class="form-control" id="participant-type-edit" data-label="#err-participant-type-edit">
                             <option value="Karyawan Swasta">Karyawan Swasta</option>
