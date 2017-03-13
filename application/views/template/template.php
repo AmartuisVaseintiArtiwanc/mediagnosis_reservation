@@ -167,6 +167,7 @@
 				  <?php }?>
               </ul>
           </li>
+		  <?php if($this->session->userdata('role')=="admin" ){?>
           <li class="treeview mediagnosis-navigation-manual">
               <a href="#">
                   <i class="fa fa-edit"></i>
@@ -178,6 +179,7 @@
                   <li><a href="<?php echo site_url("Reservation/reserveOfflinePatient");?>"><i class="fa fa-circle-o"></i>Reservasi Manual</a></li>
               </ul>
           </li>
+		  <?php } ?>
           <?php if($this->session->userdata('role')=="super_admin" || $this->session->userdata('role')=="admin" ){?>
               <li class="treeview mediagnosis-navigation-laporan">
                   <a href="#">

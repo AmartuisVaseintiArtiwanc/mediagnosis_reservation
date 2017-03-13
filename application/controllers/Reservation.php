@@ -404,7 +404,7 @@ class Reservation extends CI_Controller {
             $clinicData = $this->clinic_model->getClinicByUserID($userID);
 
             if(isset($clinicData)){
-                $poli_data = $this->sclinic_Model->getClinicListByID($clinicData->clinicID);
+                $poli_data = $this->sclinic_model->getClinicListByID($clinicData->clinicID);
                 if(isset($poli_data)){
                     $data['clinic_data'] = $clinicData;
                     $data['poli_data'] = $poli_data;
