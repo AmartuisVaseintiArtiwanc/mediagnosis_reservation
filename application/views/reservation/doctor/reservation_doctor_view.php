@@ -400,7 +400,7 @@
                             //var err = eval("(" + xhr.responseText + ")");
                             //alertify.error(xhr.responseText);
                             //HIDE LOADING SCREEN
-                            alertify.error("Cannot response server ! Please Try Again");
+                            alertify.error("Terjadi kesalahan server. Harap coba lagi");
                         }
                     });
                 }

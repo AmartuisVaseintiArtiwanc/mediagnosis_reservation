@@ -43,4 +43,22 @@
 	
 	// pasien belum ada di antrian
 	$lang["015"]="Pasien ini tidak terdapat dalam proses reservasi ..";
+	
+	// pasien telah dilayani dokter lain / membatalkan reservasi
+	$lang["016"]="Pasien telah dilayani oleh dokter lain / membatalkan reservasi";
+	
+	// pasien tidak datang
+	$lang["017"]="Maaf pasien tidak datang, silahkan ambil pasien selanjutnya ...";
+	
+	// berhasil cancel
+	$lang["018"]="Proses pembatalan reservasi berhasil";
+	
+	// kode otp dibuka oleh dokter dengan id yg berbeda dengan id pada data reservasi
+	$lang["019"]="Maaf Anda bukan Dokter untuk pasien ini !";
+	
+	// kode otp salah / expired
+	$lang["020"]="Kode OTP Anda salah atau sudah habis masa berlakunya !";
+	
+	// kode otp match
+	$lang["021"]="Kode OTP cocok";
 ?>

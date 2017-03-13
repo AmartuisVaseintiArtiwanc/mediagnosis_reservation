@@ -24,6 +24,8 @@ class MedicalRecord extends CI_Controller {
         $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
         $this->load->model('UserOtp_model',"userOtp_model");
 		$this->load->model('Notification_model');
+		$this->load->helper("language");
+		$this->load->language("main", "bahasa");
 
     }
 
@@ -354,13 +356,13 @@ class MedicalRecord extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg="Cannot save Medical Record to Database";
+            $msg=$this->lang->line("002");//"Cannot save Medical Record to Database";
         }
         else {
             $this->db->trans_commit();
             $this->session->unset_userdata('detail_reservation');
             $status = "success";
-            $msg="Medical Record has been saved successfully.";
+            $msg=$this->lang->line("009");//"Medical Record has been saved successfully.";
 			
 			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
@@ -397,12 +399,12 @@ class MedicalRecord extends CI_Controller {
         if ($this->db->trans_status() === FALSE) {
             $this->db->trans_rollback();
             $status = "error";
-            $msg="Cannot save Medical Record to Database";
+            $msg= $this->lang->line("002");//"Cannot save Medical Record to Database";
         }
         else {
             $this->db->trans_commit();
             $status = "success";
-            $msg="Medical Record has been saved successfully.";
+            $msg= $this->lang->line("009");//"Medical Record has been saved successfully.";
 			
 			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
 			$token = $token_wrapper->token;
@@ -472,18 +474,18 @@ class MedicalRecord extends CI_Controller {
                     $this->userOtp_model->updateOtp($patient,$otp_data);
 
                     $status = "success";
-                    $msg= "Success";
+                    $msg= $this->lang->line("021");//"Success";
                 }else{
                     $status = "error";
-                    $msg= "Kode OTP Anda salah atau sudah habis masa berlakunya !";
+                    $msg= $this->lang->line("020");//"Kode OTP Anda salah atau sudah habis masa berlakunya !";
                 }
             }else{
                 $status = "error";
-                $msg= "Maaf Anda bukan Dokter untuk pasien ini !";
+                $msg= $this->lang->line("019");//"Maaf Anda bukan Dokter untuk pasien ini !";
             }
         }else{
             $status = "error";
-            $msg= "Maaf Anda Tidak berhas mengakses halaman ini !";
+            $msg= $this->lang->line("014");//"Maaf Anda Tidak berhas mengakses halaman ini !";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -631,7 +633,7 @@ class MedicalRecord extends CI_Controller {
 
     function saveHeaderReservationManual(){
         $status = "error";
-        $msg="Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
+        $msg=$this->lang->line("002");//"Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
         $datetime = date('Y-m-d H:i:s', time());
         $userID = $this->session->userdata('userID');
 
@@ -666,11 +668,11 @@ class MedicalRecord extends CI_Controller {
                 if(isset($detailReservation)){
                     $this->session->set_userdata("detail_reservation",$detailReservation);
                     $status = "success";
-                    $msg= "Success";
+                    $msg= $this->lang->line("012");//"Success";
                 }
 
             }else{
-                $status = "error";
+                $status = $this->lang->line("002");//"error";
             }
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
@@ -678,7 +680,7 @@ class MedicalRecord extends CI_Controller {
 
     function cancelMedicalRecordManual(){
         $status = "error";
-        $msg="Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
+        $msg=$this->lang->line("002");//"Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
 
         $role = $this->session->userdata('role');
         $detailReservation = $clinic = $this->security->xss_clean($this->input->post('detailReservation'));
@@ -688,7 +690,7 @@ class MedicalRecord extends CI_Controller {
             $this->test_model->deleteReservationDetail($detailReservation);
             $this->medical_record_detail_model->deletePhysicalExaminationByDetailReservation($detailReservation);
             $this->session->unset_userdata('detail_reservation');
-            $msg="Success";
+            $msg=$this->lang->line("018");//"Success";
             $status = "success";
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));

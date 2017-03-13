@@ -346,7 +346,7 @@
                                     <input class="w3-input input-number physical-elements" id="respiration-input" type="text" data-label="#respiration-err-msg" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
-                                    <label class="w3-padding">x/minutes</label>
+                                    <label class="w3-padding">x/menit</label>
                                 </div>
                             </div>
                         </p>
@@ -357,7 +357,7 @@
                                     <input class="w3-input input-number physical-elements" id="pulse-input" data-label="#pulse-err-msg" type="text" disabled="disabled">
                                 </div>
                                 <div class="w3-col m6">
-                                    <label class="w3-padding">x/minutes</label>
+                                    <label class="w3-padding">x/menit</label>
                                 </div>
                             </div>
                         </p>

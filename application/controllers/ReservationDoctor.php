@@ -122,7 +122,7 @@ class ReservationDoctor extends CI_Controller {
         if(isset($data)){
             if($data->status == "late" || $data->status == "reject"){
                 $status = "late";
-                $output = "Maaf pasien tidak datang, silahkan ambil pasien selanjutnya ...";
+                $output = $this->lang->line("017");//"Maaf pasien tidak datang, silahkan ambil pasien selanjutnya ...";
             }else if($data->status == "confirm"){
                 $status="success";
             }
@@ -164,12 +164,12 @@ class ReservationDoctor extends CI_Controller {
             if ($this->db->trans_status() === FALSE) {
                 $this->db->trans_rollback();
                 $status = "error";
-                $msg = "Cannot save to Database !";
+                $msg = $this->lang->line("002");//"Cannot save to Database !";
             } else {
                 if ($query_detail && $query_header) {
                     $this->db->trans_commit();
                     $status = "success";
-                    $msg = "Save data successfully !";
+                    $msg = $this->lang->line("001");//"Save data successfully !";
 					
 					
 					$token_wrapper = $this->test_model->getTokenByReservationID($detailID);
@@ -192,12 +192,12 @@ class ReservationDoctor extends CI_Controller {
                 } else {
                     $this->db->trans_rollback();
                     $status = "error";
-                    $msg = "Failed to save data !";
+                    $msg = $this->lang->line("002");//"Failed to save data !";
                 }
             }
         }else{
             $status = "taken";
-            $msg = "This Patient has been taken by Other Doctor!";
+            $msg = $this->lang->line("016");//"This Patient has been taken by Other Doctor!";
         }
 
         echo json_encode(array('status' => $status, 'msg' => $msg));
