@@ -58,12 +58,21 @@
         width: 90%;
         margin: 20px auto;
     }
+    #back-to-top-btn{
+        position: fixed;
+        bottom: 10%;
+        right: 10px;
+        z-index: 99;
+    }
 </style>
 <body>
 <!--  Start here -->
 
 <body>
 
+<button id="back-to-top-btn" class="w3-btn w3-xlarge w3-teal w3-padding">
+    <i class="fa fa-chevron-up"></i>
+</button>
 <div class="headline">
 
     <h6></h6>
@@ -558,6 +567,7 @@
     </div>
 </div>
 
+
 <script>
     $(document).ready(function(){
         $("#otp-input-form").hide();
@@ -565,6 +575,10 @@
 
         $("#request-otp-btn").click(function(){
             $("#otp-input-form").show();
+        });
+
+        $("#back-to-top-btn").click(function(){
+            $("html, body").animate({scrollTop: 0}, 1000);
         });
     });
 </script>

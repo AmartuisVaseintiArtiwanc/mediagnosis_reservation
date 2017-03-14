@@ -133,7 +133,7 @@
                 <div class="w3-section">
                     <div id="search-date-field">
                         <label><b>Pilih Tanggal</b></label>
-                        <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Enter Username" name="usrname" required>
+                        <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Pilih Tanggal" required>
                     </div>
 
                     <div id="search-period-field">
@@ -164,11 +164,11 @@
 
         $('#date-end').bootstrapMaterialDatePicker
         ({
-            weekStart: 0, format: 'DD/MM/YYYY', time: false
+            weekStart: 0, time: false
         });
         $('#date-start').bootstrapMaterialDatePicker
         ({
-            weekStart: 0, format: 'DD/MM/YYYY', time: false
+            weekStart: 0, time: false
         }).on('change', function(e, date)
         {
             $('#date-end').bootstrapMaterialDatePicker('setMinDate', date);
@@ -189,53 +189,24 @@
             var $base_url,$data;
             var $search = $("#btn-search-modal").attr("data-search");
             var $patient = "<?php echo $patient_data->patientID;?>";
+            var $detail_reservation = "<?php echo $detail_reservation;?>";
 
             if($search == "date"){
                 $base_url = "<?php echo site_url("MedicalRecord/getMedicalRecordBySearchDate");?>";
                 var $date = $('#date').val();
-                $data={
-                    patient : $patient,
-                    date : $date
-                };
 
-            }else if($search == "periode"){
+                $base_url += "/"+$detail_reservation+"/"+$patient+"/"+$date;
+                location.href = $base_url;
+
+            }else if($search == "period"){
                 $base_url = "<?php echo site_url("MedicalRecord/getMedicalRecordBySearchPeriod");?>";
                 var $start_date = $('#date-start').val();
                 var $end_date = $('#date-end').val();
-                $data={
-                    patient : $patient,
-                    startDate : $start_date,
-                    endDate : $end_date
-                };
+
+                $base_url += "/"+$detail_reservation+"/"+$patient+"/"+$start_date+"/"+$end_date;
+                location.href = $base_url;
             }
 
-            $.ajax({
-                url: $base_url,
-                data: $data,
-                type: "POST",
-                dataType: 'json',
-                beforeSend:function(){
-                    $("#load_screen").show();
-                },
-                success:function(data){
-                    if(data.status != 'error') {
-                        $("#load_screen").hide();
-                        $(".modal").hide();
-
-                    }else{
-                        $("#load_screen").hide();
-                        alertify.set('notifier','position', 'bottom-right');
-                        alertify.error(data.msg);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    //var err = eval("(" + xhr.responseText + ")");
-                    //alertify.error(xhr.responseText);
-                    $("#load_screen").hide();
-                    alertify.set('notifier','position', 'bottom-right');
-                    alertify.error('Cannot response server !');
-                }
-            });
         });
 
         function renderList(){

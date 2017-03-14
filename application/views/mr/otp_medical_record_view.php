@@ -70,7 +70,7 @@
     <div id="accordian">
         <div class="content">
             <div class="w3-card-4" style="width:50%;margin: auto">
-                <form class="w3-container " action="form.asp">
+                <form class="w3-container " action="">
                    <div class="w3-section" id="otp-input-form">
                         <label class="w3-large"><b>Masukan Kode OTP</b></label>
                         <input class="w3-input w3-border w3-margin-bottom" id="otp-input" type="text" placeholder="Kode OTP" name="otp_input">

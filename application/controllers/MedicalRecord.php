@@ -537,31 +537,69 @@ class MedicalRecord extends CI_Controller {
     }
 
     // Get Medical Record List For OTP by Date
-    function getMedicalRecordBySearchDate($detailReservation, $patientID){
+    function getMedicalRecordBySearchDate($detailReservation,$patient,$date){
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getDoctorByUserID($userID);
 
-        $patient = $this->security->xss_clean($this->input->post('patient'));
-        $date = $this->security->xss_clean($this->input->post('date'));
+        if(isset($doctor_data)){
+            $checkReservation = $this->checkDoctorReservation($detailReservation,$doctor_data->doctorID,$patient);
+            $checkOTP = $this->checkDoctorValidateOTP($doctor_data->doctorID,$patient);
+            if($checkReservation && $checkOTP){
 
-        $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
-        $patient_data = $this->patient_model->getPatientByID($patientID);
+                $medical_record_data = $this->medical_record_model->getMedicalRecordListByPatientByDate($patient, $date);
+                $patient_data = $this->patient_model->getPatientByID($patient);
 
-        $data['medical_record_data']  = $medical_record_header;
-        $data['patient_data']  = $patient_data;
-        $this->load->view('mr/medical_record_list_view', $data);
+                $data['medical_record_data']  = $medical_record_data;
+                $data['patient_data']  = $patient_data;
+                $data['detail_reservation']  = $detailReservation;
+
+                $this->load->view('mr/medical_record_list_view', $data);
+
+            }else{
+                $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+                $this->load->view('template/error',$data);
+            }
+        }else{
+            $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+            $this->load->view('template/error',$data);
+        }
+
+        $this->output->enable_profiler(TRUE);
     }
 
     // Get Medical Record List For OTP by Periode
-    function getMedicalRecordBySearchPeriod($detailReservation, $patientID){
-        $patient = $this->security->xss_clean($this->input->post('patient'));
-        $startDate = $this->security->xss_clean($this->input->post('startDate'));
-        $endDate = $this->security->xss_clean($this->input->post('endDate'));
+    function getMedicalRecordBySearchPeriod($detailReservation,$patient,$startDatePost,$endDatePost ){
 
-        $medical_record_header = $this->medical_record_model->getMedicalRecordListByPatient($patientID);
-        $patient_data = $this->patient_model->getPatientByID($patientID);
+        $userID =  $this->session->userdata('userID');
+        $doctor_data = $this->doctor_model->getDoctorByUserID($userID);
 
-        $data['medical_record_data']  = $medical_record_header;
-        $data['patient_data']  = $patient_data;
-        $this->load->view('mr/medical_record_list_view', $data);
+        $startDate = date ( 'Y-m-d' , strtotime ( $startDatePost ) );
+        //END DATE + 1
+        $endDate = strtotime ( '1 day' , strtotime ( $endDatePost ) ) ;
+        $endDate = date ( 'Y-m-d' , $endDate );
+
+        if(isset($doctor_data)){
+            $checkReservation = $this->checkDoctorReservation($detailReservation,$doctor_data->doctorID,$patient);
+            $checkOTP = $this->checkDoctorValidateOTP($doctor_data->doctorID,$patient);
+            if($checkReservation && $checkOTP){
+
+                $medical_record_data = $this->medical_record_model->getMedicalRecordListByPatientByPeriode($patient, $startDate, $endDate);
+                $patient_data = $this->patient_model->getPatientByID($patient);
+
+                $data['medical_record_data']  = $medical_record_data;
+                $data['patient_data']  = $patient_data;
+                $data['detail_reservation']  = $detailReservation;
+
+                $this->load->view('mr/medical_record_list_view', $data);
+
+            }else{
+                $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+                $this->load->view('template/error',$data);
+            }
+        }else{
+            $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
+            $this->load->view('template/error',$data);
+        }
     }
 
     // Get Medical Record Detail For OTP

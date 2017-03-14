@@ -4,7 +4,7 @@ class Medical_record_model extends CI_Model {
 
     function getMedicalRecordListByPatient($patientID){
         $this->db->select('mr.medicalRecordID,doc.doctorID, doc.doctorName, mr.patientID,
-         mr.detailReservationID, cl.clinicName, pl.poliName, dis.diseaseName, mr.created');
+         mr.detailReservationID, cl.clinicName, pl.poliName, dis.diseaseName, hr.created');
         $this->db->from('tbl_cyberits_t_medical_record mr');
         $this->db->join('tbl_cyberits_t_detail_medical_record  dmr', 'dmr.medicalRecordID = mr.medicalRecordID');
         $this->db->join('tbl_cyberits_m_diseases  dis', 'dmr.workingDiagnose = dis.diseaseID');
@@ -14,6 +14,43 @@ class Medical_record_model extends CI_Model {
         $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = hr.poliID');
         $this->db->join('tbl_cyberits_m_doctors  doc', 'dr.doctorID = doc.doctorID');
         $this->db->where('mr.patientID', $patientID);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    function getMedicalRecordListByPatientByDate($patientID, $date){
+        $this->db->select('mr.medicalRecordID,doc.doctorID, doc.doctorName, mr.patientID,
+         mr.detailReservationID, cl.clinicName, pl.poliName, dis.diseaseName, hr.created');
+        $this->db->from('tbl_cyberits_t_medical_record mr');
+        $this->db->join('tbl_cyberits_t_detail_medical_record  dmr', 'dmr.medicalRecordID = mr.medicalRecordID');
+        $this->db->join('tbl_cyberits_m_diseases  dis', 'dmr.workingDiagnose = dis.diseaseID');
+        $this->db->join('tbl_cyberits_t_detail_reservation  dr', 'mr.detailReservationID = dr.detailReservationID');
+        $this->db->join('tbl_cyberits_t_header_reservation  hr', 'dr.reservationID = hr.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics  cl', 'cl.clinicID = hr.clinicID');
+        $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = hr.poliID');
+        $this->db->join('tbl_cyberits_m_doctors  doc', 'dr.doctorID = doc.doctorID');
+        $this->db->where('mr.patientID', $patientID);
+        $this->db->like('hr.created', $date);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+    function getMedicalRecordListByPatientByPeriode($patientID, $startDate, $endDate){
+        $this->db->select('mr.medicalRecordID,doc.doctorID, doc.doctorName, mr.patientID,
+         mr.detailReservationID, cl.clinicName, pl.poliName, dis.diseaseName, hr.created');
+        $this->db->from('tbl_cyberits_t_medical_record mr');
+        $this->db->join('tbl_cyberits_t_detail_medical_record  dmr', 'dmr.medicalRecordID = mr.medicalRecordID');
+        $this->db->join('tbl_cyberits_m_diseases  dis', 'dmr.workingDiagnose = dis.diseaseID');
+        $this->db->join('tbl_cyberits_t_detail_reservation  dr', 'mr.detailReservationID = dr.detailReservationID');
+        $this->db->join('tbl_cyberits_t_header_reservation  hr', 'dr.reservationID = hr.reservationID');
+        $this->db->join('tbl_cyberits_m_clinics  cl', 'cl.clinicID = hr.clinicID');
+        $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = hr.poliID');
+        $this->db->join('tbl_cyberits_m_doctors  doc', 'dr.doctorID = doc.doctorID');
+        $this->db->where('mr.patientID', $patientID);
+
+        $this->db->where('hr.created >=',$startDate);
+        $this->db->where('hr.created <=',$endDate);
+
         $query = $this->db->get();
         return $query->result_array();
     }
