@@ -563,8 +563,6 @@ class MedicalRecord extends CI_Controller {
             $data['err_msg'] = "Maaf Anda tidak berhak mengakses halaman ini";
             $this->load->view('template/error',$data);
         }
-
-        $this->output->enable_profiler(TRUE);
     }
 
     // Get Medical Record List For OTP by Periode

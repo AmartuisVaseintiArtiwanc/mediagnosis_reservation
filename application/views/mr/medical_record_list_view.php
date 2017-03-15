@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>
-        Sample Page by Designscrazed.com
+        Mediagnosis | MRIS
     </title>
     <!--Main CSS-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/doctor.css">
@@ -56,6 +56,12 @@
     .search-btn-container button{
         min-width: 150px;
     }
+    .hiden{
+        display: none;
+    }
+    .search-text-container{
+        margin-top: -30px;
+    }
 </style>
 <body>
 <!--  Start here -->
@@ -74,50 +80,74 @@
 
 <div id="wrap">
     <div class="we-col-m12">
+        <div class="w3-col m12 l6 w3-left search-text-container">
+            <div class="w3-padding w3-margin-left">
+                <label class="w3-label w3-text-teal"><b>Kata Kunci</b></label>
+                <input class="w3-input w3-border" id="table-search-input" placeholder="Kata yang di cari" type="text">
+            </div>
+        </div>
         <div class="w3-btn-group w3-right search-btn-container">
+            <button id="btn-search-all" class="w3-btn w3-padding-medium w3-margin-left w3-teal">ALL</button>
             <button onclick="document.getElementById('id01').style.display='block'"
-                    id="btn-search-date" class="w3-btn w3-padding-medium w3-margin-left w3-teal">DATE</button>
+                    id="btn-search-date" class="w3-btn w3-padding-medium w3-margin-left w3-teal">TANGGAL</button>
             <button onclick="document.getElementById('id01').style.display='block'"
-                    id="btn-search-period" class="w3-btn w3-padding-medium w3-margin-left w3-teal">PERIODE</button>
+                        id="btn-search-period" class="w3-btn w3-padding-medium w3-margin-left w3-teal">PERIODE</button>
         </div>
         <div class="w3-clear"></div>
     </div>
     <div id="accordian">
         <div class="w3-row content">
             <div class="w3-col m12">
-                <ul class="w3-ul w3-card-4" id="mr-ul">
-                    <?php foreach($medical_record_data as $row){?>
-                        <li class="w3-padding-16 w3-hover-green">
-                            <div class="w3-row">
-                                <div class="w3-col m6">
-                                    <div class="w3-padding-medium w3-left w3-circle ">
-                                        <i class="fa fa-file-text fa-icon"></i>
+                <table id="dataTables-mr" class="w3-table">
+                    <thead>
+                        <tr class="hidden">
+                            <th></th>
+                            <th>disease</th>
+                            <th>clinic</th>
+                            <th>poli</th>
+                            <th>doctor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach($medical_record_data as $row){?>
+                        <tr class="w3-card-4 w3-margin">
+                            <td class="w3-padding-16 w3-hover-green">
+                                <div class="w3-row">
+                                    <div class="w3-col m6">
+                                        <div class="w3-padding-medium w3-left w3-circle ">
+                                            <i class="fa fa-file-text fa-icon"></i>
+                                        </div>
+                                        <span class="w3-xlarge">
+                                            <?php
+                                                $date_created=date_create($row['created']);
+                                                echo date_format($date_created,"d F Y");
+                                            ?>
+                                        </span><br>
+                                        <span class="w3-large"><?php echo $row['clinicName']." - ".$row['poliName'];?></span><br>
+                                        <span class="w3-large"><?php echo $row['doctorName'];?></span>
                                     </div>
-                                    <span class="w3-xlarge">
-                                        <?php
-                                            $date_created=date_create($row['created']);
-                                            echo date_format($date_created,"d F Y");
-                                        ?>
-                                    </span><br>
-                                    <span class="w3-large"><?php echo $row['clinicName']." - ".$row['poliName'];?></span><br>
-                                    <span class="w3-large"><?php echo $row['doctorName'];?></span>
+                                    <div class="w3-col m6">
+                                        <div class="w3-padding-medium w3-left w3-circle ">
+                                            <i class="fa fa-stethoscope fa-icon"></i>
+                                        </div>
+                                        <span class="w3-large">DIAGNOSA</span><br>
+                                        <span class="w3-large"><b><?php echo $row['diseaseName'];?></b></span><br>
+                                        <div class="w3-padding-medium">
+                                            <a href="<?php echo site_url("MedicalRecord/getMedicalRecordDetail/".$detail_reservation."/".$row['patientID']."/".$row['medicalRecordID']);?>">
+                                                <button class="w3-btn w3-light-grey"> <i class="fa fa-search"></i> Lihat Detail</button>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="w3-col m6">
-                                    <div class="w3-padding-medium w3-left w3-circle ">
-                                        <i class="fa fa-stethoscope fa-icon"></i>
-                                    </div>
-                                    <span class="w3-large">DIAGNOSA</span><br>
-                                    <span class="w3-large"><b><?php echo $row['diseaseName'];?></b></span><br>
-                                    <div class="w3-padding-medium">
-                                        <a href="<?php echo site_url("MedicalRecord/getMedicalRecordDetail/".$detail_reservation."/".$row['patientID']."/".$row['medicalRecordID']);?>">
-                                            <button class="w3-btn w3-light-grey"> <i class="fa fa-search"></i> Lihat Detail</button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    <?php } ?>
-                </ul>
+                            </td>
+                            <td class="hidden"><?php echo $row['diseaseName'];?></td>
+                            <td class="hidden"><?php echo $row['clinicName'];?></td>
+                            <td class="hidden"><?php echo $row['poliName'];?></td>
+                            <td class="hidden"><?php echo $row['doctorName'];?></td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -129,11 +159,11 @@
                 <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn w3-hover-red w3-container w3-padding-8 w3-display-topright" title="Close Modal">&times;</span>
             </div>
 
-            <form class="w3-container w3-margin-top" action="form.asp">
+            <form class="w3-container w3-margin-top" action="">
                 <div class="w3-section">
                     <div id="search-date-field">
                         <label><b>Pilih Tanggal</b></label>
-                        <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Pilih Tanggal" required>
+                        <input class="w3-input w3-border w3-margin-bottom" id="date" type="text" placeholder="Tahun-Bulan-tanggal" required>
                     </div>
 
                     <div id="search-period-field">
@@ -153,6 +183,10 @@
         </div>
     </div>
 </div>
+
+<!-- Data Table -->
+<script src="<?php echo base_url();?>assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="<?php echo base_url();?>assets/plugins/datatables/dataTables.bootstrap.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -183,6 +217,14 @@
             $("#search-date-field").hide();
             $("#search-period-field").show();
             $("#btn-search-modal").attr("data-search","period");
+        });
+        $("#btn-search-all").click(function(){
+            var $patient = "<?php echo $patient_data->patientID;?>";
+            var $detail_reservation = "<?php echo $detail_reservation;?>";
+            $base_url = "<?php echo site_url("MedicalRecord/getMedicalRecordList");?>";
+
+            $base_url += "/"+$detail_reservation+"/"+$patient;
+            location.href = $base_url;
         });
 
         $("#btn-search-modal").click(function(){
@@ -261,6 +303,25 @@
             var $ul = $("ul#mr-ul");
             $li.appendTo($ul);
         }
+
+        var data_table_mr = $('#dataTables-mr').DataTable( {
+            bFilter: false,
+            dom: 't',
+            searching: true,
+            "pageLength": 15,
+            "lengthChange": false,
+            "autoWidth": false,
+            "columnDefs": [
+                {
+                    "targets": 0,
+                    "searchable": false
+                }
+            ]
+        } );
+
+        $('#table-search-input').keyup(function(){
+            data_table_mr.search($(this).val()).draw() ;
+        })
     });
 </script>
 </body>
