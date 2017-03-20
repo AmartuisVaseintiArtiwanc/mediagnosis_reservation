@@ -402,7 +402,8 @@
                 $rating_data = $this->test_model->getRatingReservationByPatient($patient_data->patientID);
                 if(isset($rating_data)){
                     echo json_encode(array('status' => "success",'clinicName' => $rating_data->clinicName,
-                        'doctorName'=>$rating_data->doctorName, 'detailReservation'=> $rating_data->detailReservationID));
+                        'doctorName'=>$rating_data->doctorName, 'doctorImage'=>$rating_data->doctorImage, 
+						'detailReservation'=> $rating_data->detailReservationID));
                 }else{
                     echo json_encode(array('status' => "empty"));
                 }

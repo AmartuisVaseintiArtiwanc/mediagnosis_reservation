@@ -412,9 +412,10 @@ class Test_model extends CI_Model{
     }
 
     function getRatingReservationByPatient($patientID){
-        $this->db->select('*');
+        $this->db->select('c.clinicName, dc.doctorName, a.detailReservationID, u.userImage as doctorImage');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->join('tbl_cyberits_m_doctors dc', 'dc.doctorID = a.doctorID');
+		$this->db->join('tbl_cyberits_m_users u', 'u.userID = dc.userID');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_clinics c', 'b.clinicID = c.clinicID');
         $this->db->where("a.patientID",$patientID);
