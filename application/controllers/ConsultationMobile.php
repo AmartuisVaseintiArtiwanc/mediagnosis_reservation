@@ -146,8 +146,7 @@
 	        	$this->db->trans_commit();
     			$status = 'success';
 				$msg = "Berhasil menghapus chat";
-				
-				$this->sendNotificationToRespectiveUserInTheRoom($sRoomID, $userID, $recentChat);
+
 	        }
 
 	     	echo json_encode(array("status" => $status, "msg" => $msg));
