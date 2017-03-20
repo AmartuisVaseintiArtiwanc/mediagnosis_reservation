@@ -7,6 +7,7 @@
 	        $this->db->where('topicID',$topicID);
 	        $this->db->where('patientID',$patientID);
 	        $this->db->where('doctorID',$expertID);
+			$this->db->where("isActive",1);
 	        $query = $this->db->get();
 	        return $query->row();
 		}
@@ -34,9 +35,10 @@
 	    }
 
 	    function getUserListByPatientID($patientID){
-	    	$this->db->select('md.doctorID, , md.doctorName, mt.topicID, mt.topicName, sr.RecentChat');
+	    	$this->db->select('md.doctorID, , md.doctorName,  md.phoneNumber, mt.topicID, mt.topicName, sr.RecentChat, mu.isOnline');
 	        $this->db->from('tbl_cyberits_s_room sr');
 	        $this->db->join('tbl_cyberits_m_doctors md', 'md.doctorID = sr.doctorID');
+			$this->db->join('tbl_cyberits_m_users mu', 'mu.userID = md.userID');
 	        $this->db->join('tbl_cyberits_m_topics mt', 'mt.topicID = sr.topicID');
 	        $this->db->where('sr.patientID',$patientID);
 	        $query = $this->db->get();

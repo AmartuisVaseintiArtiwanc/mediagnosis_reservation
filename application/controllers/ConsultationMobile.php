@@ -121,6 +121,38 @@
 
 	     	echo json_encode(array("status" => $status, "msg" => $msg));
 	    }
+		
+		function deleteChatRoom(){
+			$userID = $this->input->post("userID");
+			$sRoomID = $this->input->post("sRoomID");
+			$datetime = date('Y-m-d H:i:s', time());
+			
+			$chat_room_data = array(
+				"isActive"=>0,
+				"lastUpdated"=>$datetime,
+				"lastUpdatedBy"=>$userID
+			);
+			
+	        $this->db->trans_begin();
+	        $query = $this->sroom_model->updateRoom($chat_room_data, $sRoomID);
+
+	        if ($this->db->trans_status() === FALSE) {
+	            // Failed to save Data to DB
+	            $this->db->trans_rollback();
+	            $status = 'error';
+				$msg = "Maaf, Terjadi kesalahan saat menghapus chat";
+	        }
+	        else{
+	        	$this->db->trans_commit();
+    			$status = 'success';
+				$msg = "Berhasil menghapus chat";
+				
+				$this->sendNotificationToRespectiveUserInTheRoom($sRoomID, $userID, $recentChat);
+	        }
+
+	     	echo json_encode(array("status" => $status, "msg" => $msg));
+			
+		}
 
 	    function recentExpertList($userID){
 	    	$patients = $this->patient_model->getPatientIDByUserID($userID);
