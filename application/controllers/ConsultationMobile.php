@@ -10,6 +10,7 @@
 	        $this->load->model('Doctor_model',"doctor_model");
 	        $this->load->model('SRoom_model',"sroom_model");
 			$this->load->model('Notification_model');
+			$this->load->model('Login_model','login_model');
 	    }
 
 	    function topicList(){
@@ -152,8 +153,78 @@
 	     	echo json_encode(array("status" => $status, "msg" => $msg));
 			
 		}
+		
+		function reportChatRoom(){
+			$userID = $this->input->post("userID");
+			$sRoomID = $this->input->post("sRoomID");
+			$datetime = date('Y-m-d H:i:s', time());
+			
+			$chat_room_data = array(
+				"isReported"=>1,
+				"lastUpdated"=>$datetime,
+				"lastUpdatedBy"=>$userID
+			);
+			
+	        $this->db->trans_begin();
+	        $query = $this->sroom_model->updateRoom($chat_room_data, $sRoomID);
 
-	    function recentExpertList($userID){
+	        if ($this->db->trans_status() === FALSE) {
+	            // Failed to save Data to DB
+	            $this->db->trans_rollback();
+	            $status = 'error';
+				$msg = "Maaf, Terjadi kesalahan saat melaporkan chat";
+	        }
+	        else{
+	        	$this->db->trans_commit();
+    			$status = 'success';
+				$msg = "Berhasil melaporkan chat";
+
+	        }
+
+	     	echo json_encode(array("status" => $status, "msg" => $msg));
+			
+		}
+
+	    function archiveChat(){
+			$archive = $this->input->post("archive");
+			$userID = $this->input->post("userID");
+			$sRoomID = $this->input->post("sRoomID");
+			
+			$userWrapper = $this->login_model->getUserDataByUserID($userID);
+			$this->load->library('email');
+			$config = Array(
+                'protocol' => 'mail',
+                'smtp_host' => 'cyberits.co.id',
+                'smtp_port' => 25,
+                'smtp_user' => 'no-reply@cyberits.co.id',
+                'smtp_pass' => 'Pass@word1',
+                'mailtype'  => 'html',
+                'charset' => 'iso-8859-1',
+                'wordwrap' => TRUE
+            );
+			
+			$message =  "<p>Dear Mediagnosis Users,</p><p>Berikut lampiran transkrip chat pada ruangan ".$sRoomID."</p><p style='width:80&;word-wrap:break-word;width:80%;margin:auto;border: 1px solid black;padding-top:3%;padding-bottom:3%;text-align: center;'>".$archive."</p><p>Regards,</p><br/><br/><p>Mediagnosis Team</p>";
+			$this->email->initialize($config);
+			$this->email->set_newline("\r\n");
+			$this->email->from('no-reply@cyberits.co.id', 'Mediagnosis Team');
+			$this->email->to($userWrapper->email); 
+			$this->email->subject('[MEDIAGNOSIS] Chat Archive');
+			$this->email->message($message);
+			
+			if($this->email->send()){
+				$status = 'success';
+				//$msg = $message;
+				$msg = 'Arsip telah dikirim. Silahkan cek email anda';
+			}else{
+				show_error($this->email->print_debugger());
+				$status = 'error';
+				$msg = 'Terjadi kesalahan. harap coba lagi dalam beberapa saat';
+			}
+			
+			echo json_encode(array('status' => $status, 'msg' => $msg));
+		}
+		
+		function recentExpertList($userID){
 	    	$patients = $this->patient_model->getPatientIDByUserID($userID);
 	    	$patientID = $patients->patientID;
 

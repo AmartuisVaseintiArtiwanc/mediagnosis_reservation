@@ -24,6 +24,7 @@
 			$this->db->join('tbl_cyberits_m_users mu', 'mu.userID = mp.userID');
 	        $this->db->join('tbl_cyberits_m_topics mt', 'mt.topicID = sr.topicID');
 	        $this->db->where('sr.doctorID',$expertID);
+			$this->db->where("sr.isActive",1);
 	        $query = $this->db->get();
 	        return $query->result_array();
 	    }
@@ -41,6 +42,7 @@
 			$this->db->join('tbl_cyberits_m_users mu', 'mu.userID = md.userID');
 	        $this->db->join('tbl_cyberits_m_topics mt', 'mt.topicID = sr.topicID');
 	        $this->db->where('sr.patientID',$patientID);
+			$this->db->where("sr.isActive",1);
 	        $query = $this->db->get();
 	        return $query->result_array();
 	    }
@@ -51,6 +53,7 @@
 	        $this->db->join('tbl_cyberits_m_doctors md', 'md.doctorID = sr.doctorID');
 	        $this->db->join('tbl_cyberits_m_patients mp', 'mp.patientID = sr.patientID');
 	        $this->db->where('sr.sRoomID',$sRoomID);
+			$this->db->where("sr.isActive",1);
 	        $query = $this->db->get();
 	        return $query->row();
 		}
