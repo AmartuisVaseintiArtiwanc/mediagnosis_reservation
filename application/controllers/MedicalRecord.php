@@ -363,22 +363,9 @@ class MedicalRecord extends CI_Controller {
             $this->session->unset_userdata('detail_reservation');
             $status = "success";
             $msg=$this->lang->line("009");//"Medical Record has been saved successfully.";
+			/*insert here*/
+			$this->getReservationDetail($detail_reservation);
 			
-			$token_wrapper = $this->test_model->getTokenByReservationID($detail_reservation);
-			$token = $token_wrapper->token;
-			$this->sendNotification("Harap berikan penilaian untuk pelayanan yang diberikan","Kunjungan anda telah selesai",$token);
-			
-			/*$data = array(
-				'userID'=>$token_wrapper->userID,
-				'header'=>"Harap review kunjungan hari ini",
-				'message'=>"Kunjungan anda tleh selesai",
-				'isActive'=>1,
-				'created'=>$datetime,
-				'createdBy'=>$userID,
-				'lastUpdated'=>$datetime,
-				'lastUpdatedBy'=>$userID
-			);
-			$this->Notification_model->createNotification($data);*/
         }
         echo json_encode(array('status' => $status, 'msg' => $msg));
     }
@@ -808,6 +795,24 @@ class MedicalRecord extends CI_Controller {
 
         return $headerID;
     }
+	
+	private function getReservationDetail($detailReservationID){
+		
+		
+		$token_wrapper = $this->test_model->getTokenByReservationID($detailReservationID);
+		$token = $token_wrapper->token;
+		
+		$reservation_wrapper = $this->test_model->getDoctorClinicDetailForNotification($detailReservationID);
+		
+		$data = array(
+			'doctor_name'=>$reservation_wrapper->doctorName,
+			'clinic_name'=>$reservation_wrapper->clinicName,
+			'doctor_image'=>$reservation_wrapper->userImage,
+			'detail_id'=>$detailReservationID
+		);
+		
+		$this->sendNotificationOpenRating("Harap berikan penilaian untuk pelayanan yang diberikan","Kunjungan anda telah selesai",$token, $data);
+	}
 
     function sendNotification($title, $message, $token){
 		$path = 'https://fcm.googleapis.com/fcm/send';
@@ -818,6 +823,37 @@ class MedicalRecord extends CI_Controller {
 			'Content-Type:application/json'
 		);
 		$data = array('title'=>$title, 'body'=>$message, 'open_drawer'=>"OPEN");
+		$fields = array('to'=>$token,
+						//'notification'=>array('title'=>$title, 'body'=>$message),
+						'data'=>$data
+		);
+		
+		$payload= json_encode($fields);
+		
+		$curl_session = curl_init();
+		curl_setopt($curl_session, CURLOPT_URL, $path);
+		curl_setopt($curl_session, CURLOPT_POST, true);
+		curl_setopt($curl_session, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($curl_session, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($curl_session, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+		curl_setopt($curl_session, CURLOPT_POSTFIELDS, $payload);
+		
+		$result = curl_exec($curl_session);
+		curl_close($curl_session);
+		
+	}
+	
+	function sendNotificationOpenRating($title, $message, $token, $data){
+		$path = 'https://fcm.googleapis.com/fcm/send';
+		$server_key = "AAAAa0DykfY:APA91bGVDIV31q6GpXzcbpo_Tlr_L1BkqtuVio_OwvV2Ov7zTzIXrkPaRpcgLNxZ7XEy33gX356Q9TeRstFxqQo5V-rImTvvrFEG7EvLTwecAWncZ72xQvy63Waux3Xu7Pcv07WsxTPY8t8_DbtyqohE06ZdV0RSug";
+		
+		$headers = array(
+			'Authorization:key='.$server_key,
+			'Content-Type:application/json'
+		);
+		$notifArray = array('title'=>$title, 'body'=>$message, 'click_action'=>'id.co.cyberits.minimediagnosis_RATING_TARGET_NOTIFICATION');
+		$data = array_merge($notifArray, $data);
 		$fields = array('to'=>$token,
 						//'notification'=>array('title'=>$title, 'body'=>$message),
 						'data'=>$data
