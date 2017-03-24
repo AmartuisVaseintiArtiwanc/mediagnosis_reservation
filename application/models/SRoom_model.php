@@ -36,7 +36,7 @@
 	    }
 
 	    function getUserListByPatientID($patientID){
-	    	$this->db->select('md.doctorID, , md.doctorName,  md.phoneNumber, mt.topicID, mt.topicName, sr.RecentChat, mu.isOnline');
+	    	$this->db->select('md.doctorID, md.sip, md.userID, md.doctorName, md.phoneNumber, mt.topicID, mt.topicName, sr.RecentChat, mu.isOnline, mu.userImage');
 	        $this->db->from('tbl_cyberits_s_room sr');
 	        $this->db->join('tbl_cyberits_m_doctors md', 'md.doctorID = sr.doctorID');
 			$this->db->join('tbl_cyberits_m_users mu', 'mu.userID = md.userID');

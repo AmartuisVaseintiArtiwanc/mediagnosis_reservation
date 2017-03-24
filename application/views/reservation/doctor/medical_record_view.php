@@ -97,7 +97,7 @@
                 <label class="w3-large"><b>OTP</b></label>
                 <input class="w3-input w3-border w3-margin-bottom" id="otp-input" type="text" placeholder="Enter OTP" name="otp_input">
             </div>-->
-            <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$reservation_data->detailReservationID."/".$reservation_data->patientID);?>"
+            <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$header_data->detailReservationID."/".$header_data->patientID);?>"
                target="_blank">
                 <button class="w3-btn-block w3-teal w3-section w3-padding-xlarge request-otp-btn" type="button">MASUKKAN OTP</button>
             </a>
@@ -174,7 +174,7 @@
 
                 <br>
                 <div class="w3-margin">
-                    <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$reservation_data->detailReservationID."/".$reservation_data->patientID);?>"
+                    <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$header_data->detailReservationID."/".$header_data->patientID);?>"
                        target="_blank">
                         <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple request-otp-btn">MASUKKAN OTP</button>
                     </a>
@@ -253,20 +253,7 @@
                     <div class="w3-container">
                         <p>
                             <textarea class="w3-input" id="main-condition-text"
-                                data-ul="#main-condition-ul" data-li="#main-condition-value"
                                 data-label="#main-condition-err-msg"></textarea>
-
-                            <!--VALUE-->
-                            <ul class="w3-ul w3-card-4 w3-hide" id="main-condition-ul">
-                                <li class="w3-padding-8">
-                                    <span class="w3-large" id="main-condition-value" data-value="" data-status=""></span>
-                                      <span
-                                          data-input-value="#main-condition-value"
-                                            data-input-element="#main-condition-text"
-                                            data-ul="#main-condition-ul"
-                                            class="w3-closebtn w3-margin-right w3-medium"><i class="fa fa-pencil"></i></span>
-                                </li>
-                            </ul>
                         </p>
                     </div>
                 </div>
@@ -466,21 +453,9 @@
                     <form class="w3-container">
                         <p>
                             <textarea class="w3-input" id="working-diagnose-text"
-                                data-label="#working-diagnose-err-msg"
-                                data-ul="#working-diagnose-ul" data-li="#working-diagnose-value"></textarea>
+                                data-label="#working-diagnose-err-msg"></textarea>
                             <br>
                             <!--ERROR MSG-->
-                            <!--VALUE-->
-                            <ul class="w3-ul w3-card-4 w3-hide" id="working-diagnose-ul">
-                                <li class="w3-padding-8">
-                                    <span class="w3-large" id="working-diagnose-value" data-value="" data-status=""></span>
-                                          <span
-                                              data-input-value="#working-diagnose-value"
-                                              data-input-element="#working-diagnose-text"
-                                              data-ul="#working-diagnose-ul"
-                                              class="w3-closebtn w3-margin-right w3-medium">x</span>
-                                </li>
-                            </ul>
                         </p>
                         <br/>
                     </form>
@@ -650,8 +625,8 @@
             </div>
 
             <input type="hidden" id="base-url" value="<?php echo site_url();?>"/>
-            <input type="hidden" id="detail-reservation" value="<?php echo $reservation_data->detailReservationID;?>"/>
-            <input type="hidden" id="patient-id" value="<?php echo $reservation_data->patientID;?>"/>
+            <input type="hidden" id="detail-reservation" value="<?php echo $header_data->detailReservationID;?>"/>
+            <input type="hidden" id="patient-id" value="<?php echo $header_data->patientID;?>"/>
         </div>
 
         <div class="w3-center">
