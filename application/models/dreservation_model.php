@@ -41,6 +41,24 @@
 		        return 1; // available
 		    }
 		}
+		
+		function checkReservationSchedule($clinicID, $poliID, $scheduleDay, $todayTime){
+			$this->db->select('*');
+		    $this->db->from('tbl_cyberits_s_schedule ss');
+		    $this->db->where("ss.isActive",1);
+			$this->db->where("ss.isOpen",1);
+			$this->db->where("ss.clinicID",$clinicID);
+			$this->db->where("ss.poliID",$poliID);
+			$this->db->where("ss.scheduleDay",$scheduleDay);
+			$this->db->where("ss.openTime <",$todayTime);
+			$this->db->where("ss.closeTime >",$todayTime);
+		    $query = $this->db->get();
+		    if($query->num_rows() == 0){
+		        return 0; // ga cocok jadwalnya
+		    }else{
+		        return 1; // cocok jadwalnya
+		    }
+		}
 
 	}
 ?>

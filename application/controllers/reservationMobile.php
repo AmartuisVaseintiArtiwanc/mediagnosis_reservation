@@ -38,6 +38,8 @@
 				$reserveDate = $today;
 			}
 			
+			$validateSchedule = $this->checkSchedule($clinicID, $poliID, $reserveDate);
+			
 			$patient_data = $this->Patient_model->getPatientByUserID($userID);
             $patientID = $patient_data->patientID;
 
@@ -46,8 +48,11 @@
             // Check User has been reserve on today or Not
 			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patientID);
 
-            // Check User has been reserve on today or Not
-			if($resrvationAvailability != 0){
+			//check jadwal klinik
+			if($validateSchedule != 1){
+				echo json_encode(array('status' => 'error', 'msg' => 'Maaf, anda tidak bisa mereservasi pada jam ini'));
+			// Check User has been reserve on today or Not
+			}else if($resrvationAvailability != 0){
 				echo json_encode(array('status' => 'error', 'msg' => 'Maaf, anda tidak bisa melakukan reservasi lagi'));
 			}else if($userID!=null){
 				if(!isset($verifyReservationOverall)){
@@ -489,6 +494,41 @@
             }
             echo json_encode(array('status' => $status, 'msg' => $msg));
         }
+		
+		function checkSchedule($clinicID, $poliID, $reservationDate){
+			$dayofweek = date('w', strtotime($reservationDate));
+			$dayofweekid = "";
+			$waktu = date('H:i:s', time());
+			
+			switch($dayofweek){
+				case 1:
+					$dayofweekid = "Senin";
+				break;
+				case 2:
+					$dayofweekid = "Selasa";
+				break;
+				case 3:
+					$dayofweekid = "Rabu";
+				break;
+				case 4:
+					$dayofweekid = "Kamis";
+				break;
+				case 5:
+					$dayofweekid = "Jumat";
+				break;
+				case 6:
+					$dayofweekid = "Sabtu";
+				break;
+				case 7:
+					$dayofweekid = "Minggu";
+				break;
+			}
+			
+			$query = $this->DReservation_model->checkReservationSchedule($clinicID, $poliID, $dayofweekid, $waktu);
+			
+			return $query;
+			
+		}
 		
 		function sendNotification($title, $message, $token){
 			$path = 'https://fcm.googleapis.com/fcm/send';
