@@ -52,6 +52,7 @@ class Clinic_Model extends CI_Model {
 
     function _dataClinicQuery($searchText,$orderByColumnIndex,$orderDir){
         $this->db->select('a.clinicID, a.clinicName, b.userID, b.userName, b.email,
+        a.clinicAddress, a.longitude, a.latitude,
         a.isActive, a.created, a.lastUpdated, a.createdBy, a.lastUpdatedBy');
         $this->db->from('tbl_cyberits_m_clinics a');
         $this->db->join('tbl_cyberits_m_users b',"a.userID = b.userID");

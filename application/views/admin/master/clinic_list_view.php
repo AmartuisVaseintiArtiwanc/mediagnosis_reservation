@@ -103,7 +103,8 @@
                     "className": "dt-center",
                     "createdCell": function (td, cellData, rowData, row, col) {
                         var $btn_edit = $("<button>", { class:"btn btn-primary btn-xs edit-btn","type": "button",
-                            "data-toggle":"modal","data-target":"#clinic-modal-edit","data-value": rowData[1]});
+                            "data-toggle":"modal","data-target":"#clinic-modal-edit","data-value": rowData[1],
+                            "data-address": rowData[9],"data-lng": rowData[10],"data-lat": rowData[11]});
                         $btn_edit.append("<span class='glyphicon glyphicon-pencil'></span>&nbsp Edit");
 
                         var $btn_edit_account = $("<button>", { class:"btn btn-primary btn-xs edit-account-btn","type": "button",
@@ -179,12 +180,19 @@
             var $tr =  $(this).closest("tr");
             var $td =  $(this).closest("td");
             var text = $tr.find('td').eq(1).text();
+            var address = $(this).attr("data-address");
+            var lng = $(this).attr("data-lng");
+            var lat = $(this).attr("data-lat");
+
             var status = $tr.find('td span.status-label').attr("data-status");
             var created = $td.find('div.item-info').attr("data-created");
             var last_modified = $td.find('div.item-info').attr("data-last-modifed");
 
             $('#modal-title-edit').html("Edit Klinik - <b>"+text+"</b>");
             $('#master-name-edit').val(text);
+            $('#master-address-edit').val(address);
+            $('#master-address-edit').attr("data-lng",lng);
+            $('#master-address-edit').attr("data-lat",lat);
             $('#master-id').val(id_item);
 
             if(status == 1){

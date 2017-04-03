@@ -31,7 +31,8 @@
   <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/alertify/themes/default.min.css">
   <!--Sweet Alert-->
   <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/sweetalert2/sweetalert2.min.css">
-
+  <!-- Geocomplete -->
+  <link rel="stylesheet" href="<?php echo base_url();?>assets/plugins/geocomplete/styles.css">
   <!-- jQuery 2.2.0 -->
   <script src="<?php echo base_url();?>assets/plugins/jQuery/jQuery-2.2.0.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->

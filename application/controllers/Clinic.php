@@ -82,6 +82,9 @@ class Clinic extends CI_Controller {
             $row[] = $item['userID'];
             $row[] = $item['userName'];
             $row[] = $item['email'];
+            $row[] = $item['clinicAddress'];
+            $row[] = $item['longitude'];
+            $row[] = $item['latitude'];
             $data[] = $row;
         }
 
@@ -102,6 +105,9 @@ class Clinic extends CI_Controller {
         $msg="";
 
         $name = $this->security->xss_clean($this->input->post('name'));
+        $address = $this->security->xss_clean($this->input->post('address'));
+        $lng = $this->security->xss_clean($this->input->post('lng'));
+        $lat = $this->security->xss_clean($this->input->post('lat'));
         $username = $this->security->xss_clean($this->input->post('username'));
         $password = $this->security->xss_clean($this->input->post('password'));
         $email = $this->security->xss_clean($this->input->post('email'));
@@ -122,6 +128,9 @@ class Clinic extends CI_Controller {
                 $data=array(
                     'userID'=>$save_account['userID'],
                     'clinicName'=>$name,
+                    'clinicAddress'=>$address,
+                    'latitude'=>$lat,
+                    'longitude'=>$lng,
                     'isActive'=>1,
                     'created'=>$datetime,
                     "createdBy" => $superUserID,
@@ -165,6 +174,9 @@ class Clinic extends CI_Controller {
         $datetime = date('Y-m-d H:i:s', time());
         $id = $this->security->xss_clean($this->input->post('id'));
         $name = $this->security->xss_clean($this->input->post('name'));
+        $address = $this->security->xss_clean($this->input->post('address'));
+        $lng = $this->security->xss_clean($this->input->post('lng'));
+        $lat = $this->security->xss_clean($this->input->post('lat'));
         $isActive = $this->security->xss_clean($this->input->post('isActive'));
         $superUserID = $this->security->xss_clean($this->input->post('superUserID'));
 
@@ -173,6 +185,9 @@ class Clinic extends CI_Controller {
 
         $data=array(
             'clinicName'=>$name,
+            'clinicAddress'=>$address,
+            'latitude'=>$lat,
+            'longitude'=>$lng,
             "lastUpdated"=>$datetime,
             'isActive'=>$isActive,
             "lastUpdatedBy"=>$this->session->userdata('userID')

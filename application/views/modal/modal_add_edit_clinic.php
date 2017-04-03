@@ -14,39 +14,60 @@
 
                 </div>
                 <form id="clinic-form-add" action="">
-                    <div class="form-group">
-                        <label for="master-name-add" class="control-label cd-name">Nama Klinik :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-name-add"></span>
-                        <input type="text" class="form-control" id="master-name-add" name="clinic_name"
-                               placeholder="Nama Klinik Anda" data-label="#err-master-name-add" autofocus>
-                    </div>
 
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Akun Klinik</h3>
-                    </div>
-                    <div class="form-group">
-                        <label for="master-username-add" class="control-label">Username :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-username-add"></span>
-                        <input type="text" class="form-control" id="master-username-add" name="acc_username"
-                               placeholder="Username Anda" data-label="#err-master-username-add" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label for="master-password-add" class="control-label">Password :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-password-add"></span>
-                        <input type="password" class="form-control" id="master-password-add" name="acc_password"
-                               placeholder="Password Anda" data-label="#err-master-password-add" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label for="master-confirm-password-add" class="control-label">Konfirmasi Password :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-confirm-password-add"></span>
-                        <input type="password" class="form-control" id="master-confirm-password-add" name="acc_confirm_password"
-                               placeholder="Ulangi Password Anda" data-label="#err-master-confirm-password-add" autofocus>
-                    </div>
-                    <div class="form-group">
-                        <label for="master-email-add" class="control-label">Email :</label>
-                        <span class="cd-error-message label label-danger" id="err-master-email-add"></span>
-                        <input type="text" class="form-control" id="master-email-add" name="acc_email"
-                               placeholder="Email Anda" data-label="#err-master-email-add" autofocus>
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab-master" data-toggle="tab">Master</a></li>
+                            <li><a href="#tab-account" data-toggle="tab">Akun</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <!--Tab Master-->
+                            <div class="tab-pane active" id="tab-master">
+                                <div class="form-group">
+                                    <label for="master-name-add" class="control-label cd-name">Nama Klinik :</label>
+                                    <span class="cd-error-message label label-danger" id="err-master-name-add"></span>
+                                    <input type="text" class="form-control" id="master-name-add" name="clinic_name"
+                                           placeholder="Nama Klinik Anda" data-label="#err-master-name-add" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="master-search-address-add" class="control-label">Cari Alamat :</label>
+                                    <span class="cd-error-message label label-danger" id="err-master-address-add"></span>
+                                    <input type="text" class="form-control" id="master-search-address-add" placeholder="Alamat Klinik Anda"
+                                              data-label="#err-master-address-add" />
+                                    <textarea type="text" class="form-control" id="master-address-add" placeholder="Alamat Klinik Anda"
+                                              data-label="#err-master-address-add" disabled></textarea>
+                                </div>
+                                <div class="map_canvas" id="map-canvas-add"></div>
+                            </div>
+                            <!--Tab Account-->
+                            <div class="tab-pane" id="tab-account">
+                                <div class="form-group">
+                                    <label for="master-username-add" class="control-label">Username :</label>
+                                    <span class="cd-error-message label label-danger" id="err-master-username-add"></span>
+                                    <input type="text" class="form-control" id="master-username-add" name="acc_username"
+                                           placeholder="Username Anda" data-label="#err-master-username-add" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="master-password-add" class="control-label">Password :</label>
+                                    <span class="cd-error-message label label-danger" id="err-master-password-add"></span>
+                                    <input type="password" class="form-control" id="master-password-add" name="acc_password"
+                                           placeholder="Password Anda" data-label="#err-master-password-add" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="master-confirm-password-add" class="control-label">Konfirmasi Password :</label>
+                                    <span class="cd-error-message label label-danger" id="err-master-confirm-password-add"></span>
+                                    <input type="password" class="form-control" id="master-confirm-password-add" name="acc_confirm_password"
+                                           placeholder="Ulangi Password Anda" data-label="#err-master-confirm-password-add" autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <label for="master-email-add" class="control-label">Email :</label>
+                                    <span class="cd-error-message label label-danger" id="err-master-email-add"></span>
+                                    <input type="text" class="form-control" id="master-email-add" name="acc_email"
+                                           placeholder="Email Anda" data-label="#err-master-email-add" autofocus>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div><!--modal body-->
@@ -82,6 +103,16 @@
                         <input type="text" class="form-control" id="master-name-edit"
                                placeholder="Name" data-label="#err-master-name-edit">
                     </div>
+                    <div class="form-group">
+                        <label for="master-search-address-edit" class="control-label">Cari Alamat :</label>
+                        <span class="cd-error-message label label-danger" id="err-master-address-edit"></span>
+                        <input type="text" class="form-control" id="master-search-address-edit" placeholder="Alamat Klinik Anda"
+                               data-label="#err-master-address-edit" />
+                        <textarea type="text" class="form-control" id="master-address-edit" placeholder="Alamat Klinik Anda"
+                                  data-label="#err-master-address-edit" disabled></textarea>
+                    </div>
+                    <div class="map_canvas" id="map-canvas-edit"></div>
+
                     <div class="form-group">
                         <label for="master-isactive-edit" class="control-label">Status :</label>
                         <input type="hidden" class="form-control" id="master-isactive-edit">
@@ -158,11 +189,40 @@
     </div><!--modal dialog-->
 </div>
 
+<script src="//maps.googleapis.com/maps/api/js?libraries=places&amp;key=AIzaSyDmzn_NKO9LsuSuhg4McW8oj_zXJk9h6Ig"></script>
+<script src="<?php echo base_url();?>assets/plugins/geocomplete/jquery.geocomplete.js"></script>
 <script>
 
     $(document).ready( function($) {
 
         var $superUser = "<?php echo $superUserID;?>";
+
+        $("#master-search-address-add").geocomplete({
+            map: "#map-canvas-add"
+        }).bind("geocode:result", function(event, result){
+            var lat = result.geometry.location.lat();
+            var lng = result.geometry.location.lng();
+            var address = result.formatted_address;
+
+            $("#master-address-add").val(address);
+            $("#master-address-add").attr("data-lng", lng);
+            $("#master-address-add").attr("data-lat", lat);
+            console.log(result.geometry.location.lat());
+        });
+
+        $("#master-search-address-edit").geocomplete({
+            map: "#map-canvas-edit"
+        }).bind("geocode:result", function(event, result){
+            var lat = result.geometry.location.lat();
+            var lng = result.geometry.location.lng();
+            var address = result.formatted_address;
+
+            $("#master-address-edit").val(address);
+            $("#master-address-edit").attr("data-lng", lng);
+            $("#master-address-edit").attr("data-lat", lat);
+            console.log(result.geometry.location.lat());
+        });
+
 
         $(".btn-isactive").click(function(){
             var $status = $(this).attr("data-status");
@@ -182,27 +242,38 @@
 
             if (!$('#master-name-add').validateRequired()) {
                 err++;
+                $('.nav-tabs a[href="#tab-master"]').tab('show');
+            }
+
+            if (!$('#master-address-add').validateRequired()) {
+                err++;
+                $('.nav-tabs a[href="#tab-master"]').tab('show');
             }
 
             if (!$('#master-username-add').validateRequired()) {
                 err++;
+                $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
 
             if (!$('#master-password-add').validateRequired()) {
                 err++;
+                $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
 
             if(!$('#master-confirm-password-add').validateRequired()) {
                 err++;
+                $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
 
             if(!$('#master-confirm-password-add').validateConfirmPassword({
                     compareValue : $('#master-password-add').val()}) ) {
                 err++;
+                $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
 
             if (!$('#master-email-add').validateEmailForm()) {
                 err++;
+                $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
 
             if (err != 0) {
@@ -215,6 +286,9 @@
             var err = 0;
 
             if (!$('#master-name-edit').validateRequired()) {
+                err++;
+            }
+            if (!$('#master-address-edit').validateRequired()) {
                 err++;
             }
 
@@ -251,6 +325,9 @@
             if (validate()) {
                 var formData = new FormData();
                 formData.append("name", $("#master-name-add").val());
+                formData.append("address", $("#master-address-add").val());
+                formData.append("lat", $("#master-address-add").attr("data-lat"));
+                formData.append("lng", $("#master-address-add").attr("data-lng"));
                 formData.append("username", $("#master-username-add").val());
                 formData.append("password", $("#master-password-add").val());
                 formData.append("email", $("#master-email-add").val());
@@ -272,6 +349,9 @@
                 var formData = new FormData();
                 formData.append("id", $("#master-id").val());
                 formData.append("name", $("#master-name-edit").val());
+                formData.append("address", $("#master-address-edit").val());
+                formData.append("lat", $("#master-address-edit").attr("data-lat"));
+                formData.append("lng", $("#master-address-edit").attr("data-lng"));
                 formData.append("isActive", $("#master-isactive-edit").val());
                 formData.append("superUserID", $superUser);
 

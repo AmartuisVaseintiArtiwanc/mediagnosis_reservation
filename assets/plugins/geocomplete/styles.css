@@ -1,0 +1,16 @@
+#geocomplete { width: 200px}
+
+.map_canvas { 
+  width: 100%;
+  height: 210px;
+  margin: 10px 20px 10px 0;
+}
+
+#multiple li { 
+  cursor: pointer; 
+  text-decoration: underline; 
+}
+
+.pac-container{
+    z-index: 2000;
+}
