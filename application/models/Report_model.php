@@ -141,12 +141,18 @@ class Report_model extends CI_Model {
         return $query->result_array();
     }
 
-    function getReportDiseaseVisitDetail($startDate, $endDate, $diseaseID){
+    function getReportDiseaseVisitDetail($startDate, $endDate, $diseaseID, $superUserID=""){
 
         #Create where clause
         $this->db->select('doctorID');
         $this->db->from('tbl_cyberits_m_doctors');
-        $this->db->where("createdBy",$this->session->userdata('superUserID'));
+		$role = $this->session->userdata('role');
+        if($role != "mediagnosis_admin"){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+
+        $this->db->where('createdBy',$superUserID);
+        
         $doctor_clause = $this->db->get_compiled_select();
 
         $this->db->select('a.clinicID, cl.clinicName, a.poliID, pl.poliName, b.patientID, b.doctorID, b.created as reserveDate, b.reservationID,
