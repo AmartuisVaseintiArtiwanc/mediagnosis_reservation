@@ -14,15 +14,28 @@ class Report extends CI_Controller {
         $this->load->model('Doctor_model',"doctor_model");
         $this->load->model('Diseases_model',"diseases_model");
     }
+	
+	function indexAdmin($functionName){
+        $data['main_content'] = 'admin/report/home_super_admin_report_list_view';
+        $data['master'] = 'Report';
+        $data['master_title'] = 'Report';
+		$data['function_name'] = $functionName;
+        $this->load->view('admin/template/template', $data);
+    }
 
     // REPORT Kunjungan Sehat Sakit
-    function reportVisitType(){
+    function reportVisitType($superUserID=""){
         $role = $this->session->userdata('role');
-        $userID = $this->session->userdata('superUserID');
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+			$userID = $superUserID;
+		}
+		else if($this->authentication->isAuthorizeSuperAdmin($role)){
+			$userID = $this->session->userdata('superUserID');
+		}
         $today = date('Y-m-d', time());
 
         //$this->output->enable_profiler(true);
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
+        if($this->authentication->isAuthorizeSuperAdmin($role) || $this->authentication->isAuthorizeAdminMediagnosis($role)){
             $startDate = "";
             $endDate = "";
             $startDatePost = $this->security->xss_clean($this->input->get("from"));
@@ -44,21 +57,28 @@ class Report extends CI_Controller {
             $data['start_date'] = $startDatePost;
             $data['end_date'] = $endDatePost;
             $data['report_data']  = $report_list;
-            $data['main_content'] = 'report/report_visit_type_view';
-            $this->load->view('template/template', $data);
+            $data['super_admin_id'] = $userID;
+			if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+				$data['main_content'] = 'admin/report/report_visit_type_view';
+				$this->load->view('admin/template/template', $data);
+			}
+			else{
+				$data['main_content'] = 'report/report_visit_type_view';
+				$this->load->view('template/template', $data);
+			}
             //print_r($clinic_list);
         }else{
            $this->goToErrorPage();
         }
     }
     // DETAIL REPORT Kunjungan Sehat Sakit
-    function reportVisitTypeDetail($clinicID,$from,$to){
+    function reportVisitTypeDetail($clinicID,$from,$to,$superUserID=""){
         $role = $this->session->userdata('role');
         $userID = $this->session->userdata('superUserID');
         $today = date('Y-m-d', time());
 
         //$this->output->enable_profiler(true);
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
+        if($this->authentication->isAuthorizeSuperAdmin($role) || $this->authentication->isAuthorizeAdminMediagnosis($role)){
             $startDatePost = $from;
             $endDatePost = $to;
 
@@ -74,7 +94,12 @@ class Report extends CI_Controller {
                 $endDate = date ( 'Y-m-d' , $endDate );
             }
 
-            $clinic = $this->clinic_model->getClinicByID($clinicID);
+			if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+				$clinic = $this->clinic_model->getClinicByID($clinicID, $superUserID);
+			}else{
+				$clinic = $this->clinic_model->getClinicByID($clinicID);
+			}
+			
 
             if(isset($clinic)){
                 $report_list = $this->report_model->getReportClinicVisitTypeDetail($startDate, $endDate, $clinicID);
@@ -82,8 +107,16 @@ class Report extends CI_Controller {
                 $data['end_date'] = $endDatePost;
                 $data['clinic_name'] = $clinic->clinicName;
                 $data['report_detail_data']  = $report_list;
-                $data['main_content'] = 'report/report_visit_type_detail_view';
-                $this->load->view('template/template', $data);
+                $data['super_admin_id'] = $superUserID;
+				
+                if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+					$data['main_content'] = 'admin/report/report_visit_type_detail_view';
+					$this->load->view('admin/template/template', $data);
+				}
+				else{
+					$data['main_content'] = 'report/report_visit_type_detail_view';
+					$this->load->view('template/template', $data);
+				}
                 //$this->output->enable_profiler(TRUE);
             }else{
                 $this->goToErrorPage();

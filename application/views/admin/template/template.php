@@ -182,6 +182,22 @@
 					<li><a href="<?php echo site_url("Troubleshoot/reportedChat");?>"><i class="fa fa-circle-o"></i> Daftar Chat Bermasalah</a></li>
                 </ul>
             </li>
+			<li class="treeview mediagnosis-navigation-report">
+				<a href="#">
+					<i class="fa fa-bar-chart"></i>
+					<span>Laporan</span>
+					<i class="fa fa-angle-left pull-right"></i>
+				</a>
+				<ul class="treeview-menu">
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportVisitType");?>"><i class="fa fa-circle-o"></i>Laporan Kunjungan Sehat/Sakit</a></li>
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportClinicPoliVisit");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan per Poli</a></li>
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportDoctorVisit");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan per Dokter</a></li>
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportPatientType");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan Umum/BPJS</a></li>
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportDiseaseVisit");?>"><i class="fa fa-circle-o"></i>Laporan Penyakit</a></li>
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportDoctorRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Dokter</a></li>
+					<li><a href="<?php echo site_url("Report/indexAdmin/reportClinicPoliRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Klinik</a></li>
+				</ul>
+			</li>
             <li class="mediagnosis-navigation-diagnose"><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-stethoscope"></i> <span>Diagnosa</span></a></li>
         <?php } ?>
 
