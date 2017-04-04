@@ -48,6 +48,7 @@
                     <th style = "text-align:left;">Dokter</th>
                     <th style = "text-align:center;">Status</th>
                     <th style = "text-align:center;">Super Admin</th>
+					<th style = "text-align:center;">Klinik</th>
                     <th style = "text-align:right;">Rating</th>
                     <th style = "text-align:center;">Tanggal Update</th>
                 </tr>
@@ -117,7 +118,8 @@
                 { data: 3, "width": "10%"},
                 { data: 4, "width": "20%"},
                 { data: 5, "width": "10%"},
-                { data: 6, "width": "20%"},
+				{ data: 6, "width": "10%"},
+                { data: 7, "width": "20%"},
             ],
             //Set column definition initialisation properties.
             "columnDefs": [

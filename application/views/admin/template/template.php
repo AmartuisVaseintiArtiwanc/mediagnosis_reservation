@@ -194,8 +194,6 @@
 					<li><a href="<?php echo site_url("Report/indexAdmin/reportDoctorVisit");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan per Dokter</a></li>
 					<li><a href="<?php echo site_url("Report/indexAdmin/reportPatientType");?>"><i class="fa fa-circle-o"></i>Laporan Kunjugan Umum/BPJS</a></li>
 					<li><a href="<?php echo site_url("Report/indexAdmin/reportDiseaseVisit");?>"><i class="fa fa-circle-o"></i>Laporan Penyakit</a></li>
-					<li><a href="<?php echo site_url("Report/indexAdmin/reportDoctorRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Dokter</a></li>
-					<li><a href="<?php echo site_url("Report/indexAdmin/reportClinicPoliRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Klinik</a></li>
 				</ul>
 			</li>
             <li class="mediagnosis-navigation-diagnose"><a href="<?php echo site_url("Diagnose");?>"><i class="fa fa-stethoscope"></i> <span>Diagnosa</span></a></li>
