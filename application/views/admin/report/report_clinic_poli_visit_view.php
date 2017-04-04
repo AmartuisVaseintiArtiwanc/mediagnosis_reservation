@@ -145,7 +145,7 @@
         $('#btn-search').click(function(){
             var $start = $('#search-start-date').val();
             var $end = $('#search-end-date').val();
-            var $url = "<?php echo site_url();?>"+"/Report/reportClinicPoliVisit?";
+            var $url = "<?php echo site_url();?>"+"/Report/reportClinicPoliVisit/"+"<?php echo $super_admin_id;?>"+"?";
             $url+="from="+$start;
             $url+="&to="+$end;
 

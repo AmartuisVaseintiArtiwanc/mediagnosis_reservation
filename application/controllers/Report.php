@@ -127,13 +127,18 @@ class Report extends CI_Controller {
     }
 
     // REPORT Kunjungan Per Klinik
-    function reportClinicPoliVisit(){
+    function reportClinicPoliVisit($superUserID=""){
         $role = $this->session->userdata('role');
-        $userID = $this->session->userdata('superUserID');
+        if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+			$userID = $superUserID;
+		}
+		else if($this->authentication->isAuthorizeSuperAdmin($role)){
+			$userID = $this->session->userdata('superUserID');
+		}
         $today = date('Y-m-d', time());
 
         //$this->output->enable_profiler(true);
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
+        if($this->authentication->isAuthorizeSuperAdmin($role) || $this->authentication->isAuthorizeAdminMediagnosis($role)){
             $startDate = "";
             $endDate = "";
             $startDatePost = $this->security->xss_clean($this->input->get("from"));
@@ -156,20 +161,28 @@ class Report extends CI_Controller {
             $data['start_date'] = $startDatePost;
             $data['end_date'] = $endDatePost;
             $data['report_data']  = $report_list;
-            $data['main_content'] = 'report/report_clinic_poli_visit_view';
-            $this->load->view('template/template', $data);
+			$data['super_admin_id'] = $userID;
+			if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+				$data['main_content'] = 'admin/report/report_clinic_poli_visit_view';
+				$this->load->view('admin/template/template', $data);
+			}
+			else{
+				$data['main_content'] = 'report/report_clinic_poli_visit_view';
+				$this->load->view('template/template', $data);
+			}
+            
         }else{
             $this->goToErrorPage();
         }
     }
     // DETAIL REPORT Kunjungan Per Klinik
-    function reportClinicPoliVisitDetail($clinicID,$poliID,$from,$to){
+    function reportClinicPoliVisitDetail($clinicID,$poliID,$from,$to,$superUserID=""){
         $role = $this->session->userdata('role');
         $userID = $this->session->userdata('superUserID');
         $today = date('Y-m-d', time());
 
        //$this->output->enable_profiler(true);
-        if($this->authentication->isAuthorizeSuperAdmin($role)){
+        if($this->authentication->isAuthorizeSuperAdmin($role) || $this->authentication->isAuthorizeAdminMediagnosis($role)){
             $startDatePost = $from;
             $endDatePost = $to;
 
@@ -185,7 +198,11 @@ class Report extends CI_Controller {
                 $endDate = date ( 'Y-m-d' , $endDate );
             }
 
-            $clinic = $this->clinic_model->getClinicByID($clinicID);
+            if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+				$clinic = $this->clinic_model->getClinicByID($clinicID, $superUserID);
+			}else{
+				$clinic = $this->clinic_model->getClinicByID($clinicID);
+			}
             $poli = $this->poli_model->getPoliByID($poliID);
 
             if(isset($clinic) && isset($poli)){
@@ -195,8 +212,16 @@ class Report extends CI_Controller {
                 $data['clinic_name'] = $clinic->clinicName;
                 $data['poli_name'] = $poli->poliName;
                 $data['report_detail_data']  = $report_list;
-                $data['main_content'] = 'report/report_clinic_poli_visit_detail_view';
-                $this->load->view('template/template', $data);
+				$data['super_admin_id'] = $superUserID;
+				if($this->authentication->isAuthorizeAdminMediagnosis($role)){
+					$data['main_content'] = 'admin/report/report_clinic_poli_visit_detail_view';
+					$this->load->view('admin/template/template', $data);
+				}
+				else{
+					$data['main_content'] = 'report/report_clinic_poli_visit_detail_view';
+					$this->load->view('template/template', $data);
+				}
+                
                 //$this->output->enable_profiler(TRUE);
             }else{
                 $this->goToErrorPage();
