@@ -615,8 +615,15 @@ class Report extends CI_Controller {
         }
     }
 
-
-    function goToErrorPage(){
+	// REPORT Kunjungan Sehat Sakit
+    function reportClinicSuperAdmin(){
+        $role = $this->session->userdata('role');
+        //something 
+		$data = $this->Report_model->getReportClinicDoctorPerSuperAdmin();
+    }
+    
+	
+	function goToErrorPage(){
         $data['err_msg'] = "Maaf Anda tidak dapat mengakses halaman ini..";
         $data['main_content'] = 'template/error';
         $this->load->view('template/template', $data);

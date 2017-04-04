@@ -219,4 +219,9 @@ class Report_model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
-}
+	
+	function getReportClinicDoctorPerSuperAdmin(){
+		$sql = "call sp_clinic_doctor_per_super_admin()";
+        $execute = $this->db->query($sql);
+        return $execute->result_array();
+	}
