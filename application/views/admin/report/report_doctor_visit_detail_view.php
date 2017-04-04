@@ -38,7 +38,7 @@
     <p>
         <div class="row">
             <div class="col-lg-8">
-                <a href="<?php echo site_url()."/Report/reportDoctorVisit?from=".$start_date."&to=".$end_date;?>">
+                <a href="<?php echo site_url()."/Report/reportDoctorVisit/".$super_admin_id."?from=".$start_date."&to=".$end_date;?>">
                     <button type="button" class="btn btn-primary btn-xl">
                         <span class="glyphicon glyphicon-arrow-left"></span>&nbsp Kembali
                     </button>
