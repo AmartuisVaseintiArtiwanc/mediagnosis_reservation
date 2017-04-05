@@ -169,11 +169,17 @@ class Doctor_Model extends CI_Model {
         $query = $this->db->get();
         return $query->row();
     }
-    function getDoctorByIdWithoutIsactive($id){
+    function getDoctorByIdWithoutIsactive($id,$superUserID=""){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_m_doctors a');
         $this->db->where('doctorID',$id);
-        $this->db->where('a.createdBy',$this->session->userdata('superUserID'));
+        // Check Role
+        $role = $this->session->userdata('role');
+        if($role != "mediagnosis_admin"){
+            $superUserID = $this->session->userdata('superUserID');
+        }
+
+        $this->db->where('a.createdBy',$superUserID);
         $query = $this->db->get();
         return $query->row();
     }
@@ -228,9 +234,12 @@ class Doctor_Model extends CI_Model {
 
     function _dataRatingDoctorQuery($searchText,$orderByColumnIndex,$orderDir){
         $this->db->select('a.doctorID, a.doctorName, a.rating, a.lastUpdatedRating,
-        b.userID, b.userName, b.email, b.superUserID, c.userName as superAdmin,
+        b.userID, b.userName, b.email, b.superUserID, c.userName as superAdmin, cl.clinicName, cl.clinicID,
         a.isActive, a.created, a.lastUpdated, a.createdBy, a.lastUpdatedBy');
         $this->db->from('tbl_cyberits_m_doctors a');
+		$this->db->join('tbl_cyberits_s_poli spl',"spl.doctorID=a.doctorID");
+		$this->db->join('tbl_cyberits_s_clinic scl',"scl.sClinicID=spl.sClinicID");
+		$this->db->join('tbl_cyberits_m_clinics cl',"cl.clinicID=scl.clinicID");
         $this->db->join('tbl_cyberits_m_users b',"a.userID = b.userID");
         $this->db->join('tbl_cyberits_m_users c',"b.superUserID = c.userID");
 

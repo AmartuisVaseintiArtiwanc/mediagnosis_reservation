@@ -116,6 +116,7 @@ class Rating extends CI_Controller{
             $row[] = $item['doctorName'];
             $row[] = $item['isActive'];
             $row[] = $item['superAdmin'];
+			$row[] = $item['clinicName'];
             $row[] = $item['rating'];
             $row[] = date_format($date_lastUpdateRating,"d M Y");
             $row[] = date_format($date_created,"d M Y")." by ".$item['createdBy'];

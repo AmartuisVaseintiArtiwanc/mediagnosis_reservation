@@ -51,7 +51,7 @@
                         <td class="dt-right"><?php echo $row['totalBpjsVisit'] != "" ? $row['totalBpjsVisit']: 0 ;?></td>
                         <td class="dt-right"><?php echo $row['totalUmumVisit'] != "" ? $row['totalUmumVisit']: 0 ;?></td>
                         <td class="dt-center">
-                            <a href="<?php echo site_url()."/Report/reportPatientTypeDetail/".$row['clinicID']."/".$start_date."/".$end_date;?>">
+                            <a href="<?php echo site_url()."/Report/reportPatientTypeDetail/".$row['clinicID']."/".$start_date."/".$end_date."/".$super_admin_id;?>">
                                 <button type="button" class="btn btn-primary btn-xs">
                                     <span class="glyphicon glyphicon-plus"></span>&nbsp Detail
                                 </button>
@@ -145,7 +145,7 @@
         $('#btn-search').click(function(){
             var $start = $('#search-start-date').val();
             var $end = $('#search-end-date').val();
-            var $url = "<?php echo site_url();?>"+"/Report/reportPatientType?";
+            var $url = "<?php echo site_url();?>"+"/Report/reportPatientType/"+"<?php echo $super_admin_id;?>"+"?";
             $url+="from="+$start;
             $url+="&to="+$end;
 
