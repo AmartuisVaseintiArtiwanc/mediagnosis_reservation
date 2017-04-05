@@ -529,7 +529,24 @@
 			return $query;
 			
 		}
-		
+
+        function getClinicReservation(){
+            $userID = $this->security->xss_clean($this->input->post("userID"));
+            $lat = $this->security->xss_clean($this->input->post("lat"));
+            $lng = $this->security->xss_clean($this->input->post("lng"));
+
+            $lat = floatval($lat);
+            $lat = bcdiv($lat, 1, 2);
+
+            $lng = floatval($lng);
+            $lng = bcdiv($lng, 1, 2);
+
+            $clinic = $this->Clinic_model->getClinicListByLatLng($lat,$lng);
+
+            echo json_encode(array('data' => $clinic));
+            //$this->output->enable_profiler(true);
+        }
+
 		function sendNotification($title, $message, $token){
 			$path = 'https://fcm.googleapis.com/fcm/send';
 			$server_key = "AAAAa0DykfY:APA91bGVDIV31q6GpXzcbpo_Tlr_L1BkqtuVio_OwvV2Ov7zTzIXrkPaRpcgLNxZ7XEy33gX356Q9TeRstFxqQo5V-rImTvvrFEG7EvLTwecAWncZ72xQvy63Waux3Xu7Pcv07WsxTPY8t8_DbtyqohE06ZdV0RSug";

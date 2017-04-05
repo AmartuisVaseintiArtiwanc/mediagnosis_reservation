@@ -219,6 +219,15 @@ class Clinic_Model extends CI_Model {
         }
     }
 
+    function getClinicListByLatLng($lat,$lng){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_clinics a');
+        $this->db->like('a.latitude', $lat, 'after');
+        $this->db->like('a.longitude',$lng, 'after');
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
     function createClinic($data){
         $this->db->insert('tbl_cyberits_m_clinics',$data);	
 		$result=$this->db->affected_rows();
