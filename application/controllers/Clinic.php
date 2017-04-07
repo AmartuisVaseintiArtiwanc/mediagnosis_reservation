@@ -254,7 +254,7 @@ class Clinic extends CI_Controller {
             }
         }
 
-        if(isset($password)){
+        if(isset($password) && $password != ""){
             $data['password'] = $this->hash->hashPass($password);
         }
 
