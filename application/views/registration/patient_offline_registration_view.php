@@ -48,6 +48,7 @@
                     <th style = "text-align:center;">No. KTP</th>
                     <th style = "text-align:center;">No. BPJS</th>
 					<th style = "text-align:center;">Nomor MRIS</th>
+					<th style = "text-align:center;">Alamat</th>
                     <th style = "text-align:center;">Option</th>
                 </tr>
                 </thead>
@@ -89,21 +90,28 @@
                 $(nRow).attr('data-ktp', aData[3]);
                 $(nRow).attr('data-bpjs', aData[4]);
                 $(nRow).attr('data-mris', aData[5]);
-                $(nRow).attr('data-gender', aData[7]);
-                $(nRow).attr('data-participant-status', aData[8]);
-                $(nRow).attr('data-participant-type', aData[9]);
+				$(nRow).attr('data-address', aData[6]);
+                $(nRow).attr('data-gender', aData[8]);
+                $(nRow).attr('data-participant-status', aData[9]);
+                $(nRow).attr('data-participant-type', aData[10]);
 
             },
             columns: [
                 { data: 0,"width": "10%" },
-                { data: 2, "width": "30%"},
-                { data: 3, "width": "20%"},
-                { data: 4, "width": "20%"},
-				{ data: 5, "width": "10%"},
-                { data: 7, "width": "10%"}
+                { data: 2, "width": "35%"},
+                { data: 3, "width": "10%"},
+                { data: 4, "width": "10%"},
+				{ data: 5, "width": "5%"},
+				{ data: 6, "width": "20%"},
+                { data: 8, "width": "10%"}
             ],
             //Set column definition initialisation properties.
             "columnDefs": [
+				{
+                    "targets": [ 0 ], //kolom nomor
+                    "orderable": false//set not orderable
+                    
+                },
                 {
                     "targets": [ -1 ], //last column
                     "orderable": false,//set not orderable
@@ -161,6 +169,7 @@
             var $bpjs =  $($tr).attr("data-bpjs");
             var $mris =  $($tr).attr("data-mris");
             var $gender =  $($tr).attr("data-gender");
+			var $address =  $($tr).attr("data-address");
             var $participant_status =  $($tr).attr("data-participant-status");
             var $participant_type =  $($tr).attr("data-participant-type");
 
@@ -169,6 +178,7 @@
             $('#no-ktp-edit').val($ktp);
             $('#no-bpjs-edit').val($bpjs);
             $('#gender-edit').val($gender);
+			$('#address-edit').val($address);
             $('#participant-status-edit').val($participant_status);
             $('#participant-type-edit').val($participant_type);
 

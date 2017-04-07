@@ -6,7 +6,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'This field is required !',
+            errMsg       : 'Harap isi kolom ini',
             errColor     : '#e74c3c',
             color        : '',
             fontStyle    : null,
@@ -34,7 +34,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'This file type is not allowed !',
+            errMsg       : 'Harap isi dengan tipe file jpg / png',
             errColor     : '#e74c3c',
             color        : '',
             fontStyle    : null,
@@ -63,7 +63,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'Max size must be ',
+            errMsg       : 'Ukuran file maksimal haruslah ',
             errColor     : '#e74c3c',
             color        : '',
             size         : '2 Mb',
@@ -89,7 +89,7 @@
 
         // Establish our default settings
         var settings = $.extend({
-            errMsg       : 'Max size must be ',
+            errMsg       : 'Ukuran file maksimal haruslah ',
             errColor     : '#e74c3c',
             url          : '',
             data         : '',
@@ -132,7 +132,7 @@
                     //alertify.error(xhr.responseText);
                     $("#load_screen").hide();
                     alertify.set('notifier','position', 'bottom-right');
-                    alertify.error('Cannot response server !');
+                    alertify.error('Maaf terjadi kesalahan server. Harap coba lagi beberapa saat nanti');
                 }
             });
         });
@@ -184,7 +184,7 @@
                             //alertify.error(xhr.responseText);
                             $("#load_screen").hide();
                             alertify.set('notifier','position', 'top-right');
-                            alertify.error('Cannot response server !');
+                            alertify.error('Maaf terjadi kesalahan server. Harap coba lagi beberapa saat nanti');
                         }
                     });
                 }
@@ -228,7 +228,11 @@
             maxLength    : ''
         }, options);
 
-        var message = "The field must be between " + settings.minLength +"and "+ settings.maxLength;
+		if(settings.errMsg != ""){
+			var message = settings.errMsg;
+		}else{
+			var message = "Kolom ini harus diisi antara " + settings.minLength +" hingga "+ settings.maxLength+" digit/karakter";
+		}
 
         this.each( function() {
             var input = $(this).val().trim().length;
@@ -251,7 +255,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'This field isn\'t Email !'
+            errMsg       : 'harap isi dengan format email yang benar'
         }, options);
 
         this.each( function() {
@@ -275,7 +279,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'This field isn\'t Phone !'
+            errMsg       : 'harap isi dengan format telepon yang benar'
         }, options);
 
         this.each( function() {
@@ -299,7 +303,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'This field isn\'t Number !'
+            errMsg       : 'harap isi kolom ini hanya dengan angka'
         }, options);
 
         this.each( function() {
@@ -308,6 +312,30 @@
             $(label_err).html("");
 
             if(!validateNumber(input)){
+                $(label_err).css( 'font-size', '12px').html(settings.errMsg);
+            }else{
+                bool=true;
+            }
+
+        });
+        return bool;
+    };
+	
+	$.fn.validateAlphaPlusSpaceForm = function( options ) {
+
+        // Establish our default settings
+        var bool=false;
+        var settings = $.extend({
+            text         : '',
+            errMsg       : 'harap isi kolom ini hanya dengan huruf alphabet'
+        }, options);
+
+        this.each( function() {
+            var input = $(this).val();
+            var label_err = $(this).attr("data-label");
+            $(label_err).html("");
+
+            if(!validateAlphaPlusSpace(input)){
                 $(label_err).css( 'font-size', '12px').html(settings.errMsg);
             }else{
                 bool=true;
@@ -347,6 +375,12 @@
     {
         var regex = /^[0-9]*$/;
         return regex.test(number);
+    }
+	
+	function validateAlphaPlusSpace(alpha)
+    {
+        var regex = /^[a-z ]+$/i;
+        return regex.test(alpha);
     }
 
     function checkAll(){

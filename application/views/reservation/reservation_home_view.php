@@ -79,12 +79,12 @@
 <section class="content-header">
     <h1>
         Reservasi
-        <small>Klinik</small>
+        <small>Hari ini</small>
 
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Reservasi</a></li>
-        <li class="active">Reservasi Hari Ini</li>
+        <li class="active">Hari Ini</li>
     </ol>
 </section>
 <!-- Main content -->

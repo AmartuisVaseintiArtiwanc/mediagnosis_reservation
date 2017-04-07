@@ -29,6 +29,11 @@
                         <span class="cd-error-message label label-danger" id="err-no-bpjs-add"></span>
                         <input type="text" class="form-control" id="no-bpjs-add" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-add">
                     </div>
+					<div class="form-group">
+                        <label for="address-add" class="control-label cd-address-add">Alamat :</label>
+                        <span class="cd-error-message label label-danger" id="err-address-add"></span>
+                        <textarea class="form-control" id="address-add" placeholder="Alamat" data-label="#err-address-add"></textarea>
+                    </div>
                     <div class="form-group">
                       <label for="gender-add" class="control-label cd-gender-add">Jenis Kelamin :</label>
                       <span class="cd-error-message label label-danger" id="err-gender-add"></span>
@@ -94,6 +99,11 @@
                         <span class="cd-error-message label label-danger" id="err-no-bpjs-edit"></span>
                         <input type="text" class="form-control" id="no-bpjs-edit" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-edit">
                     </div>
+					<div class="form-group">
+                        <label for="address-edit" class="control-label cd-address-edit">Alamat :</label>
+                        <span class="cd-error-message label label-danger" id="err-address-edit"></span>
+                        <textarea class="form-control" id="address-edit" placeholder="Alamat" data-label="#err-address-edit"></textarea>
+                    </div>
                     <div class="form-group">
                         <label for="gender-edit" class="control-label cd-gender-edit">Jenis Kelamin :</label>
                         <span class="cd-error-message label label-danger" id="err-gender-edit"></span>
@@ -136,11 +146,27 @@
 
             if (!$('#patient-name-add').validateRequired()) {
                 err++;
-            }else if (!$('#no-ktp-add').validateRequired()) {
+            }else if (!$('#patient-name-add').validateAlphaPlusSpaceForm()) {
                 err++;
-            }else if (!$('#no-bpjs-add').validateRequired()) {
+            }else if(!$('#patient-name-add').validateLengthRange({minLength:3,maxLength:50})){
+				err++;
+			}else if (!$('#no-ktp-add').validateRequired()) {
                 err++;
-            }
+            }else if (!$('#no-ktp-add').validateNumberForm()) {
+                err++;
+            }else if(!$('#no-ktp-add').validateLengthRange({minLength:16,maxLength:16,errMsg:"No KTP harus 16 digit"})){
+				err++;
+			}else if (!$('#no-bpjs-add').validateRequired()) {
+                err++;
+            }else if (!$('#no-bpjs-add').validateNumberForm()) {
+                err++;
+            }else if(!$('#no-bpjs-add').validateLengthRange({minLength:15,maxLength:15,errMsg:"No BPJS harus 15 digit"})){
+				err++;
+			}else if (!$('#address-add').validateRequired()) {
+                err++;
+            }else if(!$('#address-add').validateLengthRange({minLength:8,maxLength:250})){
+				err++;
+			}
 
             if (err != 0) {
                 return false;
@@ -154,11 +180,27 @@
 
             if (!$('#patient-name-edit').validateRequired()) {
                 err++;
-            }else if (!$('#no-ktp-edit').validateRequired()) {
+            }else if (!$('#patient-name-edit').validateAlphaPlusSpaceForm()) {
                 err++;
-            }else if (!$('#no-bpjs-edit').validateRequired()) {
+            }else if(!$('#patient-name-edit').validateLengthRange({minLength:3,maxLength:50})){
+				err++;
+			}else if (!$('#no-ktp-edit').validateRequired()) {
                 err++;
-            }
+            }else if (!$('#no-ktp-edit').validateNumberForm()) {
+                err++;
+            }else if(!$('#no-ktp-edit').validateLengthRange({minLength:16,maxLength:16,errMsg:"No KTP harus 16 digit"})){
+				err++;
+			}else if (!$('#no-bpjs-edit').validateRequired()) {
+                err++;
+            }else if (!$('#no-bpjs-edit').validateNumberForm()) {
+                err++;
+            }else if(!$('#no-bpjs-edit').validateLengthRange({minLength:15,maxLength:15,errMsg:"No BPJS harus 15 digit"})){
+				err++;
+			}else if (!$('#address-edit').validateRequired()) {
+                err++;
+            }else if(!$('#address-edit').validateLengthRange({minLength:8,maxLength:250})){
+				err++;
+			}
 
             if (err != 0) {
                 return false;
@@ -174,6 +216,7 @@
                 formData.append("ktpID", $("#no-ktp-add").val());
                 formData.append("bpjsID", $("#no-bpjs-add").val());
                 formData.append("gender", $("#gender-add").find(":selected").val());
+				formData.append("address", $("#address-add").val());
                 formData.append("participantStatus", $("#participant-status-add").find(":selected").val());
                 formData.append("participantType", $("#participant-type-add").find(":selected").val());
 
@@ -189,6 +232,7 @@
         };
 
         var updateDataEvent = function(e){
+			
             if (validateEdit()) {
                 var formData = new FormData();
                 formData.append("patientID", $("#patient-id-edit").val());
@@ -196,6 +240,7 @@
                 formData.append("ktpID", $("#no-ktp-edit").val());
                 formData.append("bpjsID", $("#no-bpjs-edit").val());
                 formData.append("gender", $("#gender-edit").find(":selected").val());
+				formData.append("address", $("#address-edit").val());
                 formData.append("participantStatus", $("#participant-status-edit").find(":selected").val());
                 formData.append("participantType", $("#participant-type-edit").find(":selected").val());
 

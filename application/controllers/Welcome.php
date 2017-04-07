@@ -15,7 +15,10 @@ class Welcome extends CI_Controller {
         if($this->authentication->isAuthorizeDoctor($role)){
             $doctor = site_url("ReservationDoctor");
             redirect($doctor, 'refresh');
-        }else{
+        }else if($this->authentication->isAuthorizeAdmin($role)){
+			$admin = site_url("Reservation");
+            redirect($admin, 'refresh');
+		}else{
             $data['main_content'] = 'template/dashboard.php';
             $this->load->view('template/template',$data);
         }

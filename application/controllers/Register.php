@@ -60,6 +60,7 @@
 	            $row[] = $item['ktpID'];
 	            $row[] = $item['bpjsID'];
 				$row[] = $item['mrisNumber'];
+				$row[] = $item['address'];
 	            $row[] = $item['isActive'];
                 $row[] = $item['gender'];
                 $row[] = $item['participantStatus'];
@@ -86,6 +87,7 @@
 	        $patientName = $this->security->xss_clean($this->input->post('patientName'));
 	        $ktpID = $this->security->xss_clean($this->input->post('ktpID'));
 	        $bpjsID = $this->security->xss_clean($this->input->post('bpjsID'));
+			$address = $this->security->xss_clean($this->input->post('address'));
 	        $gender = $this->security->xss_clean($this->input->post('gender'));
 	        $participantStatus = $this->security->xss_clean($this->input->post('participantStatus'));
 	        $participantType = $this->security->xss_clean($this->input->post('participantType'));
@@ -111,6 +113,7 @@
 					"mrisNumber"=>$this->generateMrisNumber(),
 		            "participantStatus"=>$participantStatus,
 		            "participantType"=>$participantType,
+					"address"=>$address,
 		            "isTemp"=>1,
 		            'isActive'=>1,
 		            'created'=>$datetime,
@@ -149,6 +152,7 @@
             $patientName = $this->security->xss_clean($this->input->post('patientName'));
             $ktpID = $this->security->xss_clean($this->input->post('ktpID'));
             $bpjsID = $this->security->xss_clean($this->input->post('bpjsID'));
+			$address = $this->security->xss_clean($this->input->post('address'));
             $gender = $this->security->xss_clean($this->input->post('gender'));
             $participantStatus = $this->security->xss_clean($this->input->post('participantStatus'));
             $participantType = $this->security->xss_clean($this->input->post('participantType'));
@@ -169,6 +173,7 @@
                     "ktpID"=>$ktpID,
                     "bpjsID"=>$bpjsID,
                     "gender"=>$gender,
+					"address"=>$address,
                     "participantStatus"=>$participantStatus,
                     "participantType"=>$participantType,
                     "lastUpdated"=>$datetime,
@@ -196,34 +201,37 @@
         }
 		
 		private function generateMrisNumber(){
-			//$max = $this->patient_model->get_last_mris_number();
+			$max = $this->patient_model->get_last_mris_number();
+			$angka = $max->lastMrisNumber;
 			
 			$flag = 0;
-			$newMrisNumber = 0;
+			$newMrisNumber = (int) $angka;
+			
+			$newMrisNumber++;
 			
 			while($flag==0){
-				if($newMrisNumber > 100000000){
+				if($newMrisNumber >= 100000000){
 					$newMrisNumberString="".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 10000000){
+				else if($newMrisNumber >= 10000000){
 					$newMrisNumberString="0".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 1000000){
+				else if($newMrisNumber >= 1000000){
 					$newMrisNumberString="00".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 100000){
+				else if($newMrisNumber >= 100000){
 					$newMrisNumberString="000".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 10000){
+				else if($newMrisNumber >= 10000){
 					$newMrisNumberString="0000".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 1000){
+				else if($newMrisNumber >= 1000){
 					$newMrisNumberString="00000".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 100){
+				else if($newMrisNumber >= 100){
 					$newMrisNumberString="000000".$newMrisNumber."";
 				}
-				else if($newMrisNumber > 10){
+				else if($newMrisNumber >= 10){
 					$newMrisNumberString="0000000".$newMrisNumber."";
 				}
 				else{
