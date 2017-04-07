@@ -277,7 +277,7 @@
 
             swal({
                 title: 'Apakah Anda yakin untuk Membatalkan pemeriksaan ini?',
-                text: "Data yang di simpan tidak bisa diganti lagi",
+                text: "Data yang di simpan tidak dapat diubah lagi",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -295,7 +295,7 @@
                      success:function(data){
                          if(data.status != 'error'){
                              swal({
-                                 title: data.msg,
+                                 title: "Reservasi dibatalkan",
                                  text: 'Halaman ini akan di arahkan ke halaman selanjutnya...',
                                  type: 'success',
                                  allowOutsideClick: false,
@@ -319,7 +319,7 @@
                          //var err = eval("(" + xhr.responseText + ")");
                          $("#load_screen").hide();
                          swal(
-                             "Server Error ! Silahkan coba beberapa saat lagi..",
+                             "Koneksi Terputus! Silahkan coba beberapa saat lagi..",
                              '',
                              'error'
                          );
@@ -357,7 +357,7 @@
 
             swal({
                 title: 'Apakah Anda yakin untuk Menyimpan data ini?',
-                text: "Data yang di simpan tidak bisa diganti lagi",
+                text: "Data yang di simpan tidak dapat diubah lagi",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -399,7 +399,7 @@
                         //var err = eval("(" + xhr.responseText + ")");
                         $("#load_screen").hide();
                         swal(
-                            "Server Error ! Silahkan coba beberapa saat lagi..",
+                            "Koneksi terputus ! Silahkan coba beberapa saat lagi..",
                             '',
                             'error'
                         )

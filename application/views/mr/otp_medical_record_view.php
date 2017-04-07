@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>
-        Sample Page by Designscrazed.com
+        Mediagnosis | MRIS
     </title>
     <!--Main CSS-->
     <link rel="stylesheet" href="<?php echo base_url();?>assets/custom/doctor.css">

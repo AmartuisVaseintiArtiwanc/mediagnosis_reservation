@@ -173,12 +173,14 @@
                 </div>
 
                 <br>
+				<?php if($patient_data->isTemp == 0){ ?>
                 <div class="w3-margin">
                     <a href="<?php echo site_url("MedicalRecord/checkUserOTPView/".$header_data->detailReservationID."/".$header_data->patientID);?>"
                        target="_blank">
                         <button class="w3-btn-block w3-teal w3-padding-xlarge w3-ripple request-otp-btn">MASUKKAN OTP</button>
                     </a>
                 </div>
+				<?php } ?>
 
             </div>
             <div class="w3-col m6">
@@ -641,8 +643,10 @@
 <script>
     $(document).ready(function(){
         //$("#otp-input-form").hide();
-        $(".w3-modal").show();
-
+		<?php if($patient_data->isTemp == 0){ ?>
+			$(".w3-modal").show();
+		<?php } ?>
+		
 		$("button.btn-edit-physical").click(function() {
 			$(".physical-elements").removeAttr("disabled");
 			$(this).hide();

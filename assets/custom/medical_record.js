@@ -627,7 +627,7 @@ $(document).ready(function(){
                         if(data.status != 'error'){
                             swal({
                                 title: data.msg,
-                                text: 'This Page will be redirect after a few second !',
+                                text: 'Halaman ini akan di arahkan ke halaman selanjutnya...',
                                 type: 'success',
                                 allowOutsideClick: false,
                                 showConfirmButton:false
@@ -649,7 +649,7 @@ $(document).ready(function(){
                         //var err = eval("(" + xhr.responseText + ")");
                         $("#load_screen").hide();
                         swal(
-                            "Server Error ! Please Try Again",
+                            "Koneksi terputus ! Silahkan coba beberapa saat lagi..",
                             '',
                             'error'
                         )
@@ -682,8 +682,8 @@ $(document).ready(function(){
                 success:function(data){
                     if(data.status != 'error'){
                         swal({
-                            title: data.msg,
-                            text: 'This Page will be redirect after a few second !',
+                            title: "Reservasi dibatalkan",
+                            text: 'Halaman ini akan di arahkan ke halaman selanjutnya...',
                             type: 'success',
                             allowOutsideClick: false,
                             showConfirmButton:false
@@ -705,7 +705,7 @@ $(document).ready(function(){
                     //var err = eval("(" + xhr.responseText + ")");
                     $("#load_screen").hide();
                     swal(
-                        "Server Error ! Please Try Again",
+                        "Koneksi terputus ! Silahkan coba beberapa saat lagi..",
                         '',
                         'error'
                     )
