@@ -235,7 +235,7 @@ class Clinic extends CI_Controller {
         $data = [];
         // Check Duplicate Username
         if(isset($username) && $username != ""){
-            if(!($this->checkDuplicateUsername($username))){
+            if(!($this->checkUpdateDuplicateUsername($id,$username))){
                 $msg = $this->lang->line("007");//"Username already exist !";
                 $status = "error";
                 $flag++;
@@ -245,7 +245,7 @@ class Clinic extends CI_Controller {
         }
         // Check Duplicate Email
         if(isset($email) && $email != ""){
-            if(!($this->checkDuplicateEmail($email))){
+            if(!($this->checkUpdateDuplicateEmail($id,$email))){
                 $msg = $this->lang->line("008");//"Email already exist !";
                 $status = "error";
                 $flag++;
@@ -383,6 +383,24 @@ class Clinic extends CI_Controller {
             if($check == 0){
                 $result = true;
             }
+        }
+        return $result;
+    }
+
+    private function checkUpdateDuplicateEmail($userID,$email){
+        $result = false;
+        if($email != ""){
+            $check = $this->login_model->checkUpdatedEmailExists($userID,$email);
+            $result = $check;
+        }
+        return $result;
+    }
+
+    private function checkUpdateDuplicateUsername($userID,$username){
+        $result = false;
+        if($username != ""){
+            $check = $this->login_model->checkUpdatedUsernameExists($userID,$username);
+            $result = $check;
         }
         return $result;
     }

@@ -218,7 +218,7 @@ class Doctor extends CI_Controller {
         $data = [];
         // Check Duplicate Username
         if(isset($username) && $username != ""){
-            if(!($this->checkDuplicateUsername($username))){
+            if(!($this->checkUpdateDuplicateUsername($id,$username))){
                 $msg = "Username already exist !";
                 $status = "error";
                 $flag++;
@@ -228,7 +228,7 @@ class Doctor extends CI_Controller {
         }
         // Check Duplicate Email
         if(isset($email) && $email != ""){
-            if(!($this->checkDuplicateEmail($email))){
+            if(!($this->checkUpdateDuplicateEmail($id,$email))){
                 $msg = "Email already exist !";
                 $status = "error";
                 $flag++;
@@ -385,6 +385,23 @@ class Doctor extends CI_Controller {
         return $result;
     }
 
+    private function checkUpdateDuplicateEmail($userID,$email){
+        $result = false;
+        if($email != ""){
+            $check = $this->login_model->checkUpdatedEmailExists($userID,$email);
+            $result = $check;
+        }
+        return $result;
+    }
+
+    private function checkUpdateDuplicateUsername($userID,$username){
+        $result = false;
+        if($username != ""){
+            $check = $this->login_model->checkUpdatedUsernameExists($userID,$username);
+            $result = $check;
+        }
+        return $result;
+    }
 
     function is_logged_in(){
         $is_logged_in = $this->session->userdata('is_logged_in');
