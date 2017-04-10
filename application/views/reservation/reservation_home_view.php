@@ -118,7 +118,7 @@
                         <div class="col-lg-12 col-xs-12" id="next-queue-<?php echo $row['detailReservationID'];?>">
                             <div class="small-box-list bg-green">
                                 <div class="inner">
-                                    <h3><?php echo $row['noQueue'];?> - <?php echo substr($row['patientName'],0,30)."...";?></h3>
+                                    <h3><?php echo $row['noQueue'];?> - <?php echo substr($row['patientName'],0,20)."...";?></h3>
                                     <p><?php echo strtoupper($row['poliName']);?></p>
                                 </div>
                                 <div class="icon">
@@ -246,7 +246,7 @@
         setInterval(loopGetCurrentQuery, 3000);
 
         function renderQueueBox(q_number,poli_name, doctor_name, patient_name, poli){
-            var patient_name = patient_name.substring(0, 30);
+            var patient_name = patient_name.substring(0, 20);
             var $small_box = $("<div>", {class: "small-box bg-green", "data-value": "0"});
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
             var $queue_number = $("<h3>", {class: "text-center"}).html(q_number+" - "+patient_name+"...");
@@ -391,7 +391,7 @@
             var $poli = $("#current-queue-info").attr("data-queue-poli");
             var $doctor =  $("#current-queue-info").attr("data-queue-doctor");
 
-            var patient_name = patient_name.substring(0, 30);
+            var patient_name = patient_name.substring(0, 20);
 
             var $div = $("<div>", {class: "col-lg-12 col-xs-12"});
             var $small_box = $("<div>", {class: "small-box-list bg-green", "data-value": "0"});
