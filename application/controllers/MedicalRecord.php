@@ -875,6 +875,99 @@ class MedicalRecord extends CI_Controller {
 		
 	}
 
+    function medicalRecordListBySuperUser(){
+        if($this->isSuperAdminClinic()){
+            $data['main_content'] = 'mr/super_admin/medical_record_patient_list_view';
+
+        }else{
+            $data['main_content'] = 'template/error';
+        }
+        $this->load->view('template/template', $data);
+    }
+
+    function getMedicalRecordListDataBySuperUser(){
+        $status = 'error';
+        $msg = "Maaf Anda tidak dapat mengakses halaman ini..";
+        $query = "";
+
+        if($this->isSuperAdminClinic()){
+            $superUserID = $this->session->userdata('superUserID');
+            $query = $this->medical_record_model->getMedicalRecordListBySuperUser($superUserID);
+            $status = 'success';
+        }
+        echo json_encode(array('data' => $query, 'status' => $status, 'msg' => $msg));
+    }
+
+
+    function medicalRecordListByPatient($patientID){
+        if($this->isSuperAdminClinic()){
+
+            $data['main_content'] = 'mr/super_admin/medical_record_list_view';
+            $data['patient_data'] = $this->patient_model->getPatientByID($patientID);
+
+        }else{
+            $data['main_content'] = 'template/error';
+        }
+        $this->load->view('template/template', $data);
+    }
+
+    function getMedicalRecordListDataByPatient($patientID){
+        $status = 'error';
+        $msg = "Maaf Anda tidak dapat mengakses halaman ini..";
+        $query = "";
+
+        if($this->isSuperAdminClinic()){
+            $superUserID = $this->session->userdata('superUserID');
+            $query = $this->medical_record_model->getMedicalRecordListBySuperUserAndPatient($superUserID,$patientID);
+            $status = 'success';
+        }
+        echo json_encode(array('data' => $query, 'status' => $status, 'msg' => $msg));
+    }
+
+    function medialRecordDetailByPatient($medicalRecordID,$patientID){
+
+        if($this->isSuperAdminClinic()){
+            $medical_record_header = $this->medical_record_model->getMedicalRecordByID($medicalRecordID);
+            $medical_record_detail = $this->medical_record_detail_model->getMedicalRecordDetailByID($medicalRecordID);
+            $addtional_condition = $this->medical_record_detail_model->getAdditionalConditionByID($medicalRecordID);
+            $physical_examination = $this->medical_record_detail_model->getPhysicalExaminationByID($medicalRecordID);
+            $support_examination = $this->medical_record_detail_model->getSupportExaminationByID($medicalRecordID);
+            $support_diagnose = $this->medical_record_detail_model->getSupportDiagnoseByID($medicalRecordID);
+            $medication = $this->medical_record_detail_model->getMedicationByID($medicalRecordID);
+
+            $data['header']  = $medical_record_header;
+            $data['detail']  = $medical_record_detail;
+            $data['additional_condition']  = $addtional_condition;
+            $data['physical_examination']  = $physical_examination;
+            $data['support_examination']  = $support_examination;
+            $data['support_diagnose']  = $support_diagnose;
+            $data['medication']  = $medication;
+
+            //$data['detailReservation']  = $detailReservation;
+            $data['patient']  = $patientID;
+            $data['main_content'] = 'mr/super_admin/medical_record_detail_view';
+        }else{
+            $data['main_content'] = 'template/error';
+        }
+        $this->load->view('template/template', $data);
+
+    }
+
+    function test(){
+        $this->output->enable_profiler(TRUE);
+        $superUserID = $this->session->userdata('superUserID');
+        $query = $this->medical_record_model->getMedicalRecordListBySuperUserAndPatient($superUserID,1);
+        echo json_encode(array('data' => $query));
+    }
+
+    function isSuperAdminClinic(){
+        $role = $this->session->userdata('role');
+        if($this->authentication->isAuthorizeSuperAdmin($role)){
+            return true;
+        }
+        return false;
+    }
+
     function is_logged_in(){
         $is_logged_in = $this->session->userdata('is_logged_in');
         if(!isset($is_logged_in) || $is_logged_in != true) {

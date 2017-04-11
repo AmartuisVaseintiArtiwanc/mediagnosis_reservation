@@ -198,6 +198,8 @@
                       <li><a href="<?php echo site_url("Report/reportClinicPoliRating");?>"><i class="fa fa-circle-o"></i>Laporan Rating Klinik</a></li>
                   </ul>
               </li>
+              <li class="mediagnosis-navigation-mr"><a href="<?php echo site_url("MedicalRecord/medicalRecordListBySuperUser");?>">
+                      <i class="fa fa-stethoscope"></i> <span>Daftar Medical Record</span></a></li>
           <?php } ?>
       </ul>
     </section>
@@ -243,6 +245,7 @@
 
 <!-- daterangepicker
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>-->
+<script type="text/javascript" src="<?php echo base_url();?>assets/plugins/daterangepicker/moment.min.js"></script>
 <script src="<?php echo base_url();?>assets/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- datepicker -->
 <script src="<?php echo base_url();?>assets/plugins/datepicker/bootstrap-datepicker.js"></script>
