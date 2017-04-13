@@ -166,12 +166,15 @@
                                placeholder="Email Anda" data-value="" data-label="#err-master-email-edit" autofocus>
                     </div>
                     <div class="form-group">
+                        <button type="button" class="btn btn-primary" id="btn-change-password" data-value="0">Ubah Password</button>
+                    </div>
+                    <div class="form-group change-password-group">
                         <label for="master-password-edit" class="control-label">Reset Password :</label>
                         <span class="cd-error-message label label-danger" id="err-master-password-edit"></span>
                         <input type="password" class="form-control" id="master-password-edit"
                                placeholder="Reset Password" data-label="#err-master-password-edit">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group change-password-group">
                         <label for="master-confirm-password-edit" class="control-label">Konfirmasi Reset Password :</label>
                         <span class="cd-error-message label label-danger" id="err-master-confirm-password-edit"></span>
                         <input type="password" class="form-control" id="master-confirm-password-edit"
@@ -196,6 +199,7 @@
     $(document).ready( function($) {
 
         var $superUser = "<?php echo $superUserID;?>";
+        $(".change-password-group").hide();
 
         $("#master-search-address-add").geocomplete({
             map: "#map-canvas-add"
@@ -237,8 +241,19 @@
             }
         });
 
+        $("#btn-change-password").click(function(){
+            var $value = $(this).attr("data-value");
+            if($value == 1){
+                $(this).attr("data-value",0);
+            }else{
+                $(this).attr("data-value",1);
+            }
+            $(".change-password-group").toggle();
+        });
+
         function validate() {
             var err = 0;
+            var regex = /\W/;
 
             if (!$('#master-name-add').validateRequired()) {
                 err++;
@@ -250,12 +265,12 @@
                 $('.nav-tabs a[href="#tab-master"]').tab('show');
             }
 
-            if (!$('#master-username-add').validateRequired()) {
+            if (!$('#master-username-add').validateUsername()) {
                 err++;
                 $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
 
-            if (!$('#master-password-add').validateRequired()) {
+            if (!$('#master-password-add').validateLengthRange({minLength:6,maxLength:50})) {
                 err++;
                 $('.nav-tabs a[href="#tab-account"]').tab('show');
             }
@@ -301,14 +316,25 @@
 
         function validateEditAccount() {
             var err = 0;
+            var change_pass_flag = $("#btn-change-password").attr("data-value");
 
-            if (!$('#master-username-edit').validateRequired()) {
+            if (!$('#master-username-edit').validateUsername()) {
                 err++;
             }
 
-            if(!$('#master-confirm-password-edit').validateConfirmPassword({
-                    compareValue : $('#master-password-edit').val()}) ) {
-                err++;
+            if(change_pass_flag == 1){
+                if (!$('#master-password-edit').validateLengthRange({minLength:6,maxLength:50})) {
+                    err++;
+                }
+
+                if(!$('#master-confirm-password-edit').validateRequired()) {
+                    err++;
+                }
+
+                if(!$('#master-confirm-password-edit').validateConfirmPassword({
+                        compareValue : $('#master-password-edit').val()}) ) {
+                    err++;
+                }
             }
 
             if (!$('#master-email-edit').validateEmailForm()) {

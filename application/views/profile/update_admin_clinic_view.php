@@ -66,12 +66,15 @@
                                            placeholder="Email Anda" data-value="" data-label="#err-master-email-edit" autofocus>
                                 </div>
                                 <div class="form-group">
+                                    <button type="button" class="btn btn-primary" id="btn-change-password" data-value="0">Ubah Password</button>
+                                </div>
+                                <div class="form-group change-password-group">
                                     <label for="master-password-edit" class="control-label">Reset Password :</label>
                                     <span class="cd-error-message label label-danger" id="err-master-password-edit"></span>
                                     <input type="password" class="form-control" id="master-password-edit"
                                            placeholder="Reset Password" data-label="#err-master-password-edit">
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group change-password-group">
                                     <label for="master-confirm-password-edit" class="control-label">Konfirmasi Reset Password :</label>
                                     <span class="cd-error-message label label-danger" id="err-master-confirm-password-edit"></span>
                                     <input type="password" class="form-control" id="master-confirm-password-edit"
@@ -138,6 +141,7 @@
 <script>
     $(function() {
         var $base_url = "<?php echo site_url();?>/";
+        $(".change-password-group").hide();
 
         $("#master-search-address-edit").geocomplete({
             map: "#map-canvas-edit"
@@ -152,16 +156,37 @@
             console.log(result.geometry.location.lat());
         });
 
+        $("#btn-change-password").click(function(){
+            var $value = $(this).attr("data-value");
+            if($value == 1){
+                $(this).attr("data-value",0);
+            }else{
+                $(this).attr("data-value",1);
+            }
+            $(".change-password-group").toggle();
+        });
+
         function validateEditAccount() {
             var err = 0;
+            var change_pass_flag = $("#btn-change-password").attr("data-value");
 
-            if (!$('#master-username-edit').validateRequired()) {
+            if (!$('#master-username-edit').validateUsername()) {
                 err++;
             }
 
-            if(!$('#master-confirm-password-edit').validateConfirmPassword({
-                    compareValue : $('#master-password-edit').val()}) ) {
-                err++;
+            if(change_pass_flag == 1){
+                if (!$('#master-password-edit').validateLengthRange({minLength:6,maxLength:50})) {
+                    err++;
+                }
+
+                if(!$('#master-confirm-password-edit').validateRequired()) {
+                    err++;
+                }
+
+                if(!$('#master-confirm-password-edit').validateConfirmPassword({
+                        compareValue : $('#master-password-edit').val()}) ) {
+                    err++;
+                }
             }
 
             if (!$('#master-email-edit').validateEmailForm()) {

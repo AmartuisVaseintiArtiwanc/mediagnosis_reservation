@@ -198,7 +198,7 @@
         var bool=false;
         var settings = $.extend({
             text         : '',
-            errMsg       : 'This password doesn\'t match !',
+            errMsg       : 'Konfirmasi Password tidak sama dengan Password !',
             compareValue : ''
         }, options);
 
@@ -209,6 +209,37 @@
 
             if(settings.compareValue != input){
                 $(label_err).css( 'font-size', '12px').html(settings.errMsg);
+            }else{
+                bool=true;
+            }
+
+        });
+        return bool;
+    };
+
+    $.fn.validateUsername = function( options ) {
+
+        // Establish our default settings
+        var bool=false;
+        var settings = $.extend({
+            text         : '',
+            errMsg       : 'harap isi kolom ini hanya dengan angka'
+        }, options);
+
+        this.each( function() {
+            var input = $(this).val();
+            var label_err = $(this).attr("data-label");
+            $(label_err).html("");
+
+            if(!validateEmpty(input)){
+                $(label_err).css( 'font-size', '12px').html("Harap isi kolom ini");
+
+            }else if(input.trim().length < 4 || input.trim().length > 50){
+                $(label_err).css( 'font-size', '12px').html("Username harus 4-50 character");
+
+            }else if(!validateIlegalChar(input)){
+                $(label_err).css( 'font-size', '12px').html("Username hanya boleh mengandung angka,huruf,dan _");
+
             }else{
                 bool=true;
             }
@@ -381,6 +412,11 @@
     {
         var regex = /^[a-z ]+$/i;
         return regex.test(alpha);
+    }
+
+    function validateIlegalChar(string){
+        var regex = /\W/;
+        return !regex.test(string);
     }
 
     function checkAll(){
