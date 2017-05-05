@@ -64,6 +64,9 @@
         right: 10px;
         z-index: 99;
     }
+	.not-needed{
+		display: none;
+	}
 </style>
 <body>
 <button id="back-to-top-btn" class="w3-btn w3-xlarge w3-teal w3-padding">
@@ -544,7 +547,7 @@
         </div>
 
         <!-- KUNJUNGAN -->
-        <div class="step" id="step4">
+        <div class="step not-needed" id="step4">
             <div class="number">
                 <span>5</span>
             </div>
@@ -558,7 +561,7 @@
         <div class="content w3-row">
 
             <!--Rujukan-->
-            <div class="w3-col m6 w3-padding-small">
+            <div class="w3-col m6 w3-padding-small not-needed">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
                         <h4 class="w3-left">JENIS KUNJUNGAN</h4>
@@ -608,7 +611,7 @@
             </div>-->
 
             <!--Rujukan-->
-            <div class="w3-col m6 w3-padding-small">
+            <div class="w3-col m6 w3-padding-small not-needed">
                 <div class="w3-card-4 w3-margin">
                     <div class="w3-container w3-green">
                         <h4 class="w3-left">STATUS PULANG</h4>
@@ -617,8 +620,8 @@
                     <form class="w3-container">
                         <p>
                             <select class="w3-select" name="option" id="status-diagnose-input">
-                                <option value="Sembuh" selected>Sembuh</option>
-                                <option value="Sakit">Sakit</option>
+                                <option value="Sembuh">Sembuh</option>
+                                <option value="Sakit" selected>Sakit</option>
                             </select>
                         </p>
                         <br/>
