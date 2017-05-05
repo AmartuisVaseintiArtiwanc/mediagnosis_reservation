@@ -9,6 +9,7 @@
         display: none;
     }
     th.dt-center, td.dt-center { text-align: center; }
+	th.dt-right, td.dt-right { text-align: right; }
 </style>
 
 <!-- Content Header (Page header) -->
@@ -112,6 +113,11 @@
                     "orderable": false//set not orderable
                     
                 },
+				{
+                    "targets": [ 4 ], //kolom mris
+                    "className": "dt-right"
+                    
+                },
                 {
                     "targets": [ -1 ], //last column
                     "orderable": false,//set not orderable
@@ -177,6 +183,7 @@
             $('#patient-name-edit').val($patient_name);
             $('#no-ktp-edit').val($ktp);
             $('#no-bpjs-edit').val($bpjs);
+			$('#no-mris-edit').val($mris);
             $('#gender-edit').val($gender);
 			$('#address-edit').val($address);
             $('#participant-status-edit').val($participant_status);

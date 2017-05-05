@@ -3,7 +3,7 @@
 class Patient_model extends CI_Model {
 
     var $column_order = array('patientID','patientName', 'ktpID', 'bpjsID','isActive', 'mrisNumber','created',null); //set column field database for datatable orderable
-    var $column_search = array('patientName', 'ktpID', 'bpjsID'); //set column field database for datatable searchable just firstname ,
+    var $column_search = array('patientName', 'ktpID', 'bpjsID', 'mrisNumber'); //set column field database for datatable searchable just firstname ,
 
     function getPatientByID($id){
         $this->db->select('*');

@@ -87,6 +87,7 @@
 	        $patientName = $this->security->xss_clean($this->input->post('patientName'));
 	        $ktpID = $this->security->xss_clean($this->input->post('ktpID'));
 	        $bpjsID = $this->security->xss_clean($this->input->post('bpjsID'));
+			$mrisNumber = $this->security->xss_clean($this->input->post('mrisNumber'));
 			$address = $this->security->xss_clean($this->input->post('address'));
 	        $gender = $this->security->xss_clean($this->input->post('gender'));
 	        $participantStatus = $this->security->xss_clean($this->input->post('participantStatus'));
@@ -110,7 +111,7 @@
 		        	"ktpID"=>$ktpID,
 		        	"bpjsID"=>$bpjsID,
 		            "gender"=>$gender,
-					"mrisNumber"=>$this->generateMrisNumber(),
+					"mrisNumber"=>$mrisNumber,
 		            "participantStatus"=>$participantStatus,
 		            "participantType"=>$participantType,
 					"address"=>$address,
@@ -152,6 +153,7 @@
             $patientName = $this->security->xss_clean($this->input->post('patientName'));
             $ktpID = $this->security->xss_clean($this->input->post('ktpID'));
             $bpjsID = $this->security->xss_clean($this->input->post('bpjsID'));
+			$mrisNumber = $this->security->xss_clean($this->input->post('mrisNumber'));
 			$address = $this->security->xss_clean($this->input->post('address'));
             $gender = $this->security->xss_clean($this->input->post('gender'));
             $participantStatus = $this->security->xss_clean($this->input->post('participantStatus'));
@@ -172,6 +174,7 @@
                     "patientName"=>$patientName,
                     "ktpID"=>$ktpID,
                     "bpjsID"=>$bpjsID,
+					"mrisNumber"=>$mrisNumber,
                     "gender"=>$gender,
 					"address"=>$address,
                     "participantStatus"=>$participantStatus,

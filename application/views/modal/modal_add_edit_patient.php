@@ -30,6 +30,11 @@
                         <input type="text" class="form-control" id="no-bpjs-add" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-add">
                     </div>
 					<div class="form-group">
+                        <label for="no-mris-add" class="control-label cd-no-mris-add">No. MRIS :</label>
+                        <span class="cd-error-message label label-danger" id="err-no-mris-add"></span>
+                        <input type="text" class="form-control" id="no-mris-add" placeholder="No. MRIS" data-label="#err-no-mris-add">
+                    </div>
+					<div class="form-group">
                         <label for="address-add" class="control-label cd-address-add">Alamat :</label>
                         <span class="cd-error-message label label-danger" id="err-address-add"></span>
                         <textarea class="form-control" id="address-add" placeholder="Alamat" data-label="#err-address-add"></textarea>
@@ -100,6 +105,11 @@
                         <input type="text" class="form-control" id="no-bpjs-edit" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-edit">
                     </div>
 					<div class="form-group">
+                        <label for="no-mris-edit" class="control-label cd-no-mris-edit">No. MRIS :</label>
+                        <span class="cd-error-message label label-danger" id="err-no-mris-edit"></span>
+                        <input type="text" class="form-control" id="no-mris-edit" placeholder="No. MRIS" data-label="#err-no-mris-edit">
+                    </div>
+					<div class="form-group">
                         <label for="address-edit" class="control-label cd-address-edit">Alamat :</label>
                         <span class="cd-error-message label label-danger" id="err-address-edit"></span>
                         <textarea class="form-control" id="address-edit" placeholder="Alamat" data-label="#err-address-edit"></textarea>
@@ -162,6 +172,12 @@
                 err++;
             }else if(!$('#no-bpjs-add').validateLengthRange({minLength:15,maxLength:15,errMsg:"No BPJS harus 15 digit"})){
 				err++;
+			}else if(!$('#no-mris-add').validateRequired()){
+				err++;
+			}else if(!$('#no-mris-add').validateNumberForm()){
+				err++;
+			}else if(!$('#no-mris-add').validateLengthRange({minLength:6,maxLength:9,errMsg:"No MRIS minimal 6 digit, maximal 9 digit"})){
+				err++;
 			}else if (!$('#address-add').validateRequired()) {
                 err++;
             }else if(!$('#address-add').validateLengthRange({minLength:8,maxLength:250})){
@@ -196,6 +212,12 @@
                 err++;
             }else if(!$('#no-bpjs-edit').validateLengthRange({minLength:15,maxLength:15,errMsg:"No BPJS harus 15 digit"})){
 				err++;
+			}else if(!$('#no-mris-edit').validateRequired()){
+				err++;
+			}else if(!$('#no-mris-edit').validateNumberForm()){
+				err++;
+			}else if(!$('#no-mris-edit').validateLengthRange({minLength:6,maxLength:9,errMsg:"No MRIS minimal 6 digit, maximal 9 digit"})){
+				err++;
 			}else if (!$('#address-edit').validateRequired()) {
                 err++;
             }else if(!$('#address-edit').validateLengthRange({minLength:8,maxLength:250})){
@@ -215,6 +237,7 @@
                 formData.append("patientName", $("#patient-name-add").val());
                 formData.append("ktpID", $("#no-ktp-add").val());
                 formData.append("bpjsID", $("#no-bpjs-add").val());
+				formData.append("mrisNumber", $("#no-mris-add").val());
                 formData.append("gender", $("#gender-add").find(":selected").val());
 				formData.append("address", $("#address-add").val());
                 formData.append("participantStatus", $("#participant-status-add").find(":selected").val());
@@ -239,6 +262,7 @@
                 formData.append("patientName", $("#patient-name-edit").val());
                 formData.append("ktpID", $("#no-ktp-edit").val());
                 formData.append("bpjsID", $("#no-bpjs-edit").val());
+				formData.append("mrisNumber", $("#no-mris-edit").val());
                 formData.append("gender", $("#gender-edit").find(":selected").val());
 				formData.append("address", $("#address-edit").val());
                 formData.append("participantStatus", $("#participant-status-edit").find(":selected").val());
