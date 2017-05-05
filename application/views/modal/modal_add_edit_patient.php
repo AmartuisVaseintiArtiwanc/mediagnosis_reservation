@@ -27,7 +27,7 @@
                     <div class="form-group">
                         <label for="no-bpjs-add" class="control-label cd-no-bpjs-add">No. BPJS :</label>
                         <span class="cd-error-message label label-danger" id="err-no-bpjs-add"></span>
-                        <input type="text" class="form-control" id="no-bpjs-add" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-add">
+                        <input type="text" class="form-control" id="no-bpjs-add" placeholder="No. BPJS [13 Digit]" data-label="#err-no-bpjs-add">
                     </div>
 					<div class="form-group">
                         <label for="no-mris-add" class="control-label cd-no-mris-add">No. MRIS :</label>
@@ -102,7 +102,7 @@
                     <div class="form-group">
                         <label for="no-bpjs-edit" class="control-label cd-no-bpjs-edit">No. BPJS :</label>
                         <span class="cd-error-message label label-danger" id="err-no-bpjs-edit"></span>
-                        <input type="text" class="form-control" id="no-bpjs-edit" placeholder="No. BPJS [15 Digit]" data-label="#err-no-bpjs-edit">
+                        <input type="text" class="form-control" id="no-bpjs-edit" placeholder="No. BPJS [13 Digit]" data-label="#err-no-bpjs-edit">
                     </div>
 					<div class="form-group">
                         <label for="no-mris-edit" class="control-label cd-no-mris-edit">No. MRIS :</label>
@@ -170,7 +170,7 @@
                 err++;
             }else if (!$('#no-bpjs-add').validateNumberForm()) {
                 err++;
-            }else if(!$('#no-bpjs-add').validateLengthRange({minLength:15,maxLength:15,errMsg:"No BPJS harus 15 digit"})){
+            }else if(!$('#no-bpjs-add').validateLengthRange({minLength:13,maxLength:13,errMsg:"No BPJS harus 13 digit"})){
 				err++;
 			}else if(!$('#no-mris-add').validateRequired()){
 				err++;
@@ -210,7 +210,7 @@
                 err++;
             }else if (!$('#no-bpjs-edit').validateNumberForm()) {
                 err++;
-            }else if(!$('#no-bpjs-edit').validateLengthRange({minLength:15,maxLength:15,errMsg:"No BPJS harus 15 digit"})){
+            }else if(!$('#no-bpjs-edit').validateLengthRange({minLength:13,maxLength:13,errMsg:"No BPJS harus 13 digit"})){
 				err++;
 			}else if(!$('#no-mris-edit').validateRequired()){
 				err++;
