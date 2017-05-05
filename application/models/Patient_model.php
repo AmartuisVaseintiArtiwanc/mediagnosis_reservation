@@ -93,14 +93,33 @@ class Patient_model extends CI_Model {
             return 0; //blom ada
         }
     }
-
-    public function checkBPJSIDExistsBYPatientID($bpjsID, $patientID){
+	
+	public function checkBPJSIDExistsInCertainClinic($bpjsID, $clinicID){
         $this->db->select('*');
-        $this->db->from('tbl_cyberits_m_patients');
-        $this->db->where('isActive', 1);
-        $this->db->where('isTemp', 0);
-        $this->db->where('bpjsID', $bpjsID);
-        $this->db->where('patientID !=', $patientID);
+        $this->db->from('tbl_cyberits_m_patients mp');
+		$this->db->join('tbl_cyberits_m_clinics mc','mp.clinicID=mc.clinicID');
+        $this->db->where('mp.isActive', 1);
+        //$this->db->where('mp.isTemp', 0);
+		$this->db->where('mc.clinicID', $clinicID);
+        $this->db->where('mp.bpjsID', $bpjsID);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
+
+    public function checkBPJSIDExistsBYPatientID($bpjsID, $patientID, $clinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients mp');
+		$this->db->join('tbl_cyberits_m_clinics mc','mp.clinicID=mc.clinicID');
+        $this->db->where('mp.isActive', 1);
+        //$this->db->where('isTemp', 0);
+		$this->db->where('mc.clinicID', $clinicID);
+        $this->db->where('mp.bpjsID', $bpjsID);
+        $this->db->where('mp.patientID !=', $patientID);
         $query = $this->db->get();
 
         if($query->num_rows()>0){
@@ -124,14 +143,33 @@ class Patient_model extends CI_Model {
             return 0; //blom ada
         }
     }
-
-    public function checkIDNumberExistsByPatientID($idNumber, $patientID){
+	
+	public function checkIDNumberExistsInCertainClinic($idNumber, $clinicID){
         $this->db->select('*');
-        $this->db->from('tbl_cyberits_m_patients');
-        $this->db->where('isActive', 1);
-        $this->db->where('isTemp', 0);
-        $this->db->where('ktpID', $idNumber);
-        $this->db->where('patientID !=', $patientID);
+        $this->db->from('tbl_cyberits_m_patients mp');
+		$this->db->join('tbl_cyberits_m_clinics mc','mp.clinicID=mc.clinicID');
+        $this->db->where('mp.isActive', 1);
+        //$this->db->where('mp.isTemp', 0);
+		$this->db->where('mc.clinicID', $clinicID);
+        $this->db->where('mp.ktpID', $idNumber);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
+
+    public function checkIDNumberExistsByPatientID($idNumber, $patientID, $clinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients mp');
+		$this->db->join('tbl_cyberits_m_clinics mc','mp.clinicID=mc.clinicID');
+        $this->db->where('mp.isActive', 1);
+        //$this->db->where('isTemp', 0);
+		$this->db->where('mc.clinicID', $clinicID);
+        $this->db->where('mp.ktpID', $idNumber);
+        $this->db->where('mp.patientID !=', $patientID);
         $query = $this->db->get();
 
         if($query->num_rows()>0){

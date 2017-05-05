@@ -94,8 +94,8 @@
 	        $participantType = $this->security->xss_clean($this->input->post('participantType'));
 	        $clinic = $this->clinic_model->getClinicByUserID($this->session->userdata('userID')); 
 
-	        $checkUniqueBPJS = $this->patient_model->checkBPJSIDExists($bpjsID);
-	        $checkUniqueKTP = $this->patient_model->checkIDNumberExists($ktpID);
+	        $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsInCertainClinic($bpjsID, $clinic->clinicID);
+	        $checkUniqueKTP = $this->patient_model->checkIDNumberExistsInCertainClinic($ktpID, $clinic->clinicID);
 
 	        if($checkUniqueKTP == 1){
 	        	$status = "error";
@@ -158,9 +158,10 @@
             $gender = $this->security->xss_clean($this->input->post('gender'));
             $participantStatus = $this->security->xss_clean($this->input->post('participantStatus'));
             $participantType = $this->security->xss_clean($this->input->post('participantType'));
+			$clinic = $this->clinic_model->getClinicByUserID($this->session->userdata('userID')); 
 
-            $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsBYPatientID($bpjsID, $patientID);
-            $checkUniqueKTP = $this->patient_model->checkIDNumberExistsByPatientID($ktpID, $patientID);
+            $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsBYPatientID($bpjsID, $patientID, $clinic->clinicID );
+            $checkUniqueKTP = $this->patient_model->checkIDNumberExistsByPatientID($ktpID, $patientID, $clinic->clinicID );
 
             if($checkUniqueKTP == 1){
                 $status = "error";
