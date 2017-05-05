@@ -45,6 +45,7 @@
                 <thead>
                 <tr>
                     <th style = "text-align:left;">MRIS</th>
+					<th style = "text-align:left;">Nama Klinik</th>
                     <th style = "text-align:left;">Nama</th>
                     <th style = "text-align:left;">Tanggal Lahir</th>
                     <th style = "text-align:left;">Jenis Kelamin</th>
@@ -96,7 +97,8 @@
                 "autoWidth": false,
                 "aoColumns": [
                     { "mDataProp": "mrisNumber"},
-                    { "mDataProp": "patientName"},
+                    { "mDataProp": "clinicName"},
+					{ "mDataProp": "patientName"},
                     { "mDataProp": "dob"},
                     { "mDataProp": "gender"},
                     { "mDataProp": "address"},
@@ -107,12 +109,12 @@
                         "width": "15%",
                         "targets": 0
                     },
-                    {
-                        "width": "15%",
+					{
+                        "width": "10%",
                         "targets": 1
                     },
                     {
-                        "width": "10%",
+                        "width": "15%",
                         "targets": 2
                     },
                     {
@@ -120,8 +122,12 @@
                         "targets": 3
                     },
                     {
-                        "width": "40%",
+                        "width": "10%",
                         "targets": 4
+                    },
+                    {
+                        "width": "40%",
+                        "targets": 5
                     },
                     {
                         "width": "10%",

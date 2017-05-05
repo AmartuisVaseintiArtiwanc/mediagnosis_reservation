@@ -81,10 +81,12 @@ class Medical_record_model extends CI_Model {
         $where_clause = $this->db->get_compiled_select();
 
         #Create main query
-        $this->db->select('d.patientName, a.patientID, DATE_FORMAT(d.dob,"%d %M %Y") as dob, d.gender, d.address,d.mrisNumber');
+		$this->db->distinct();
+        $this->db->select('d.patientName, a.patientID, DATE_FORMAT(d.dob,"%d %M %Y") as dob, d.gender, d.address,d.mrisNumber, c.clinicName');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_patients d', 'a.patientID = d.patientID');
+		$this->db->join('tbl_cyberits_m_clinics c', 'c.clinicID = b.clinicID');
         $this->db->where('a.status',"done");
         $this->db->where("b.clinicID IN ($where_clause)", NULL, FALSE);
         $this->db->order_by('d.patientName','asc');
