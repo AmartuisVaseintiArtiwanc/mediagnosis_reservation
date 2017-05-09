@@ -158,6 +158,13 @@
                                             <input type="text" class="form-control" placeholder="Nomor BPJS" id="patient-bpjs-input" disabled="disabled">
                                         </div>
                                     </div>
+									<div class="form-group">
+                                        <label class="col-sm-2 control-label">MRIS</label>
+
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control" placeholder="Nomor MRIS" id="patient-mris-input" disabled="disabled">
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label class="col-sm-2 control-label">Jenis Kelamin</label>
 
@@ -265,6 +272,7 @@
                     { "mDataProp": "patientName"},
                     { "mDataProp": "ktpID"},
                     { "mDataProp": "bpjsID"},
+					{ "mDataProp": "mrisNumber"},
                     { "mDataProp": "gender"},
                     { "mDataProp": "address"},
                     { "mDataProp": "patientID"}
@@ -298,7 +306,7 @@
                         "createdCell": function (td, cellData, rowData, row, col) {
                             var $btn_add = $("<button>", { class:"btn btn-primary btn-xs add-patient-btn","type": "button",
                                 "data-value": cellData, "data-name": rowData.patientName,"data-ktp": rowData.ktpID,
-                                "data-bpjs": rowData.bpjsID,"data-gender": rowData.gender,"data-address": rowData.address});
+                                "data-bpjs": rowData.bpjsID, "data-mris": rowData.mrisNumber, "data-gender": rowData.gender,"data-address": rowData.address});
                             $btn_add.append("<span class='glyphicon glyphicon-plus'></span>&nbsp PILIH");
                             $(td).html($btn_add);
                         }
@@ -312,6 +320,7 @@
             var $name =  $(this).attr("data-name");
             var $ktp =  $(this).attr("data-ktp");
             var $bpjs =  $(this).attr("data-bpjs");
+			var $mris = $(this).attr("data-mris");
             var $gender =  $(this).attr("data-gender");
             var $alamat =  $(this).attr("data-address");
 
@@ -322,6 +331,7 @@
             $("#patient-name-input").val($name);
             $("#patient-ktp-input").val($ktp);
             $("#patient-bpjs-input").val($bpjs);
+			$("#patient-mris-input").val($mris);
             $("#patient-gender-input").val($gender);
             $("#patient-address-input").val($alamat);
 

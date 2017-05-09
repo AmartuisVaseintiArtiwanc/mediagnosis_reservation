@@ -15,6 +15,7 @@
                         <th style = "text-align:left;">Nama</th>
                         <th style = "text-align:left;">KTP</th>
                         <th style = "text-align:left;">BPJS</th>
+						<th style = "text-align:left;">MRIS</th>
                         <th style = "text-align:left;">Jenis Kelamin</th>
                         <th style = "text-align:left;">Alamat</th>
                         <th style = "text-align:center;">Option</th>
