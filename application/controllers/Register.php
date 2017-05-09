@@ -166,7 +166,7 @@
 
             $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsBYPatientID($bpjsID, $patientID, $clinic->clinicID );
             $checkUniqueKTP = $this->patient_model->checkIDNumberExistsByPatientID($ktpID, $patientID, $clinic->clinicID );
-			$checkUniqueMRIS = $this->patient_model->checkIDNumberExistsByPatientID($mrisNumber, $patientID, $clinic->clinicID );
+			$checkUniqueMRIS = $this->patient_model->checkMRISExistsByPatientID($mrisNumber, $patientID, $clinic->clinicID );
 
             if($checkUniqueKTP == 1){
                 $status = "error";
