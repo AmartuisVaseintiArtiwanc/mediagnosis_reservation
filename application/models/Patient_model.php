@@ -178,6 +178,41 @@ class Patient_model extends CI_Model {
             return 0; //blom ada
         }
     }
+	
+	public function checkMRISNumberExistsInCertainClinic($MRISNumber, $clinicID){
+		$this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients mp');
+		$this->db->join('tbl_cyberits_m_clinics mc','mp.clinicID=mc.clinicID');
+        $this->db->where('mp.isActive', 1);
+        //$this->db->where('mp.isTemp', 0);
+		$this->db->where('mc.clinicID', $clinicID);
+        $this->db->where('mp.mrisNumber', $MRISNumber);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+	}
+	
+	public function checkMRISExistsByPatientID($MRISNumber, $patientID, $clinicID){
+        $this->db->select('*');
+        $this->db->from('tbl_cyberits_m_patients mp');
+		$this->db->join('tbl_cyberits_m_clinics mc','mp.clinicID=mc.clinicID');
+        $this->db->where('mp.isActive', 1);
+        //$this->db->where('isTemp', 0);
+		$this->db->where('mc.clinicID', $clinicID);
+        $this->db->where('mp.mrisNumber', $MRISNumber);
+        $this->db->where('mp.patientID !=', $patientID);
+        $query = $this->db->get();
+
+        if($query->num_rows()>0){
+            return 1; // allready exist
+        }else{
+            return 0; //blom ada
+        }
+    }
 
     public function getTemporaryPatientID($idNumber){
         $this->db->select('*');

@@ -61,4 +61,7 @@
 	
 	// kode otp match
 	$lang["021"]="Kode OTP cocok";
+	
+	//Spesifik no MRIS sudah ada
+	$lang["022"]="No. MRIS sudah dipakai";
 ?>

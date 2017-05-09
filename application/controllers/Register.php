@@ -96,6 +96,7 @@
 
 	        $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsInCertainClinic($bpjsID, $clinic->clinicID);
 	        $checkUniqueKTP = $this->patient_model->checkIDNumberExistsInCertainClinic($ktpID, $clinic->clinicID);
+			$checkUniqueMRIS = $this->patient_model->checkMRISNumberExistsInCertainClinic($mrisNumber, $clinic->clinicID );
 
 	        if($checkUniqueKTP == 1){
 	        	$status = "error";
@@ -103,6 +104,9 @@
 	        }else if($checkUniqueBPJS == 1){
 	        	$status = "error";
 				$msg=$this->lang->line("011");//"Maaf, No. BPJS sudah terpakai";
+	        }else if($checkUniqueMRIS == 1){
+	        	$status = "error";
+				$msg=$this->lang->line("022");//"Maaf, No. MRIS sudah terpakai";
 	        }else{
 	        	$datetime = date('Y-m-d H:i:s', time());
 		        $data=array(
@@ -162,6 +166,7 @@
 
             $checkUniqueBPJS = $this->patient_model->checkBPJSIDExistsBYPatientID($bpjsID, $patientID, $clinic->clinicID );
             $checkUniqueKTP = $this->patient_model->checkIDNumberExistsByPatientID($ktpID, $patientID, $clinic->clinicID );
+			$checkUniqueMRIS = $this->patient_model->checkIDNumberExistsByPatientID($mrisNumber, $patientID, $clinic->clinicID );
 
             if($checkUniqueKTP == 1){
                 $status = "error";
@@ -169,7 +174,10 @@
             }else if($checkUniqueBPJS == 1){
                 $status = "error";
                 $msg=$this->lang->line("011");//"Maaf, No. BPJS sudah terpakai";
-            }else{
+            }else if($checkUniqueMRIS == 1){
+	        	$status = "error";
+				$msg=$this->lang->line("022");//"Maaf, No. MRIS sudah terpakai";
+	        }else{
                 $datetime = date('Y-m-d H:i:s', time());
                 $data=array(
                     "patientName"=>$patientName,
