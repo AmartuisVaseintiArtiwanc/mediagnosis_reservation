@@ -82,7 +82,7 @@ class Report_model extends CI_Model
     function getReportClinicVisitTypeDetail($startDate, $endDate, $clinic)
     {
         $this->db->select('a.clinicID, a.poliID, pl.poliName, b.patientID, b.doctorID, b.created as reserveDate, b.reservationID,
-        b.detailReservationID, b.reservationType, c.medicalRecordID, d.visitType, d.treatment, d.statusDiagnose,
+        b.detailReservationID, b.reservationType, c.medicalRecordID, d.visitType, d.treatment, d.statusDiagnose, dis.diseaseName, dis.diseaseID,
         TIMESTAMPDIFF(YEAR, e.dob, b.created) AS age,
         e.patientName, e.ktpID, e.bpjsID, e.phoneNumber, e.address, e.dob, e.gender');
         $this->db->from('tbl_cyberits_t_header_reservation a');
@@ -90,6 +90,7 @@ class Report_model extends CI_Model
         $this->db->join('tbl_cyberits_t_detail_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_t_medical_record c', 'b.detailReservationID = c.detailReservationID');
         $this->db->join('tbl_cyberits_t_detail_medical_record d', 'c.medicalRecordID = d.medicalRecordID');
+        $this->db->join('tbl_cyberits_m_diseases dis', 'd.workingDiagnose = dis.diseaseID');
         $this->db->join('tbl_cyberits_t_patient_profile e', 'c.tPatientProfileID = e.tPatientProfileID');
         $this->db->where('b.status', 'done');
         $this->db->where('a.clinicID', $clinic);
@@ -106,7 +107,7 @@ class Report_model extends CI_Model
     function getReportClinicPoliVisitDetail($startDate, $endDate, $clinic, $poli)
     {
         $this->db->select('a.clinicID, a.poliID, pl.poliName, b.patientID, b.doctorID, b.created as reserveDate, b.reservationID,
-        b.detailReservationID,b.reservationType, c.medicalRecordID, d.visitType, d.treatment, d.statusDiagnose, dis.diseaseName,
+        b.detailReservationID,b.reservationType, c.medicalRecordID, d.visitType, d.treatment, d.statusDiagnose, dis.diseaseName,dis.diseaseID,
         TIMESTAMPDIFF(YEAR, e.dob, b.created) AS age,
         e.patientName, e.ktpID, e.bpjsID, e.phoneNumber, e.address, e.dob, e.gender');
         $this->db->from('tbl_cyberits_t_header_reservation a');

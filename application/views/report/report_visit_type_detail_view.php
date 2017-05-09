@@ -121,6 +121,7 @@
                     <th style = "text-align:left;">Jenis Kelamin</th>
                     <th style = "text-align:left;">Umur</th>
                     <th style = "text-align:left;">Poli</th>
+                    <th style = "text-align:left;">Diagnosa</th>
                     <th style = "text-align:left;">Jenis Kunjungan</th>
                     <th style = "text-align:left;">Jenis Pasien</th>
                     <th style = "text-align:left;">Tanggal Kunjungan</th>
@@ -134,6 +135,7 @@
                         <td><?php echo $row['gender'];?></td>
                         <td><?php echo $row['age'];?></td>
                         <td><?php echo $row['poliName'];?></td>
+                        <td><?php echo $row['diseaseName'];?></td>
                         <td><?php echo $row['visitType'];?></td>
                         <td><?php echo $row['reservationType'];?></td>
                         <td><?php echo $row['reserveDate'];?></td>
@@ -211,8 +213,12 @@
                         "targets": 5
                     },
                     {
+                        "width": "10%",
+                        "targets": 6
+                    },
+                    {
                         "width": "15%",
-                        "targets": 6, //last column
+                        "targets": -1, //last column
                         "createdCell": function (td, cellData, rowData, row, col) {
                             var $reserveDate = moment(cellData).format("D MMM YYYY");
                             $(td).html($reserveDate);
