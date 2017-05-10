@@ -404,7 +404,7 @@ $(document).ready(function(){
         var $main_condition = $("#main-condition-text").val();
         var $working_diagnose = $("#working-diagnose-text").val();
         var $condition_date = $("#condition-date-text").val();
-        var $rujukan = $("#rujukan-text").val();
+        var $rujukan =$rujukan = $('#reference-poli-input').val()+" - "+$('#reference-type-input').val();
 
         var $visit_type = $('input[name=visit-type-input]:checked', '#visit-form').val();
         var $treatment = "Rawat Jalan";//$('input[name=treatment-input]:checked', '#treatment-form').val();

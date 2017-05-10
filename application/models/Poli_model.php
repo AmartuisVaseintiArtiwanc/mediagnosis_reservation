@@ -101,4 +101,12 @@ class Poli_model extends CI_Model {
     	$this->db->where('poliID',$id);
         $this->db->delete('tbl_cyberits_m_poli');
 	}
+	
+	function getAllActivePoli(){
+		$this->db->select('*');
+        $this->db->from('tbl_cyberits_m_poli a');
+        $this->db->where('isActive',1);
+        $query = $this->db->get();
+        return $query->result_array();
+	}
 }

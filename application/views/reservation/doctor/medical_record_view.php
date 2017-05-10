@@ -538,7 +538,32 @@
 
                     <form class="w3-container">
                         <p>
-                            <textarea class="w3-input" id="rujukan-text"></textarea>
+							<div id="reference-poli-wrapper">
+								<label>Poli :</label>
+								<select class="w3-select" name="option" id="reference-poli-input">
+									<option value="">-</option>
+									<?php 
+										foreach($poli_data as $poli){
+									?>
+										<option value="<?php echo $poli['poliName'];?>"><?php echo $poli['poliName'];?></option>
+									<?php 
+										}
+									?>
+								</select>
+								<br/>
+							</div>
+							<div id="reference-type-wrapper">
+								<label>Tipe Rumah Sakit :</label>
+								<select class="w3-select" name="option" id="reference-type-input">
+									<option value="">-</option>
+									<option value="Rumah Sakit Tipe A">Rumah Sakit Tipe A</option>
+									<option value="Rumah Sakit Tipe B">Rumah Sakit Tipe B</option>
+									<option value="Rumah Sakit Tipe C">Rumah Sakit Tipe C</option>
+									<option value="Rumah Sakit Tipe D">Rumah Sakit Tipe D</option>
+									<option value="Rumah Sakit Tipe E">Rumah Sakit Tipe E</option>
+								</select>
+							</div>
+                            <!--<textarea class="w3-input" id="rujukan-text"></textarea>-->
                         </p>
                         <br/>
                     </form>
@@ -654,6 +679,14 @@
 			$(".physical-elements").removeAttr("disabled");
 			$(this).hide();
 			return false;
+		});
+		$("#reference-type-wrapper").hide();
+		$("#reference-poli-input").change(function(){
+			if(this.value != ""){
+				$("#reference-type-wrapper").show();
+			}else{
+				$("#reference-type-wrapper").hide();
+			}
 		});
 
         $("#back-to-top-btn").click(function(){

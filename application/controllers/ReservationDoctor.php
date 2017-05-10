@@ -216,6 +216,7 @@ class ReservationDoctor extends CI_Controller {
             $data['header_data'] = $this->test_model->getHeaderMedicalRecordByDetail($detailReservation);
             $data['doctor_data'] = $doctor_data;
             $data['patient_data']  = $this->patient_model->getPatientByID($check_medical_record->patientID);
+			$data['poli_data'] = $this->poli_model->getAllActivePoli();
 
             $this->load->view('reservation/doctor/medical_record_view', $data);
         }else{
