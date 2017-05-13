@@ -500,41 +500,70 @@ $(document).ready(function(){
 
     function validateInput(){
         var err = 0;
+        var $err_element = "";
+        var scrollFlag = 0;
 
         // MAIN CONDITION / KELUHAN UTAMA
         if (!$("#main-condition-text").validateRequired({errMsg:"Harap diisi"})) {
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
 
         // CONDITION DATE / MULAI SEJAK
         if(!$("#condition-date-text").validateRequired({errMsg:"Harap diisi"})){
             err++;
-        }
-
-        // WORKING DIAGNOSE / DIAGNOSA KERJA
-        if(!$("#working-diagnose-text").validateRequired({errMsg:"Harap diisi"})){
-            err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
 
         // PHYSICAL EXAMINATION
         if(!$("#blood-preasure-low-input").validateRequired({errMsg:"Harap diisi"}) ||
             !$("#blood-preasure-high-input").validateRequired({errMsg:"Harap diisi"}) ){
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
         if(!$("#pulse-input").validateRequired({errMsg:"Harap diisi"})){
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
         if(!$("#temperature-input").validateRequired({errMsg:"Harap diisi"})){
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
         if(!$("#respiration-input").validateRequired({errMsg:"Harap diisi"})){
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
         if(!$("#height-input").validateRequired({errMsg:"Harap diisi"})){
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
         if(!$("#weight-input").validateRequired({errMsg:"Harap diisi"})){
             err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step2");
+                scrollFlag=1;
+            }
         }
 
         if ($('#additional-condition-ul>li').length == 0){
@@ -555,14 +584,10 @@ $(document).ready(function(){
             var $element= $(this).find("textarea.add-codition-li-text");
             if(!$element.validateRequired({errMsg:"Harap diisi"})){
                 err++;
-            }
-        });
-
-        //DIAGNOSA PENUNJANG
-        $('#support-diagnose-ul>li').each(function(){
-            var $element= $(this).find("textarea.support-diagnose-li-text");
-            if(!$element.validateRequired({errMsg:"Harap diisi"})){
-                err++;
+                if(scrollFlag == 0){
+                    $err_element=$("textarea.add-codition-li-text");
+                    scrollFlag=1;
+                }
             }
         });
 
@@ -573,9 +598,38 @@ $(document).ready(function(){
 
             if(!$element1.validateRequired({errMsg:"Harap diisi"})){
                 err++;
+                if(scrollFlag == 0){
+                    $err_element=$(".support-examination-card");
+                    scrollFlag=1;
+                }
             }
             if(!$element2.validateRequired({errMsg:"Harap diisi"})){
                 err++;
+                if(scrollFlag == 0){
+                    $err_element=$(".support-examination-card");
+                    scrollFlag=1;
+                }
+            }
+        });
+
+        // WORKING DIAGNOSE / DIAGNOSA KERJA
+        if(!$("#working-diagnose-text").validateRequired({errMsg:"Harap diisi"})){
+            err++;
+            if(scrollFlag == 0){
+                $err_element=$("#step3");
+                scrollFlag=1;
+            }
+        }
+
+        //DIAGNOSA PENUNJANG
+        $('#support-diagnose-ul>li').each(function(){
+            var $element= $(this).find("textarea.support-diagnose-li-text");
+            if(!$element.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+                if(scrollFlag == 0){
+                    $err_element=$("#step3");
+                    scrollFlag=1;
+                }
             }
         });
 
@@ -584,15 +638,32 @@ $(document).ready(function(){
             var $element= $(this).find("textarea.medication-li-text");
             if(!$element.validateRequired({errMsg:"Harap diisi"})){
                 err++;
+                if(scrollFlag == 0){
+                    $err_element=$("#step4");
+                    scrollFlag=1;
+                }
             }
         });
 
         if (err != 0) {
+            console.log("Top : ",$err_element);
             swal(
                 "Terdapat data yang masih kosong, Silahkan periksa kembali !",
                 '',
                 'error'
-            )
+            ).then(
+                function () {
+                    $('html, body').animate({
+                        scrollTop: $err_element.offset().top
+                    }, 1000);
+                },
+                // handling the promise rejection
+                function () {
+                    $('html, body').animate({
+                        scrollTop: $err_element.offset().top
+                    }, 1000);
+                }
+            );
             return false;
         } else {
             return true;

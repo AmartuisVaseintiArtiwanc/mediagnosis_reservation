@@ -405,7 +405,7 @@
                     </form>
                 </div>
 
-                <div class="w3-card-4 w3-margin">
+                <div class="w3-card-4 w3-margin support-examination-card">
                     <div class="w3-container w3-green">
                         <h4 class="w3-left">PEMERIKSAAN PENUNJANG  <span class="w3-tag w3-red err-msg" id="support-examination-err-msg"></span></h4>
                     </div>
