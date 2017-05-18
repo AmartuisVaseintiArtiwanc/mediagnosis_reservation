@@ -101,6 +101,8 @@
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default btn-reserve-type" data-status="bpjs" id="btn-type-bpjs">BPJS</button>
                                         <button type="button" class="btn btn-default btn-reserve-type" data-status="umum" id="btn-type-umum">UMUM</button>
+										<button type="button" class="btn btn-default btn-reserve-type" data-status="asuransi" id="btn-type-asuransi">ASURANSI</button>
+                                        <button type="button" class="btn btn-default btn-reserve-type" data-status="perusahaan" id="btn-type-perusahaan">PERUSAHAAN</button>
                                     </div>
                                 </div>
 
@@ -214,11 +216,29 @@
             if($status == "bpjs"){
                 $("#btn-type-bpjs").removeClass("btn-default").addClass("btn-primary");
                 $("#btn-type-umum").removeClass("btn-primary").addClass("btn-default");
+				$("#btn-type-asuransi").removeClass("btn-primary").addClass("btn-default");
+				$("#btn-type-perusahaan").removeClass("btn-primary").addClass("btn-default");
                 $("#reserve-type-input").val("bpjs");
             }else if($status == "umum"){
                 $("#btn-type-bpjs").removeClass("btn-primary").addClass("btn-default");
                 $("#btn-type-umum").removeClass("btn-default").addClass("btn-primary");
+				$("#btn-type-asuransi").removeClass("btn-primary").addClass("btn-default");
+				$("#btn-type-perusahaan").removeClass("btn-primary").addClass("btn-default");
                 $("#reserve-type-input").val("umum");
+            }
+			else if($status == "asuransi"){
+                $("#btn-type-bpjs").removeClass("btn-primary").addClass("btn-default");
+                $("#btn-type-umum").removeClass("btn-primary").addClass("btn-default");
+				$("#btn-type-asuransi").removeClass("btn-default").addClass("btn-primary");
+				$("#btn-type-perusahaan").removeClass("btn-primary").addClass("btn-default");
+                $("#reserve-type-input").val("asuransi");
+            }
+			else if($status == "perusahaan"){
+                $("#btn-type-bpjs").removeClass("btn-primary").addClass("btn-default");
+                $("#btn-type-umum").removeClass("btn-primary").addClass("btn-default");
+				$("#btn-type-asuransi").removeClass("btn-primary").addClass("btn-default");
+				$("#btn-type-perusahaan").removeClass("btn-default").addClass("btn-primary");;
+                $("#reserve-type-input").val("perusahaan");
             }
         });
 
