@@ -147,17 +147,30 @@ $(document).ready(function(){
         e.preventDefault();
 
         var $ul = $("#medication-ul");
-        var $li = $("<li>", {class: "w3-padding-8", "data-value": "0"});
+        var $li = $("<li>", {class: "w3-padding-8 medication-item", "data-value": "0"});
         var $close_btn = $("<span>", {class: "w3-closebtn w3-closebtn-list w3-large w3-margin-right"}).text("x");
         var $container = $("<div>", {class: "w3-medium w3-padding-medium"});
-        var $textarea = $("<textarea>", {class: "w3-input medication-li-text"});
+		var $row = $("<div>", {class: "w3-row"});
+        var $col1= $("<div>", {class: "w3-col m5 w3-padding-small"});
+        var $col2= $("<div>", {class: "w3-col m3 w3-padding-small"});
+		var $col3= $("<div>", {class: "w3-col m4 w3-padding-small"});
+        var $textarea_name = $("<textarea>", {class: "w3-input medication-name-li-text"});
+        var $textarea_dosage = $("<textarea>", {class: "w3-input medication-dosage-li-text"});
+		//var $textarea = $("<textarea>", {class: "w3-input medication-li-text"});
         var $br = $("<br>");
 
-        $textarea.appendTo($container);
+        $textarea_name.appendTo($col1);
+        $textarea_dosage.appendTo($col2);
+		var $selectUnit =  $(".medication-unit-input-copy").clone();
+		$selectUnit.removeClass("medication-unit-input-copy not-needed").addClass("medication-unit-input").appendTo($col3);
+		$col1.appendTo($row);
+        $col2.appendTo($row);
+		$col3.appendTo($row);
+		$row.appendTo($container);
         $close_btn.appendTo($li);
         $br.appendTo($li);
         $container.appendTo($li);
-        $li.appendTo($ul)
+        $li.appendTo($ul);
 
         // Medication
         var options5 = {
@@ -178,12 +191,12 @@ $(document).ready(function(){
             },
 
             preparePostData: function(data) {
-                data.phrase = $textarea.val();
+                data.phrase = $textarea_name.val();
                 return data;
             },
             requestDelay: 400
         };
-        $textarea.easyAutocomplete(options5);
+        $textarea_name.easyAutocomplete(options5);
     });
 
     $("#btn-add-support-examination").click(function(e){
@@ -362,12 +375,12 @@ $(document).ready(function(){
             },
 
             preparePostData: function(data) {
-                data.phrase = $(".medication-li-text").val();
+                data.phrase = $(".medication-name-li-text").val();
                 return data;
             },
             requestDelay: 400
         };
-        $(".medication-li-text").easyAutocomplete(options5);
+        $(".medication-name-li-text").easyAutocomplete(options5);
 
         // Support Examination
         var options6 = {
@@ -455,11 +468,15 @@ $(document).ready(function(){
             $supportExaminationList.push(detailData);
         });
 
-        //TERAPI
-        $('#medication-ul li').each(function(){
-            var $data= $(this).find("textarea.medication-li-text").val();
-            var detailData = {
-                value : $data
+        //medication
+        $('#medication-ul>li').each(function(){
+            var $data1= $(this).find("textarea.medication-name-li-text").val();
+			var $data2= $(this).find("textarea.medication-dosage-li-text").val();
+			var $data3= $(this).find("select.medication-unit-input").val();
+			var detailData = {
+                name : $data1,
+                dosage : $data2,
+				unitID : $data3
             };
             $medicationList.push(detailData);
         });
@@ -575,9 +592,35 @@ $(document).ready(function(){
         if ($('#support-examination-ul>li').length == 0){
             $("#support-examination-err-msg").html("");
         }
-        if ($('#medication-ul>li').length == 0){
-            $("#medication-err-msg").html("");
-        }
+        //medication
+        $('#medication-ul>li').each(function(){
+            var $element= $(this).find("textarea.medication-name-li-text");
+            if(!$element.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+                if(scrollFlag == 0){
+                    $err_element=$("medication-err-msg");
+                    scrollFlag=1;
+                }
+            }
+			
+			var $element2= $(this).find("textarea.medication-dosage-li-text");
+            if(!$element2.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+                if(scrollFlag == 0){
+                    $err_element=$("medication-err-msg");
+                    scrollFlag=1;
+                }
+            }
+			
+			var $element3= $(this).find("select.medication-unit-input");
+            if(!$element3.validateRequired({errMsg:"Harap diisi"})){
+                err++;
+                if(scrollFlag == 0){
+                    $err_element=$("medication-err-msg");
+                    scrollFlag=1;
+                }
+            }
+        });
 
         //KELUHAN TAMBAHAN
         $('#additional-condition-ul>li').each(function(){
@@ -628,18 +671,6 @@ $(document).ready(function(){
                 err++;
                 if(scrollFlag == 0){
                     $err_element=$("#step3");
-                    scrollFlag=1;
-                }
-            }
-        });
-
-        //TERAPI
-        $('#medication-ul>li').each(function(){
-            var $element= $(this).find("textarea.medication-li-text");
-            if(!$element.validateRequired({errMsg:"Harap diisi"})){
-                err++;
-                if(scrollFlag == 0){
-                    $err_element=$("#step4");
                     scrollFlag=1;
                 }
             }

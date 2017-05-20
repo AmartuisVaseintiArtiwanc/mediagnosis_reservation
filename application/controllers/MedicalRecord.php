@@ -287,7 +287,9 @@ class MedicalRecord extends CI_Controller {
         //MEDICATION / TERAPI
         if(isset($data[0]['medication'])) {
             foreach ($data[0]['medication'] as $row) {
-                $medication = $row['value'];
+                $medication = $row['name'];
+				$dosage = $row['dosage'];
+				$unitID = $row['unitID'];
                 $check_medication = $this->medication_model->checkMedication($medication);
                 if (isset($check_medication->id)) {
                     $medication = $check_medication->id;
@@ -306,6 +308,8 @@ class MedicalRecord extends CI_Controller {
                 $mrd_data = array(
                     'medicalRecordID' => $header_data,
                     'medicationID' => $medication,
+					'dosage'=> $dosage,
+					'unitID'=> $unitID,
                     'isActive' => 1,
                     'created' => $datetime,
                     "createdBy" => $this->session->userdata('superUserID'),

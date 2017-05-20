@@ -513,12 +513,40 @@
                     </div>
                     <form class="w3-container w3-margin-top">
                         <!--ERROR MSG-->
+						<select class="w3-select medication-unit-input-copy not-needed" name="option">
+							<?php 
+								foreach($unit_data as $unit){
+							?>
+								<option value="<?php echo $unit['unitID'];?>"><?php echo $unit['unitName'];?></option>
+							<?php 
+								}
+							?>
+						</select>
                         <p>
                             <ul class="w3-ul w3-ul-list w3-card-4" id="medication-ul">
-                                <li class="w3-padding-8">
+                                <li class="w3-padding-8 medication-item">
                                         <span class="w3-closebtn w3-closebtn-list w3-large w3-margin-right">x</span><br>
                                     <div class="w3-medium w3-padding-medium">
-                                        <textarea class="w3-input medication-li-text" data-label="#medication-err-msg"></textarea>
+										<div class="w3-row">
+											<div class="w3-col m5 w3-padding-small">
+												<textarea class="w3-input medication-name-li-text" data-label="#medication-err-msg"></textarea>
+											</div>
+											<div class="w3-col m3 w3-padding-small">
+												<textarea class="w3-input medication-dosage-li-text" data-label="#medication-err-msg"></textarea>
+											</div>
+											<div class="w3-col m4 w3-padding-small">
+												<select class="w3-select medication-unit-input" name="option">
+													<?php 
+														foreach($unit_data as $unit){
+													?>
+														<option value="<?php echo $unit['unitID'];?>"><?php echo $unit['unitName'];?></option>
+													<?php 
+														}
+													?>
+												</select>
+											</div>
+										</div>
+										<!--<textarea class="w3-input medication-li-text" data-label="#medication-err-msg"></textarea>-->
                                     </div>
                                 </li>
                             </ul>

@@ -11,6 +11,7 @@ class ReservationDoctor extends CI_Controller {
         $this->load->model('clinic_model',"clinic_model");
         $this->load->model('doctor_model',"doctor_model");
         $this->load->model('poli_model',"poli_model");
+		$this->load->model('unit_model',"unit_model");
         $this->load->model('test_model',"test_model");
         $this->load->model('patient_model',"patient_model");
         $this->load->model('Medical_record_detail_model',"medical_record_detail_model");
@@ -217,6 +218,7 @@ class ReservationDoctor extends CI_Controller {
             $data['doctor_data'] = $doctor_data;
             $data['patient_data']  = $this->patient_model->getPatientByID($check_medical_record->patientID);
 			$data['poli_data'] = $this->poli_model->getAllActivePoli();
+			$data['unit_data'] = $this->unit_model->getAllActiveUnit();
 
             $this->load->view('reservation/doctor/medical_record_view', $data);
         }else{
