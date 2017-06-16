@@ -140,7 +140,7 @@
           <?php } ?>
 
         <!--SETTING-->
-        <?php if($this->session->userdata('role')=="super_admin" || $this->session->userdata('role')=="admin" ){?>
+        <?php if($this->session->userdata('role')=="super_admin"){?>
             <li class="treeview mediagnosis-navigation-setting">
               <a href="#">
                 <i class="fa fa-gear"></i>
