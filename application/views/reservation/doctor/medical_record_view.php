@@ -197,7 +197,7 @@
                         <td><?php echo $patient_data->ktpID;?></td>
                     </tr>
                     <tr>
-                        <td>Name</td>
+                        <td>Nama</td>
                         <td><?php echo $patient_data->patientName;?></td>
                     </tr>
                     <tr>
@@ -341,7 +341,7 @@
                             </div>
                         </p>
                         <p>
-                            <label class="w3-label">Tekanan Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
+                            <label class="w3-label">Frekuensi Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
                             <div class="w3-row">
                                 <div class="w3-col m6">
                                     <input class="w3-input input-number physical-elements" id="respiration-input" type="text" data-label="#respiration-err-msg" disabled="disabled">
@@ -529,10 +529,10 @@
                                     <div class="w3-medium w3-padding-medium">
 										<div class="w3-row">
 											<div class="w3-col m5 w3-padding-small">
-												<textarea class="w3-input medication-name-li-text" data-label="#medication-err-msg"></textarea>
+												<textarea class="w3-input medication-name-li-text" data-label="#medication-err-msg" placeholder="Nama Obat" ></textarea>
 											</div>
 											<div class="w3-col m3 w3-padding-small">
-												<textarea class="w3-input medication-dosage-li-text" data-label="#medication-err-msg"></textarea>
+												<textarea class="w3-input medication-dosage-li-text" data-label="#medication-err-msg" placeholder="Dosis" ></textarea>
 											</div>
 											<div class="w3-col m4 w3-padding-small">
 												<select class="w3-select medication-unit-input" name="option">

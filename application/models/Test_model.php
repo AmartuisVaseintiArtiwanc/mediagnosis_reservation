@@ -143,6 +143,8 @@ class Test_model extends CI_Model{
 
         $this->db->like('a.created',$date);
         $this->db->where('a.status ',"waiting");
+		$this->db->or_where('a.status ',"examine");
+		$this->db->or_where('a.status ',"confirm");
 
         $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
         $this->db->order_by('a.detailReservationID','asc');
@@ -189,7 +191,7 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
-    // Get Current Reservation Queue for Admin to Confirm (status : check)
+    // Get Current Reservation Queue for Admin to Confirm (status : confirm)
     function getCurrentQueue($clinic,$poli){
         $date = date('Y-m-d', time());
 
@@ -210,7 +212,7 @@ class Test_model extends CI_Model{
         $this->db->join('tbl_cyberits_m_doctors d', 'a.doctorID = d.doctorID');
         $this->db->join('tbl_cyberits_m_patients e', 'a.patientID = e.patientID');
         $this->db->like('a.created',$date);
-        $this->db->where('a.status',"check");
+        $this->db->where('a.status',"confirm");
         $this->db->where("a.reservationID IN ($where_clause)", NULL, FALSE);
         $this->db->order_by('a.created','asc');
         //$this->db->limit(5, 0);
@@ -245,7 +247,7 @@ class Test_model extends CI_Model{
         return $query->row();
     }
 
-    // Get Current Reservation Queue for Doctor to Confirm (status : waiting)
+    // Get Current Reservation Queue for Doctor to Confirm (status : assigned)
     function getCurrentQueueDoctor($reservation){
         $date = date('Y-m-d', time());
 
@@ -264,7 +266,7 @@ class Test_model extends CI_Model{
         $this->db->join('tbl_cyberits_m_poli c', 'b.poliID = c.poliID');
         $this->db->join('tbl_cyberits_m_patients d', 'a.patientID = d.patientID');
         $this->db->like('a.created',$date);
-        $this->db->where('a.status',"waiting");
+        $this->db->where('a.status',"assigned");
         $this->db->where("a.reservationID",$reservation);
         $this->db->where("a.noQueue > ",$where_clause);
         $this->db->order_by('a.created','asc');
@@ -278,7 +280,7 @@ class Test_model extends CI_Model{
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
         $this->db->where("a.detailReservationID",$detailID);
-        $this->db->where("a.status",'waiting');
+        $this->db->where("a.status",'assigned');
         $query = $this->db->get();
         if($query->num_rows() == 0){
             return 0; // allready taken by other doctor
@@ -322,7 +324,7 @@ class Test_model extends CI_Model{
     function checkReservationClinicAdminRole($detailID, $clinicID){
         $this->db->select('*');
         $this->db->from('tbl_cyberits_t_detail_reservation a');
-        $this->db->join('tbl_cyberits_m_doctors dc', 'dc.doctorID = a.doctorID');
+        //$this->db->join('tbl_cyberits_m_doctors dc', 'dc.doctorID = a.doctorID');
         $this->db->join('tbl_cyberits_t_header_reservation b', 'a.reservationID = b.reservationID');
         $this->db->join('tbl_cyberits_m_clinics c', 'b.clinicID = c.clinicID');
         $this->db->join('tbl_cyberits_m_poli pl', 'pl.poliID = b.poliID');

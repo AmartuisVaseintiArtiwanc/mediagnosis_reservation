@@ -18,6 +18,9 @@ class Reservation extends CI_Controller {
         $this->load->model('Test_model',"test_model");
         $this->load->model("SClinic_model","sclinic_model");
 		$this->load->model('Notification_model');
+		$this->load->model('Company_model');
+		$this->load->model('Company_reservation_model');
+		$this->load->model('SPoli_model');
 		$this->load->helper("language");
 		$this->load->language("main", "bahasa");
     }
@@ -44,6 +47,7 @@ class Reservation extends CI_Controller {
         $data['reversation_clinic_data']  = $this->test_model->getHeaderReservationData($clinicID);
         $data['reservation_latest_queue'] = $this->test_model->getReservationNextQueue($clinicID);
         $data['poli_list']  = $this->sclinic_model->getClinicListByID($clinicID);
+		$data['doctor_poli_list'] = $this->SPoli_model->getDoctorPoliByClinicID($clinicID);
 
         $data['main_content'] = 'reservation/reservation_home_view';
         $this->load->view('template/template', $data);
@@ -290,7 +294,7 @@ class Reservation extends CI_Controller {
                 $header_data = $this->test_model->checkReservationClinicAdminRole($detailReservation,$clinic->clinicID);
                 if(isset($header_data)){
                     $status = $header_data->status;
-                    if($status == "check" || $status == "examine" ){
+                    if($status == "waiting" || $status == "examine" ){
                         $this->goToExamineForm($detailReservation,$header_data);
                     }else{
                         echo $this->lang->line("015");//"Pasien ini tidak terdapat dalam proses reservasi ..";
@@ -309,7 +313,7 @@ class Reservation extends CI_Controller {
     private function goToExamineForm($detailReservation,$header_data){
         $datetime = date('Y-m-d H:i:s', time());
 
-        $reservationData=array(
+        /*$reservationData=array(
             'status'=>"examine",
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
@@ -327,7 +331,7 @@ class Reservation extends CI_Controller {
             $this->db->trans_commit();
             $status = "success";
             $msg = $this->lang->line("001");//"Save data successfully !";
-        }
+        }*/
 
         $doctor_data = $this->doctor_model->getDoctorByID($header_data->doctorID);
         $patient_data = $this->patient_model->getPatientByID($header_data->patientID);
@@ -373,7 +377,7 @@ class Reservation extends CI_Controller {
         );
 
         $reservationData=array(
-            'status'=>"confirm",
+            'status'=>"examine",
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
@@ -407,9 +411,11 @@ class Reservation extends CI_Controller {
 
             if(isset($clinicData)){
                 $poli_data = $this->sclinic_model->getClinicListByID($clinicData->clinicID);
+				$company_data = $this->company_model->getAllCompany($clinicData->clinicID);
                 if(isset($poli_data)){
                     $data['clinic_data'] = $clinicData;
                     $data['poli_data'] = $poli_data;
+					$data['company_data'] = $company_data;
                     $data['main_content'] = 'registration/patient_offline_reservation_view';
                     $this->load->view('template/template', $data);
                 }else{
@@ -424,120 +430,183 @@ class Reservation extends CI_Controller {
             }
         }
 
-        function doReservePatientOffline(){
-            $status = "error";
-            $msg=$this->lang->line("002");//"Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
-            $queueNo=0;
+	function doReservePatientOffline(){
+		$status = "error";
+		$msg=$this->lang->line("002");//"Maaf Data Anda tidak dapat tersimpan, cobalah beberapa saat lagi..";
+		$queueNo=0;
 
-            $datetime = date('Y-m-d H:i:s', time());
-            $userID = $this->session->userdata('userID');
+		$datetime = date('Y-m-d H:i:s', time());
+		$userID = $this->session->userdata('userID');
 
-            $clinic = $this->security->xss_clean($this->input->post('clinic'));
-            $poli = $this->security->xss_clean($this->input->post('poli'));
-            $reserveDate = date('Y-m-d', time());
-            $reserveType = $this->security->xss_clean($this->input->post('reserve_type'));
-            $patient = $this->security->xss_clean($this->input->post('patient'));
+		$clinic = $this->security->xss_clean($this->input->post('clinic'));
+		$poli = $this->security->xss_clean($this->input->post('poli'));
+		$company = $this->security->xss_clean($this->input->post('company'));
+		$reserveDate = date('Y-m-d', time());
+		$reserveType = $this->security->xss_clean($this->input->post('reserve_type'));
+		$patient = $this->security->xss_clean($this->input->post('patient'));
 
-            $resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
+		$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
 
-            if(!empty($clinic) && !empty($poli) && !empty($reserveDate) && !empty($patient) &&!empty($reserveType) ){
+		if(!empty($clinic) && !empty($poli) && !empty($company) && !empty($reserveDate) && !empty($patient) &&!empty($reserveType) ){
 
-                //validasi multiple reservation
-                $resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
-                if($resrvationAvailability != 0){
-                    $msg = $this->lang->line("013");//"Maaf, pasien telah melakukan reservasi sebelumnya";
-                }else{
+			//validasi multiple reservation
+			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
+			if($resrvationAvailability != 0){
+				$msg = $this->lang->line("013");//"Maaf, pasien telah melakukan reservasi sebelumnya";
+			}else{
 
-                   // CREATE AND CHECK Header Reservation
-                    $header = $this->createHeaderReservationOffline($clinic,$poli,$reserveDate);
-                    if($header != ""){
-                        $data_reservasi = array(
-                            'reservationID' => $header["headerID"],
-                            'noQueue' => $header["nextQueue"],
-                            'patientID' => $patient,
-                            'status' => 'waiting',
-                            'reservationType' => $reserveType,
-                            'isOnline' => 1,
-                            'isActive' => 1,
-                            'created' => $reserveDate,
-                            'createdBy' => $userID,
-                            'lastUpdated' => $datetime,
-                            'lastUpdatedBy' => $userID
-                        );
+			   // CREATE AND CHECK Header Reservation
+				$header = $this->createHeaderReservationOffline($clinic,$poli,$reserveDate);
+				if($header != ""){
+					$data_reservasi = array(
+						'reservationID' => $header["headerID"],
+						'noQueue' => $header["nextQueue"],
+						'patientID' => $patient,
+						'status' => 'waiting',
+						'reservationType' => $reserveType,
+						'isOnline' => 1,
+						'isActive' => 1,
+						'created' => $reserveDate,
+						'createdBy' => $userID,
+						'lastUpdated' => $datetime,
+						'lastUpdatedBy' => $userID
+					);
 
-                        // Create Detail Reservation
-                        $detailReservation = $this->DReservation_model->insertReservation($data_reservasi);
-                        if(isset($detailReservation)){
-                            $status = "success";
-                            $msg= $this->lang->line("012");//"Success";
-                            $queueNo=$header["nextQueue"];
-                        }
+					// Create Detail Reservation
+					$detailReservation = $this->DReservation_model->insertReservation($data_reservasi);
+					if(isset($detailReservation)){
+						$status = "success";
+						$msg= $this->lang->line("012");//"Success";
+						$queueNo=$header["nextQueue"];
+						
+						if($reserveType=="perusahaan"){
+						
+							$data_company_reservation = array(
+								'companyID' => $company,
+								'detailReservationID' => $detailReservation,
+								'isActive' => 1,
+								'created' => $datetime,
+								'createdBy' => $userID,
+								'lastUpdated' => $datetime,
+								'lastUpdatedBy' => $userID
+								
+							);
+							
+							 // Create company reservation transaction info
+							$companyReservation = $this->Company_reservation_model->insertCompanyReservation($data_company_reservation);
+							if(isset($companyReservation)){
+								$status = "success";
+								//$msg= $this->lang->line("012");//"Success";
+								$queueNo=$header["nextQueue"];
+							}else{
+								$status = "error";
+							}
+						
+						}
+					}
 
-                    }else{
-                        $status = "error";
-                    }
-                }
-            }
-            echo json_encode(array('status' => $status, 'msg' => $msg, 'queueNo' => $queueNo));
-        }
+				}else{
+					$status = "error";
+				}
+			}
+		}
+		echo json_encode(array('status' => $status, 'msg' => $msg, 'queueNo' => $queueNo));
+	}
 
-        /*Create Header Reservasi untuk HARI INI*/
-        private function createHeaderReservationOffline($clinicID, $poliID, $reserveDate){
-            $datetime = date('Y-m-d H:i:s', time());
-            $result;
-            $userID = $this->session->userdata('userID');
-            $headerID = "";
+	/*Create Header Reservasi untuk HARI INI*/
+	private function createHeaderReservationOffline($clinicID, $poliID, $reserveDate){
+		$datetime = date('Y-m-d H:i:s', time());
+		$result;
+		$userID = $this->session->userdata('userID');
+		$headerID = "";
 
-            $verifyReservation = $this->test_model->checkReservationByDate($clinicID,$poliID,$reserveDate);
-            if(!isset($verifyReservation)) {
-                //insert baru
-                $data_reservasi = array(
-                    'clinicID' => $clinicID,
-                    'poliID' => $poliID,
-                    'currentQueue' => 0,
-                    'totalQueue' => 1,
-                    'isActive' => 1,
-                    'created' => $reserveDate,
-                    'createdBy' => $userID,
-                    'lastUpdated' => $datetime,
-                    'lastUpdatedBy' => $userID
-                );
-                $this->db->trans_begin();
-                $query = $this->test_model->insertReservation($data_reservasi);
+		$verifyReservation = $this->test_model->checkReservationByDate($clinicID,$poliID,$reserveDate);
+		if(!isset($verifyReservation)) {
+			//insert baru
+			$data_reservasi = array(
+				'clinicID' => $clinicID,
+				'poliID' => $poliID,
+				'currentQueue' => 0,
+				'totalQueue' => 1,
+				'isActive' => 1,
+				'created' => $reserveDate,
+				'createdBy' => $userID,
+				'lastUpdated' => $datetime,
+				'lastUpdatedBy' => $userID
+			);
+			$this->db->trans_begin();
+			$query = $this->test_model->insertReservation($data_reservasi);
 
-                if ($this->db->trans_status() === FALSE) {
-                    // Failed to save Data to DB
-                    $this->db->trans_rollback();
-                }
-                else{
-                    $headerID = $query;
-                    $result["headerID"] = $headerID;
-                    $result["nextQueue"] = 1;
-                    $this->db->trans_commit();
-                }
-            }else{
-                $headerID = $verifyReservation->reservationID;
-                $data_reservasi = array(
-                        'totalQueue' => $verifyReservation->totalQueue + 1,
-                        'lastUpdated' => $datetime,
-                        'lastUpdatedBy' => $userID
-                    );
+			if ($this->db->trans_status() === FALSE) {
+				// Failed to save Data to DB
+				$this->db->trans_rollback();
+			}
+			else{
+				$headerID = $query;
+				$result["headerID"] = $headerID;
+				$result["nextQueue"] = 1;
+				$this->db->trans_commit();
+			}
+		}else{
+			$headerID = $verifyReservation->reservationID;
+			$data_reservasi = array(
+					'totalQueue' => $verifyReservation->totalQueue + 1,
+					'lastUpdated' => $datetime,
+					'lastUpdatedBy' => $userID
+				);
 
-                $this->db->trans_begin();
-                $query = $this->HReservation_model->updateReservation($data_reservasi, $clinicID, $poliID);
-                if ($this->db->trans_status() === FALSE) {
-                    // Failed to save Data to DB
-                    $this->db->trans_rollback();
-                }else{
+			$this->db->trans_begin();
+			$query = $this->HReservation_model->updateReservation($data_reservasi, $clinicID, $poliID);
+			if ($this->db->trans_status() === FALSE) {
+				// Failed to save Data to DB
+				$this->db->trans_rollback();
+			}else{
 
-                    $result["headerID"] = $headerID;
-                    $result["nextQueue"] = $verifyReservation->totalQueue + 1;
-                    $this->db->trans_commit();
-                }
-            }
+				$result["headerID"] = $headerID;
+				$result["nextQueue"] = $verifyReservation->totalQueue + 1;
+				$this->db->trans_commit();
+			}
+		}
 
-            return $result;
-        }
+		return $result;
+	}
+	
+	function doAssignPatients(){
+		$error = 0;
+		$status = "";
+		$msg = "";
+		$datetime = date('Y-m-d H:i:s', time());
+		$patients = $this->security->xss_clean($this->input->post('patients'));
+        $doctorID = $this->security->xss_clean($this->input->post('doctorID'));
+		
+		$data=array(
+            'doctorID'=>$doctorID,
+			'status'=>"confirm",
+            "lastUpdated"=>$datetime,
+            "lastUpdatedBy"=>$this->session->userdata('userID')
+        );
+		
+		foreach($patients as $p){
+			//echo $p."\n";
+			if($error == 0){
+				$this->db->trans_begin();
+				$query = $this->test_model->updateReservationDetail($data,$p);
+				if ($this->db->trans_status() === FALSE) {
+					$this->db->trans_rollback();
+					$status = "error";
+					$msg = $this->lang->line("002");//"Cannot save to Database !";
+					$error++;
+				}else{
+					$this->db->trans_commit();
+					$status = "success";
+					$msg = $this->lang->line("001");//"Save data successfully !";
+				}
+			}
+		}
+		
+		echo json_encode(array('status' => $status, 'msg' => $msg));
+		
+	}
 
     function sendNotification($title, $message, $token){
 		$path = 'https://fcm.googleapis.com/fcm/send';

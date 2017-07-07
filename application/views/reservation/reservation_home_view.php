@@ -72,6 +72,22 @@
         background: -ms-linear-gradient(80deg, #1a86b9 51%,#0078b1 51%);
         background: linear-gradient(80deg, #1a86b9 51%,#0078b1 51%);
     }
+	.small-box-list{
+		cursor : pointer;
+	}
+	.right-align{
+		text-align : right;
+	}
+	.hide-assign-button{
+		display: none;
+	}
+	.checkbox{
+		text-align: right;
+		margin-bottom: 0px;
+	}
+	.inner{
+		overflow :hidden;
+	}
 
 </style>
 
@@ -110,22 +126,55 @@
         <div class="col-lg-6">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Antrian Berikutnya</h3>
+					<div class="col-md-5">
+						<h3 class="box-title">Antrian Berikutnya</h3>
+					</div>
+					<div class="col-md-7 right-align">
+						<select class="w3-select" name="doctor_poli_assign" id="doctor-poli-assign" disabled>
+							<?php foreach($doctor_poli_list as $row) { ?>
+							<option value="<?php echo $row["doctorID"]; ?>"><?php echo $row["doctorName"]."/".$row["poliName"];?></option>
+							<?php }?>
+						</select>
+						<button class="hide-assign-button" id="assign-button">Assign</button>
+					</div>
                 </div>
 
                 <div class="box-body" id="next-queue-box-list">
                     <?php foreach($reservation_latest_queue as $row) { ?>
-                        <div class="col-lg-12 col-xs-12" id="next-queue-<?php echo $row['detailReservationID'];?>">
-                            <div class="small-box-list bg-green">
-                                <div class="inner">
-                                    <h3><?php echo $row['noQueue'];?> - <?php echo substr($row['patientName'],0,20)."...";?></h3>
-                                    <p><?php echo strtoupper($row['poliName']);?></p>
-                                </div>
-                                <div class="icon">
-                                    <i class="ion ion-person"></i>
-                                </div>
-                            </div>
-                        </div>
+                        <?php if($row['status'] == "waiting"){ ?>
+							<div class="col-lg-12 col-xs-12 queue-manageable-waiting" id="next-queue-<?php echo $row['detailReservationID'];?>">
+								<div class="small-box-list bg-red">
+									<div class="inner">
+										<h3><?php echo $row['noQueue'];?> - <?php echo substr($row['patientName'],0,20)."...";?></h3>
+										<p class="col-lg-11"><?php echo strtoupper($row['poliName']);?></p>
+										<input type="hidden" class="detailID col-lg-1" value="<?php echo $row['detailReservationID'];?>"/>
+									</div>
+									
+								</div>
+							</div>
+						<?php }else if($row['status'] == "examine"){ ?>
+							<div class="col-lg-12 col-xs-12" id="next-queue-<?php echo $row['detailReservationID'];?>">
+								<div class="small-box-list bg-yellow">
+									<div class="inner">
+										<h3><?php echo $row['noQueue'];?> - <?php echo substr($row['patientName'],0,20)."...";?></h3>
+										<p class="col-lg-11"><?php echo strtoupper($row['poliName']);?></p>
+										<input type="checkbox" name="check-assignment" class="check-assignment checkbox col-lg-1" value="<?php echo $row['detailReservationID'];?>" />
+									</div>
+									
+								</div>
+							</div>
+						<?php }else if($row['status'] == "confirm"){?>
+							<div class="col-lg-12 col-xs-12" id="next-queue-<?php echo $row['detailReservationID'];?>">
+								<div class="small-box-list bg-green">
+									<div class="inner">
+										<h3><?php echo $row['noQueue'];?> - <?php echo substr($row['patientName'],0,20)."...";?></h3>
+										<p class="col-lg-11"><?php echo strtoupper($row['poliName']);?></p>
+										<span></span>
+									</div>
+									
+								</div>
+							</div>
+						<?php }?>
                     <?php } ?>
                 </div>
             </div>
@@ -139,7 +188,7 @@
                     <div class="box-body">
                         <div class="box box-primary">
                             <div class="box-body box-profile current-queue-box" id="current-queue-box-<?php echo $row['poliID'];?>" data-queue="0">
-                                <div class="row hide" id="button-confirm-queue-<?php echo $row['poliID'];?>">
+                                <!--<div class="row hide" id="button-confirm-queue-<?php echo $row['poliID'];?>">
                                     <div class="col-lg-6">
                                         <a href="#" class="btn btn-lg btn-danger btn-block btn-reservation-confirmation" data-poli="<?php echo $row['poliID'];?>" data-value="reject">
                                             <i class="fa fa-remove"></i><b> TIDAK ADA</b></a>
@@ -148,7 +197,7 @@
                                         <a href="#" class="btn btn-lg btn-success btn-block btn-reservation-confirmation" data-poli="<?php echo $row['poliID'];?>" data-value="confirm">
                                             <i class="fa fa-check-circle"></i><b> ADA</b></a>
                                     </div>
-                                </div>
+                                </div>-->
 
                                 <input type="hidden" id="detail-reservation-value-<?php echo $row['poliID'];?>" value="0" />
                                 <div id="current-queue-info-<?php echo $row['poliID'];?>" data-queue-number="" data-queue-poli="" data-queue-doctor=""></div>
@@ -176,6 +225,7 @@
 
 <script>
     $(function(){
+		var assignmentCheckFlag = 0;
         var count = 1;
         var $detailID,$headerID;
         var $poliList = [];
@@ -236,11 +286,13 @@
         }
 
         function loopGetCurrentQuery(){
-            $.each($poliList, function( index, value ) {
-                getCurrentQueueEachPoli(value);
-            });
-
-            getNextQueueList();
+			
+				$.each($poliList, function( index, value ) {
+					getCurrentQueueEachPoli(value);
+				});
+			if(assignmentCheckFlag == 0){
+				getNextQueueList();
+			}
         }
 
         setInterval(loopGetCurrentQuery, 3000);
@@ -376,7 +428,7 @@
                         $queue_data = data.output;
 
                         $.each($queue_data, function( key, value ) {
-                            renderNextQueue(value.noQueue,value.poliName,value.patientName,value.poliID);
+                            renderNextQueue(value.detailReservationID, value.noQueue,value.poliName,value.patientName,value.poliID, value.status);
                         });
                     }
                 },
@@ -386,25 +438,115 @@
             });
         }
 
-        function renderNextQueue(q_number,poli_name, patient_name, poli){
+        function renderNextQueue(detailID,q_number,poli_name, patient_name, poli, status){
             var $qnumber = $("#current-queue-info").attr("data-queue-number");
             var $poli = $("#current-queue-info").attr("data-queue-poli");
             var $doctor =  $("#current-queue-info").attr("data-queue-doctor");
 
             var patient_name = patient_name.substring(0, 20);
 
-            var $div = $("<div>", {class: "col-lg-12 col-xs-12"});
-            var $small_box = $("<div>", {class: "small-box-list bg-green", "data-value": "0"});
+            var $div;
+			if(status == "waiting"){
+				$div = $("<div>", {class: "col-lg-12 col-xs-12 queue-manageable-waiting"});
+			}else{
+				$div = $("<div>", {class: "col-lg-12 col-xs-12"});
+			}
+            var $small_box; 
+			if(status == "waiting"){
+				$small_box= $("<div>", {class: "small-box-list bg-red", "data-value": "0"});
+			}else if(status == "examine"){
+				$small_box= $("<div>", {class: "small-box-list bg-yellow", "data-value": "0"});
+			}else if(status == "confirm"){
+				$small_box= $("<div>", {class: "small-box-list bg-green", "data-value": "0"});
+			}
             var $inner = $("<div>", {class: "inner", "data-value": "0"});
+			var $custom_section;
+			if(status == "waiting"){
+				$custom_section = $("<input>").attr({type: "hidden", class:"detailID col-lg-1", value: detailID});
+			}else if(status == "examine"){
+				$custom_section = $("<input>").attr({type: "checkbox", class:"check-assignment checkbox col-lg-1", name:"check-assignment", value: detailID});
+			}else if(status == "confirm"){
+				$custom_section = $("<span>").html("");
+			}
             var $queue_number = $("<h3>").html(q_number+" - "+patient_name+"...");
-            var $poli_doctor = $("<p>").html(poli_name);
+            var $poli_doctor = $("<p>").attr({class:"col-lg-11"}).html(poli_name);
 
-            $queue_number.appendTo($inner);
+			$queue_number.appendTo($inner);
             $poli_doctor.appendTo($inner);
+			$custom_section.appendTo($inner);
             $inner.appendTo($small_box);
             $small_box.appendTo($div);
             $("#next-queue-box-list").append($div);
         }
+
+		$("#next-queue-box-list").on('click', "div.queue-manageable-waiting",function(){			
+            var $title = "Konfirmasi";
+            var $base_url = "<?php echo site_url();?>/";
+			var $detailID = $(this).children(".small-box-list").children(".inner").children(".detailID").val();
+			var $patient_name = $(this).children(".small-box-list").children(".inner").children("h3").html();
+			$msg="Lanjutkan pasien ["+ $patient_name+"] untuk pengisian data physical ?";
+            alertify.confirm($msg,
+                function(){
+                    window.open($base_url+"Reservation/goToPhysicalExamination/"+$detailID);
+                }
+            ).setHeader($title);
+        });
+		
+		$("#next-queue-box-list").on('change', 'input.check-assignment', function(){
+			if($(this).is(":checked")){
+				assignmentCheckFlag++;
+			}else{
+				assignmentCheckFlag--;
+				if(assignmentCheckFlag < 0){
+					assignmentCheckFlag = 0;
+				}
+			}
+			
+			if(assignmentCheckFlag > 0){
+				$("#assign-button").removeClass("hide-assign-button");
+				$('#doctor-poli-assign').prop("disabled", false);
+			}else{
+				$("#assign-button").addClass("hide-assign-button");
+				$('#doctor-poli-assign').prop("disabled", true);
+			}
+		});
+		
+		$("#assign-button").on('click', function(){
+			var $patients = [];
+			var $doctor;
+			
+			$('.check-assignment:checkbox:checked').each(function(){
+				$patients.push(this.value);
+			});
+			$doctor = $("#doctor-poli-assign").find("option:selected").val();
+			//console.log($patients);
+			//console.log($doctor);
+			var $base_url = "<?php echo site_url();?>/";
+            $.ajax({
+                url: $base_url+"reservation/doAssignPatients",
+                data: {
+					patients : $patients,
+					doctorID : $doctor
+				},
+                type: "POST",
+                dataType: 'json',
+                cache:false,
+                beforeSend:function(){
+
+                },
+                success:function(data){
+                    if(data.status != "error"){
+                        alertify.success(data.msg);
+						location.reload();
+                    }else{
+						alertify.error(data.msg);
+					}
+                },
+                error: function(xhr, status, error) {
+                    
+                }
+            });
+		});
     });
 </script>
 

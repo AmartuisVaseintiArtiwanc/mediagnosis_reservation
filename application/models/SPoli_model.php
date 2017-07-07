@@ -57,4 +57,16 @@ class SPoli_Model extends CI_Model {
         $this->db->where('doctorID',$doctorID);
         $this->db->delete('tbl_cyberits_s_poli');
 	}
+	
+	function getDoctorPoliByClinicID($clinicID){
+		$this->db->select('d.doctorID, d.doctorName, b.poliName');
+        $this->db->from('tbl_cyberits_s_clinic a');
+        $this->db->join('tbl_cyberits_m_poli b', 'a.poliID = b.poliID');
+		$this->db->join('tbl_cyberits_s_poli c', 'c.sClinicID = a.sClinicID');
+		$this->db->join('tbl_cyberits_m_doctors d', 'd.doctorID = c.doctorID');
+        $this->db->where('a.clinicID',$clinicID);
+        $this->db->where('a.isActive',1);
+        $query = $this->db->get();
+        return $query->result_array();
+	}
 }

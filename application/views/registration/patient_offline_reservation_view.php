@@ -105,6 +105,17 @@
                                         <button type="button" class="btn btn-default btn-reserve-type" data-status="perusahaan" id="btn-type-perusahaan">PERUSAHAAN</button>
                                     </div>
                                 </div>
+								
+								<div class="form-group company-input">
+									<label for="company-select" class="control-label cd-name">Pilih Perusahaan :</label>
+                                    <span class="cd-error-message label label-danger" id="err-company-input"></span>
+                                    <select class="form-control" id="company-select" style="width: 100%;" tabindex="-1" aria-hidden="true" data-label="#err-company-input">
+                                        <option value="">--Pilih perushaan--</option>
+                                        <?php foreach($company_data as $row){ ?>
+                                            <option value="<?php echo $row['companyID'];?>" data-company="<?php echo $row['companyID'];?>"><?php echo $row['companyName'];?></option>
+                                        <?php } ?>
+                                    </select>
+								</div>
 
                             </div>
                             <!-- /.box-body -->
@@ -209,6 +220,7 @@
 		$(".sidebar-menu").find(".active").removeClass("active");
 		$(".mediagnosis-navigation-manual").addClass("active");
 
+		$(".company-input").hide();
         autosize($('textarea'));
 
         $(".btn-reserve-type").click(function(){
@@ -219,12 +231,14 @@
 				$("#btn-type-asuransi").removeClass("btn-primary").addClass("btn-default");
 				$("#btn-type-perusahaan").removeClass("btn-primary").addClass("btn-default");
                 $("#reserve-type-input").val("bpjs");
+				$(".company-input").hide();
             }else if($status == "umum"){
                 $("#btn-type-bpjs").removeClass("btn-primary").addClass("btn-default");
                 $("#btn-type-umum").removeClass("btn-default").addClass("btn-primary");
 				$("#btn-type-asuransi").removeClass("btn-primary").addClass("btn-default");
 				$("#btn-type-perusahaan").removeClass("btn-primary").addClass("btn-default");
                 $("#reserve-type-input").val("umum");
+				$(".company-input").hide();
             }
 			else if($status == "asuransi"){
                 $("#btn-type-bpjs").removeClass("btn-primary").addClass("btn-default");
@@ -232,6 +246,7 @@
 				$("#btn-type-asuransi").removeClass("btn-default").addClass("btn-primary");
 				$("#btn-type-perusahaan").removeClass("btn-primary").addClass("btn-default");
                 $("#reserve-type-input").val("asuransi");
+				$(".company-input").hide();
             }
 			else if($status == "perusahaan"){
                 $("#btn-type-bpjs").removeClass("btn-primary").addClass("btn-default");
@@ -239,6 +254,7 @@
 				$("#btn-type-asuransi").removeClass("btn-primary").addClass("btn-default");
 				$("#btn-type-perusahaan").removeClass("btn-default").addClass("btn-primary");;
                 $("#reserve-type-input").val("perusahaan");
+				$(".company-input").show();
             }
         });
 
@@ -363,12 +379,14 @@
             if(validateInput()){
                 var $clinic = "<?php echo $clinic_data->clinicID;?>";
                 var $poli = $("#poli-select").find('option:selected').data('poli');
+				var $company = $("#conpany-select").find('option:selected').data('company');
                 var $patient = $("#patient-input").attr("data-value");
                 var $reserve_type =  $("#reserve-type-input").val();
 
                 var $data = {
                     clinic : $clinic,
                     poli : $poli,
+					company : $company,
                     patient : $patient,
                     reserve_type : $reserve_type
                 }
@@ -410,6 +428,7 @@
             var $err=0;
             var $clinic = "<?php echo $clinic_data->clinicID;?>";
             var $poli = $("#poli-select");
+			var $company = $("#company-select");
             var $patient = $("#patient-input");
             var $reserve_type = $("#reserve-type-input");
 
@@ -419,6 +438,11 @@
                 $err=1;
                 var $label_err = $($poli).attr("data-label");
                 showErrorLabel($label_err, "Poli tidak boleh kosong..");
+            }
+			if($company.val() == ""){
+                $err=1;
+                var $label_err = $($company).attr("data-label");
+                showErrorLabel($label_err, "Perusahaan tidak boleh kosong..");
             }
             if($patient.attr("data-value")=="" || $patient.attr("data-value")==null){
                 $err=1;

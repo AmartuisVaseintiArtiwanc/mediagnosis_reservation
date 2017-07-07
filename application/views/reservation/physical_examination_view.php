@@ -72,10 +72,10 @@
 </div>
 
 <div class="w3-container w3-row margin-wrap">
-    <div class="w3-col m6">
-        <span class="w3-large w3-text-green">Diperiksa oleh : <?php echo $doctor_data->doctorName;?></span>
-    </div>
-    <div class="w3-col m6 w3-right-align">
+    <!--<div class="w3-col m6">
+        <span class="w3-large w3-text-green">Diperiksa oleh : <?php //echo $doctor_data->doctorName;?></span>
+    </div>-->
+    <div class="w3-col m12 w3-right-align">
         <span class="w3-large w3-text-green" id="date-name"></span>
         <span class="w3-large w3-text-green">, pkl </span>
         <span class="w3-large w3-text-green" id="time-name"></span>
@@ -187,7 +187,7 @@
                         </div>
                         </p>
                         <p>
-                            <label class="w3-label">Tekanan Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
+                            <label class="w3-label">Frekuensi Pernapasan</label> <span class="w3-tag w3-red" id="respiration-err-msg"></span>
                         <div class="w3-row">
                             <div class="w3-col m6">
                                 <input class="w3-input input-number" id="respiration-input" type="text" data-label="#respiration-err-msg">
@@ -252,7 +252,7 @@
 
         <div class="w3-center">
             <button class="w3-btn w3-red btn-confirmation" id="btn-cancel-examine" data-value="reject">BATAL</button>
-            <button class="w3-btn w3-green btn-confirmation" id="btn-save-examine" data-value="confirm">MULAI PERIKSA</button>
+            <button class="w3-btn w3-green btn-confirmation" id="btn-save-examine" data-value="confirm">SIMPAN</button>
         </div>
     </div>
 </div>

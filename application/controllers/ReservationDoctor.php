@@ -31,14 +31,14 @@ class ReservationDoctor extends CI_Controller {
                 if(isset($check_reservation->detailReservationID)){
                     $this->goToMedicalRecord($check_reservation->detailReservationID);
                 }else{
-                    $check_reservation = $this->test_model->checkWaitingConfirmReservation($doctor_data->doctorID);
+                    /*$check_reservation = $this->test_model->checkWaitingConfirmReservation($doctor_data->doctorID);
                     if(isset($check_reservation->detailReservationID)){
                         $status = "waiting";
                         $data['detailID']  = $check_reservation->detailReservationID;
-                    }else{
+                    }else{*/
                         $status = "clear";
                         $data['detailID']  = "";
-                    }
+                    //}
                     // CREATE & CHECK RESERVATION CLINIC POLI
                     $this->createHeaderReservation($doctor_data->clinicID,$doctor_data->poliID );
                     $headerData = $this->test_model->getHeaderReservationDataByDoctor($doctor_data->clinicID,$doctor_data->poliID);
@@ -141,7 +141,7 @@ class ReservationDoctor extends CI_Controller {
         $checkReservation = $this->test_model->checkReservationDetail($detailID);
         if($checkReservation){
             $doctor = $this->doctor_model->getDoctorByUserID($this->session->userdata('userID'));
-            $detail_data = $this->test_model->getReservationDetailByIDStatus($detailID,"waiting");
+            $detail_data = $this->test_model->getReservationDetailByIDStatus($detailID,"assigned");
 
             //UPDATE HEADER CURRENT QUEUE
             $data_header=array(
@@ -153,8 +153,7 @@ class ReservationDoctor extends CI_Controller {
 
             //UPDATE RESERVATION DETAIL
             $data=array(
-                'doctorID'=>$doctor->doctorID,
-                'status'=>'check',
+                'status'=>'confirm',
                 "lastUpdated"=>$datetime,
                 "lastUpdatedBy"=>$this->session->userdata('userID')
             );
