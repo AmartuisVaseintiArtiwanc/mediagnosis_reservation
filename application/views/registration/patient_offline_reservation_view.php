@@ -439,11 +439,7 @@
                 var $label_err = $($poli).attr("data-label");
                 showErrorLabel($label_err, "Poli tidak boleh kosong..");
             }
-			if($company.val() == ""){
-                $err=1;
-                var $label_err = $($company).attr("data-label");
-                showErrorLabel($label_err, "Perusahaan tidak boleh kosong..");
-            }
+			
             if($patient.attr("data-value")=="" || $patient.attr("data-value")==null){
                 $err=1;
                 var $label_err = $($patient).attr("data-label");
@@ -454,6 +450,11 @@
                 $err=1;
                 var $label_err = $($reserve_type).attr("data-label");
                 showErrorLabel($label_err, "Jenis Kunjungan tidak boleh kosong..");
+            }
+			if($company.val() == "" && $reserve_type.val()== "perusahaan"){
+                $err=1;
+                var $label_err = $($company).attr("data-label");
+                showErrorLabel($label_err, "Perusahaan tidak boleh kosong..");
             }
 
             if($err!=0){

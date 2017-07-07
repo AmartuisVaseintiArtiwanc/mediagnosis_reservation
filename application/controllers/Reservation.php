@@ -18,7 +18,7 @@ class Reservation extends CI_Controller {
         $this->load->model('Test_model',"test_model");
         $this->load->model("SClinic_model","sclinic_model");
 		$this->load->model('Notification_model');
-		$this->load->model('Company_model');
+		$this->load->model('company_model');
 		$this->load->model('Company_reservation_model');
 		$this->load->model('SPoli_model');
 		$this->load->helper("language");
@@ -447,7 +447,7 @@ class Reservation extends CI_Controller {
 
 		$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
 
-		if(!empty($clinic) && !empty($poli) && !empty($company) && !empty($reserveDate) && !empty($patient) &&!empty($reserveType) ){
+		if(!empty($clinic) && !empty($poli) && !empty($reserveDate) && !empty($patient) &&!empty($reserveType) ){
 
 			//validasi multiple reservation
 			$resrvationAvailability = $this->DReservation_model->checkReservationAvailability($patient);
@@ -476,7 +476,7 @@ class Reservation extends CI_Controller {
 					$detailReservation = $this->DReservation_model->insertReservation($data_reservasi);
 					if(isset($detailReservation)){
 						$status = "success";
-						$msg= $this->lang->line("012");//"Success";
+						$msg= "gagal saat detail reservation";//$this->lang->line("012");//"Success";
 						$queueNo=$header["nextQueue"];
 						
 						if($reserveType=="perusahaan"){
@@ -503,6 +503,8 @@ class Reservation extends CI_Controller {
 							}
 						
 						}
+					}else{
+						$status = "error";
 					}
 
 				}else{
@@ -581,7 +583,7 @@ class Reservation extends CI_Controller {
 		
 		$data=array(
             'doctorID'=>$doctorID,
-			'status'=>"confirm",
+			'status'=>"assigned",
             "lastUpdated"=>$datetime,
             "lastUpdatedBy"=>$this->session->userdata('userID')
         );
